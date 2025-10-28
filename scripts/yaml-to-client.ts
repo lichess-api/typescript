@@ -39,8 +39,12 @@ const OpenApiSchemaSchema = z.object({
 
 type OpenApiSchema = z.infer<typeof OpenApiSchemaSchema>;
 
+function processTag(tagSchema) {}
+
 function processSchema(schema: OpenApiSchema) {
-  console.log(schema);
+  const tagsDir = "specs/tags" as const;
+
+  console.log(schema.paths);
 }
 
 async function main() {
