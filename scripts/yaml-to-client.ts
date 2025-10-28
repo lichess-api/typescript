@@ -43,6 +43,20 @@ function processTag(tagSchema) {}
 
 function processSchema(schema: OpenApiSchema) {
   const tagsDir = "specs/tags" as const;
+  const clientDir = "src/client" as const;
+
+  const API_URL = schema.servers[0].url;
+
+  const clientCodeTs = `/* imports */
+
+const API_URL = "${API_URL}";
+
+/* handlers */
+` as const;
+
+  const clientCodePath = `${clientDir}/index.ts` as const;
+
+  Bun.write(clientCodePath, clientCodeTs);
 
   console.log(schema.paths);
 }
