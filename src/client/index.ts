@@ -28,7 +28,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -47,7 +47,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -70,7 +70,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -91,7 +91,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -115,7 +115,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -137,7 +137,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -158,7 +158,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -177,7 +177,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -198,7 +198,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -223,7 +223,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -248,7 +248,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -288,7 +288,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -309,12 +309,12 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
       case 404: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -337,7 +337,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -360,7 +360,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -403,12 +403,12 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
       case 404: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -444,7 +444,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -462,7 +462,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -482,7 +482,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -501,7 +501,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -540,7 +540,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -719,7 +719,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -745,12 +745,12 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
       case 429: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -829,7 +829,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -848,7 +848,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -870,7 +870,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -911,7 +911,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -955,7 +955,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -1096,7 +1096,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -1117,7 +1117,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -1144,7 +1144,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -1171,7 +1171,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -1213,7 +1213,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -1378,7 +1378,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -1401,7 +1401,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -1554,7 +1554,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -1596,7 +1596,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -1617,7 +1617,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -1639,7 +1639,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -1660,7 +1660,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -1696,7 +1696,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -1717,7 +1717,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -1739,12 +1739,12 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
       case 404: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -1805,7 +1805,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -1958,7 +1958,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -1979,7 +1979,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2000,7 +2000,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2021,7 +2021,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2042,7 +2042,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2063,7 +2063,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2084,7 +2084,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2105,7 +2105,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2128,7 +2128,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -2151,7 +2151,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -2212,7 +2212,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2302,7 +2302,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2324,7 +2324,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2345,7 +2345,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2366,7 +2366,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2401,7 +2401,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -2500,7 +2500,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -2566,12 +2566,12 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
       case 404: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2609,7 +2609,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -2768,7 +2768,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -2816,12 +2816,12 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
       case 404: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -2860,7 +2860,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -3001,7 +3001,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3043,7 +3043,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3173,7 +3173,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3248,12 +3248,12 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
       case 404: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3368,12 +3368,12 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
       case 404: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3392,7 +3392,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3428,7 +3428,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3652,7 +3652,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3679,7 +3679,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3714,7 +3714,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* ndjson */
         return { status, data } as const;
       }
 
@@ -3764,7 +3764,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3787,7 +3787,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 
@@ -3810,7 +3810,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json:only */
+        /* json */
         return { status, data } as const;
       }
 

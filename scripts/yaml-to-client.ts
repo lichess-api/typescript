@@ -7,6 +7,7 @@ import {
   Primitive,
   SchemaSchemaPrimitive,
   SchemaSchemaBoolean,
+  assertNever,
 } from "./shared";
 
 const Semver = z.string().brand("Semver");
@@ -114,15 +115,7 @@ const ResponseContentChessPgnContent = ResponseContentBaseContent.extend({})
   .strict()
   .transform((x) => ({ ...x, __content: "chess-pgn" as const }));
 
-const ResponseContentBase = z
-  .object({
-    "text/plain": ResponseContextPlainTextContent.optional(),
-    "application/x-chess-pgn": ResponseContentChessPgnContent.optional(),
-    "application/x-ndjson": ResponseContentNdjsonContent.optional(),
-  })
-  .strict();
-
-const ResponseContentJsonOnly = z
+const ResponseContentJson = z
   .union([
     z
       .object({ "application/json": ResponseContentJsonContent })
@@ -133,7 +126,13 @@ const ResponseContentJsonOnly = z
       .strict()
       .transform((x) => x["application/vnd.lichess.v3+json"]),
   ])
-  .transform((x) => ({ ...x, __content_type: "json:only" as const }));
+  .transform((x) => ({ ...x, __content_type: "json" as const }));
+
+const ResponseContentNdjson = z
+  .object({ "application/x-ndjson": ResponseContentNdjsonContent })
+  .strict()
+  .transform((x) => x["application/x-ndjson"])
+  .transform((x) => ({ ...x, __content_type: "ndjson" as const }));
 
 const ResponseContentMixed = z
   .object({
@@ -151,7 +150,8 @@ const ResponseContentNoContent = z
   .transform(() => ({ __content_type: "nocontent" }) as const);
 
 const ResponseContent = z.union([
-  ResponseContentJsonOnly,
+  ResponseContentJson,
+  ResponseContentNdjson,
   ResponseContentMixed,
   ResponseContentNoContent,
 ]);
@@ -350,7 +350,7 @@ function processResponseCaseContent(content: ResponseCaseContent) {
     case "nocontent": {
       return "/* no content */" as const;
     }
-    case "json:only": {
+    case "json": {
       content.schema;
       // const { zodSchema } = convertToZod(
       //   resp.content["application/json"].schema,
@@ -358,13 +358,19 @@ function processResponseCaseContent(content: ResponseCaseContent) {
       // );
       // caseBody =
       // `        const schema = ${zodSchema};\n        const data = schema.parse(json);` as const;
-      return "/* json:only */" as const;
+      return "/* json */" as const;
+    }
+    case "ndjson": {
+      content;
+      return "/* ndjson */" as const;
     }
     case "mixed": {
       content;
       return "/* mixed */" as const;
     }
   }
+
+  assertNever(content);
 }
 
 function processResponseCase({
