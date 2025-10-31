@@ -28,10 +28,22 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.array(
+          z.object({
+            id: z.string(),
+            name: z.string(),
+            flair: schemas.Flair.optional(),
+            title: schemas.Title.optional(),
+            online: z.boolean().optional(),
+            playing: z.boolean().optional(),
+            streaming: z.boolean().optional(),
+            patron: z.boolean().optional(),
+            patronColor: schemas.PatronColor.optional(),
+          })
+        );
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -47,10 +59,10 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.Top10s;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -70,10 +82,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.Leaderboard;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -91,10 +103,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.UserExtended;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -115,10 +127,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.RatingHistory;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -137,10 +149,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.PerfStat;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -158,10 +170,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.array(schemas.UserActivity);
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -177,10 +189,10 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.PuzzleAndGame;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -198,10 +210,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.PuzzleAndGame;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -223,10 +235,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.PuzzleAndGame;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -248,10 +260,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.PuzzleBatchSelect;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -291,7 +303,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -309,15 +320,15 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.PuzzleReplay;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       case 404: {
-        /* json */
+        const schema = z.object({ error: z.string().optional() });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -337,10 +348,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.PuzzleDashboard;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -360,10 +371,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.PuzzleStormDashboard;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -403,15 +414,15 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.PuzzleRaceResults;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       case 404: {
-        /* json */
+        const schema = schemas.NotFound;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -444,10 +455,10 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.UserExtended;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -462,10 +473,10 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.object({ email: z.string().optional() });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -482,10 +493,13 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.object({
+          prefs: schemas.UserPreferences.optional(),
+          language: z.string().optional(),
+        });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -501,10 +515,10 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.object({ kid: z.boolean().optional() });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -540,10 +554,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.Timeline;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -565,7 +579,6 @@ export class Lichess {
         /* mixed */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -588,7 +601,6 @@ export class Lichess {
         /* mixed */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -616,7 +628,6 @@ export class Lichess {
         /* mixed */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -719,10 +730,40 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.object({
+          nowPlaying: z.array(
+            z.object({
+              fullId: z.string(),
+              gameId: z.string(),
+              fen: z.string(),
+              color: schemas.GameColor,
+              lastMove: z.string(),
+              source: schemas.GameSource,
+              status: schemas.GameStatusName.optional(),
+              variant: schemas.Variant,
+              speed: schemas.Speed,
+              perf: schemas.PerfType,
+              rated: z.boolean(),
+              hasMoved: z.boolean(),
+              opponent: z.object({
+                id: z.string(),
+                username: z.string(),
+                rating: z.number().optional(),
+                ratingDiff: z.number().optional(),
+                ai: z.number().optional(),
+              }),
+              isMyTurn: z.boolean(),
+              secondsLeft: z.number(),
+              tournamentId: z.string().optional(),
+              swissId: z.string().optional(),
+              winner: schemas.GameColor.optional(),
+              ratingDiff: z.number().optional(),
+            })
+          ),
+        });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -748,12 +789,11 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       case 429: {
-        /* json */
+        const schema = z.object({ error: z.string().optional() });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -789,7 +829,6 @@ export class Lichess {
         /* chess-pgn */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -812,7 +851,6 @@ export class Lichess {
         /* mixed */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -829,10 +867,27 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.object({
+          bot: schemas.TvGame,
+          blitz: schemas.TvGame,
+          racingKings: schemas.TvGame,
+          ultraBullet: schemas.TvGame,
+          bullet: schemas.TvGame,
+          classical: schemas.TvGame,
+          threeCheck: schemas.TvGame,
+          antichess: schemas.TvGame,
+          computer: schemas.TvGame,
+          horde: schemas.TvGame,
+          rapid: schemas.TvGame,
+          atomic: schemas.TvGame,
+          crazyhouse: schemas.TvGame,
+          chess960: schemas.TvGame,
+          kingOfTheHill: schemas.TvGame,
+          best: schemas.TvGame,
+        });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -851,7 +906,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -873,7 +927,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -895,7 +948,6 @@ export class Lichess {
         /* mixed */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -911,10 +963,10 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.ArenaTournaments;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -955,10 +1007,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.ArenaTournamentFull;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1074,7 +1126,6 @@ export class Lichess {
         /* mixed */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1099,7 +1150,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1117,10 +1167,25 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.object({
+          id: z.string(),
+          teams: z.array(
+            z.object({
+              rank: z.number(),
+              id: z.string(),
+              score: z.number(),
+              players: z.array(
+                z.object({
+                  user: schemas.LightUser,
+                  score: z.number().optional(),
+                })
+              ),
+            })
+          ),
+        });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1147,7 +1212,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1174,7 +1238,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1213,10 +1276,10 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.SwissTournament;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1331,7 +1394,6 @@ export class Lichess {
         /* mixed */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1356,7 +1418,6 @@ export class Lichess {
         /* mixed */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1381,7 +1442,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1404,7 +1464,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1427,7 +1486,6 @@ export class Lichess {
         /* chess-pgn */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1450,7 +1508,6 @@ export class Lichess {
         /* chess-pgn */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1533,7 +1590,6 @@ export class Lichess {
         /* chess-pgn */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1557,7 +1613,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1599,7 +1654,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1617,10 +1671,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.BroadcastTop;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1639,10 +1693,18 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.object({
+          currentPage: z.int(),
+          maxPerPage: z.int(),
+          currentPageResults: z.array(schemas.BroadcastByUser),
+          nbResults: z.int(),
+          previousPage: z.int().nullable(),
+          nextPage: z.int().nullable(),
+          nbPages: z.int(),
+        });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1660,10 +1722,16 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.object({
+          currentPage: z.int(),
+          maxPerPage: z.int(),
+          currentPageResults: z.array(schemas.BroadcastWithLastRound),
+          previousPage: z.int().nullable(),
+          nextPage: z.int().nullable(),
+        });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1696,10 +1764,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.BroadcastWithRounds;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1717,10 +1785,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.array(schemas.BroadcastPlayerEntry);
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1739,15 +1807,15 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.BroadcastPlayerEntryWithFideAndGames;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       case 404: {
-        /* json */
+        const schema = schemas.NotFound;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1805,10 +1873,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.BroadcastRound;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1888,7 +1956,6 @@ export class Lichess {
         /* chess-pgn */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1913,7 +1980,6 @@ export class Lichess {
         /* chess-pgn */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1937,7 +2003,6 @@ export class Lichess {
         /* chess-pgn */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1961,7 +2026,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -1979,10 +2043,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.FIDEPlayer;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2000,10 +2064,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.array(schemas.FIDEPlayer);
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2021,10 +2085,15 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.object({
+          pending: z.array(schemas.Simul).optional(),
+          created: z.array(schemas.Simul).optional(),
+          started: z.array(schemas.Simul).optional(),
+          finished: z.array(schemas.Simul).optional(),
+        });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2042,10 +2111,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.Team;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2063,10 +2132,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.TeamPaginatorJson;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2084,10 +2153,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.array(schemas.Team);
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2105,10 +2174,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.TeamPaginatorJson;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2131,7 +2200,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2154,7 +2222,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2212,10 +2279,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.array(schemas.TeamRequestWithUser);
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2302,10 +2369,33 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.array(
+          z.intersection(
+            schemas.LightUser,
+            z.object({
+              stream: z
+                .object({
+                  service: z.literal(["twitch", "youTube"]).optional(),
+                  status: z.string().optional(),
+                  lang: z.string().optional(),
+                })
+                .optional(),
+              streamer: z
+                .object({
+                  name: z.string().optional(),
+                  headline: z.string().optional(),
+                  description: z.string().optional(),
+                  twitch: z.url().optional(),
+                  youTube: z.url().optional(),
+                  image: z.url().optional(),
+                })
+                .optional(),
+            })
+          )
+        );
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2324,10 +2414,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.Crosstable;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2345,10 +2435,13 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.union([
+          z.array(z.string()),
+          z.object({ result: z.array(schemas.LightUserOnline).optional() }),
+        ]);
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2366,10 +2459,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.array(schemas.UserNote);
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2404,7 +2497,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2503,7 +2595,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2569,12 +2660,11 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       case 404: {
-        /* json */
+        const schema = schemas.NotFound;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2612,7 +2702,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2771,7 +2860,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2819,12 +2907,11 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       case 404: {
-        /* json */
+        const schema = schemas.NotFound;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -2863,7 +2950,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3001,10 +3087,13 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.object({
+          in: z.array(schemas.ChallengeJson).optional(),
+          out: z.array(schemas.ChallengeJson).optional(),
+        });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3043,10 +3132,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.ChallengeJson;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3173,10 +3262,10 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.array(schemas.BulkPairing);
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3248,15 +3337,15 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.BulkPairing;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       case 404: {
-        /* json */
+        const schema = schemas.NotFound;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3296,7 +3385,6 @@ export class Lichess {
         /* mixed */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3368,15 +3456,15 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.CloudEval;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       case 404: {
-        /* json */
+        const schema = z.object({ error: z.string().optional() });
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3392,10 +3480,10 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = z.array(schemas.ExternalEngine);
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3428,10 +3516,10 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.ExternalEngine;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3585,7 +3673,6 @@ export class Lichess {
         /* no content */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3652,10 +3739,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.OpeningExplorerMasters;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3679,10 +3766,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.OpeningExplorerLichess;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3717,7 +3804,6 @@ export class Lichess {
         /* ndjson */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3742,7 +3828,6 @@ export class Lichess {
         /* chess-pgn */
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3764,10 +3849,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.TablebaseJson;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3787,10 +3872,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.TablebaseJson;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
@@ -3810,10 +3895,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* json */
+        const schema = schemas.TablebaseJson;
+        const data = schema.parse(json);
         return { status, data } as const;
       }
-
       default: {
         throw new Error("Error");
       }
