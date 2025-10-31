@@ -1,6 +1,13 @@
 import { z } from "zod";
 
-import { SchemaSchemaRef, SchemaSchema, convertToZod } from "./shared";
+import {
+  SchemaSchemaRef,
+  SchemaSchema,
+  convertToZod,
+  Primitive,
+  SchemaSchemaPrimitive,
+  SchemaSchemaBoolean,
+} from "./shared";
 
 const Semver = z.string().brand("Semver");
 
@@ -122,10 +129,85 @@ const ResponseContent = z
 const ResponseSchema = z
   .object({
     description: z.string(),
-    headers: z.object({}).optional(),
+    headers: z
+      .object({
+        "Access-Control-Allow-Origin": z
+          .object({
+            schema: z.object({
+              type: z.literal("string"),
+              default: z.literal("'*'"),
+            }),
+          })
+          .strict(),
+        "Last-Modified": z
+          .object({
+            schema: z.object({
+              type: z.literal("string"),
+              example: z.string(),
+            }),
+          })
+          .strict()
+          .optional(),
+      })
+      .strict()
+      .optional(),
     content: ResponseContent.optional(),
   })
   .strict();
+
+const OperationParameterBase = z
+  .object({
+    name: z.string(),
+    description: z.string().optional(),
+    example: Primitive.optional(),
+  })
+  .strict();
+
+const SchemaSchemaNullableRefToPrimitive = z
+  .object({
+    allOf: z.tuple([SchemaSchemaRef, z.object({ default: z.null() })]),
+  })
+  .brand("notverified:SchemaSchemaNullableRefToPrimitive");
+
+const SchemaSchemaRefToPrimitive = SchemaSchemaRef.brand(
+  "notverified:SchemaSchemaRefToPrimitive"
+);
+
+const SchemaSchemaBooleanLike = z
+  .object({
+    anyOf: z.tuple([
+      SchemaSchemaBoolean,
+      z.object({ type: z.literal("string"), const: z.literal(true) }),
+    ]),
+  })
+  .brand("SchemaSchemaBooleanLike");
+
+const OperationQueryParameter = OperationParameterBase.extend({
+  in: z.literal("query"),
+  required: z.boolean().optional(),
+  schema: z.union([
+    SchemaSchemaPrimitive,
+    z.object({ type: z.literal("array"), items: SchemaSchemaPrimitive }),
+    SchemaSchemaRefToPrimitive,
+    z.object({ type: z.literal("array"), items: SchemaSchemaRefToPrimitive }),
+    SchemaSchemaNullableRefToPrimitive,
+  ]),
+}).strict();
+
+const OperationPathParameter = OperationParameterBase.extend({
+  in: z.literal("path"),
+  required: z.literal(true),
+  schema: z.union([
+    SchemaSchemaPrimitive,
+    SchemaSchemaRefToPrimitive,
+    SchemaSchemaBooleanLike,
+  ]),
+}).strict();
+
+const OperationParameter = z.union([
+  OperationQueryParameter,
+  OperationPathParameter,
+]);
 
 const BaseTagSchemaOperation = z.object({
   operationId: z.string(),
@@ -133,30 +215,97 @@ const BaseTagSchemaOperation = z.object({
   description: z.string(),
   tags: z.array(z.string()),
   security: SecuritySchema,
-  parameters: z.array(z.object({})).optional(),
+  parameters: z.array(OperationParameter).optional(),
   responses: z.record(ResponseStatus, ResponseSchema),
 });
 
+const RequestBodyContentJson = z
+  .object({ "application/json": z.object({ schema: SchemaSchema }) })
+  .strict()
+  .transform((s) => ({ ...s, __type: "json" as const }));
+
+const RequestBodyContentPlainText = z
+  .object({ "text/plain": z.object({ schema: SchemaSchema }) })
+  .strict()
+  .transform((s) => ({ ...s, __type: "text/plain" as const }));
+
+const RequestBodyContentWebFormUrlEncoded = z
+  .object({
+    "application/x-www-form-urlencoded": z.object({ schema: SchemaSchema }),
+  })
+  .strict()
+  .transform((s) => ({ ...s, __type: "x-www-form-urlencoded" as const }));
+
+const RequestBodyContent = z.union([
+  RequestBodyContentJson,
+  RequestBodyContentPlainText,
+  RequestBodyContentWebFormUrlEncoded,
+]);
+
+const RequestBodySchema = z
+  .object({
+    description: z.string().optional(),
+    required: z.boolean().optional(),
+    content: RequestBodyContent,
+  })
+  .strict();
+
 const TagSchemaSchemaGet = BaseTagSchemaOperation.extend({})
   .strict()
-  .transform((s) => ({ ...s, __method: "get" as const }));
+  .transform((s) => ({ ...s, __id: "method:get" as const }));
 
 const TagSchemaSchemaPost = BaseTagSchemaOperation.extend({
-  requestBody: z.object().optional(),
+  requestBody: RequestBodySchema.optional(),
 })
   .strict()
-  .transform((s) => ({ ...s, __method: "post" as const }));
+  .transform((s) => ({ ...s, __id: "method:post" as const }));
 
-const TagSchemaSchema = z.object({
-  get: TagSchemaSchemaGet.optional(),
-  post: TagSchemaSchemaPost.optional(),
-});
+const TagSchemaSchemaHead = BaseTagSchemaOperation.extend({})
+  .strict()
+  .transform((s) => ({ ...s, __id: "method:head" as const }));
+
+const TagSchemaSchemaDelete = BaseTagSchemaOperation.extend({})
+  .strict()
+  .transform((s) => ({ ...s, __id: "method:delete" as const }));
+
+const TagSchemaSchemaPut = BaseTagSchemaOperation.extend({
+  requestBody: RequestBodySchema.optional(),
+})
+  .strict()
+  .transform((s) => ({ ...s, __id: "method:put" as const }));
+
+const TagSchemaSchema = z
+  .object({
+    servers: z
+      .tuple([
+        z.object({
+          url: z.literal([
+            "https://engine.lichess.ovh",
+            "https://explorer.lichess.ovh",
+            "https://tablebase.lichess.ovh",
+          ]),
+        }),
+      ])
+      .transform((s) => ({ ...s, __id: "__servers" as const }))
+      .optional(),
+    parameters: z
+      .array(OperationPathParameter)
+      .transform((s) => ({ ...s, __id: "__parameters" as const }))
+      .optional(),
+    get: TagSchemaSchemaGet.optional(),
+    post: TagSchemaSchemaPost.optional(),
+    head: TagSchemaSchemaHead.optional(),
+    delete: TagSchemaSchemaDelete.optional(),
+    put: TagSchemaSchemaPut.optional(),
+  })
+  .strict();
 type TagSchema = z.infer<typeof TagSchemaSchema>;
 
 function processTag(tagSchema: TagSchema, rawApiPath: string) {
   const methodsCode: string[] = [];
   return;
   for (const operation of Object.values(tagSchema)) {
+    if (operation.__id === "__parameters") throw new Error("");
     const operationId = operation.operationId;
     const summary = operation.summary || "";
     const description = operation.description || "";
@@ -262,14 +411,18 @@ function processTag(tagSchema: TagSchema, rawApiPath: string) {
           resp.content["application/json"].schema,
           "schemas."
         );
-        caseBody = `        const schema = ${zodSchema};\n        const data = schema.parse(json);`;
+        caseBody =
+          `        const schema = ${zodSchema};\n        const data = schema.parse(json);` as const;
       }
-      responseCases += `      case ${status}: {\n${caseBody}\n        return { status, data } as const;\n      }\n`;
+      responseCases +=
+        `      case ${status}: {\n${caseBody}\n        return { status, data } as const;\n      }\n` as const;
     }
-    const switchCode = `    switch (status) {\n${responseCases}      default: {\n        throw new Error(\`Unexpected status \${status}: \${JSON.stringify(json)}\`);\n      }\n    }`;
+    const switchCode =
+      `    switch (status) {\n${responseCases}      default: {\n        throw new Error(\`Unexpected status \${status}: \${JSON.stringify(json)}\`);\n      }\n    }` as const;
 
     // Full method
-    const methodCode = `${jsdoc}${fullSig}{\n  ${pathCode}\n  ${requestCode}\n  ${switchCode}\n  }`;
+    const methodCode =
+      `${jsdoc}${fullSig}{\n  ${pathCode}\n  ${requestCode}\n  ${switchCode}\n  }` as const;
     methodsCode.push(methodCode);
   }
   return methodsCode;
@@ -286,7 +439,7 @@ async function processSchema(schema: OpenApiSchema) {
     const fullYamlPath = `${tagsDir}/${tagPath}` as const;
     const yamlStr = await Bun.file(fullYamlPath).text();
     const schema = Bun.YAML.parse(yamlStr);
-    console.log({ schema, rawApiPath });
+    console.log({ rawApiPath, schema });
     const tagSchema = TagSchemaSchema.parse(schema);
     console.log({ tagSchema });
     const newMethods = processTag(tagSchema, rawApiPath);

@@ -3,14 +3,14 @@ import { z } from "zod";
 const SchemaUnparsed = z.unknown().brand("SchemaUnparsed");
 type SchemaUnparsed = z.infer<typeof SchemaUnparsed>;
 
-const Primitive = z.union([z.string(), z.number(), z.boolean()]);
+export const Primitive = z.union([z.string(), z.number(), z.boolean()]);
 
 const BaseSchema = z.object({
   // `const` can only be on `string`, `number` and `boolean`
   const: z.never().optional(),
 
   // `default` can only be on `string`, `number` and `boolean`
-  default: Primitive.optional(),
+  default: Primitive.nullish(),
 
   // `description` and `deprecated` can be on any schema
   description: z.string().optional(),
@@ -51,12 +51,18 @@ const SchemaSchemaStringNullable = BaseSchema.extend({
   .strict()
   .transform((s) => ({ ...s, __schema: "string:nullable" as const }));
 
+const SchemaSchemaIntegerEnum = BaseSchema.extend({
+  type: z.literal(["integer", "number"]),
+  enum: z.array(z.int()),
+})
+  .strict()
+  .transform((s) => ({ ...s, __schema: "integer:enum" as const }));
+
 const SchemaSchemaInteger = BaseSchema.extend({
   type: z.literal("integer"),
   const: z.int().optional(),
   example: z.int().optional(),
   format: z.literal("int64").optional(),
-  enum: z.array(z.int()).optional(),
   minimum: z.number().optional(),
   maximum: z.number().optional(),
 })
@@ -82,7 +88,7 @@ const SchemaSchemaNumber = BaseSchema.extend({
   .strict()
   .transform((s) => ({ ...s, __schema: "number" as const }));
 
-const SchemaSchemaBoolean = BaseSchema.extend({
+export const SchemaSchemaBoolean = BaseSchema.extend({
   type: z.literal("boolean"),
   const: z.boolean().optional(),
   example: z.boolean().optional(),
@@ -90,9 +96,10 @@ const SchemaSchemaBoolean = BaseSchema.extend({
   .strict()
   .transform((s) => ({ ...s, __schema: "boolean" as const }));
 
-const SchemaSchemaPrimitive = z.discriminatedUnion("type", [
+export const SchemaSchemaPrimitive = z.union([
   SchemaSchemaString,
   SchemaSchemaInteger,
+  SchemaSchemaIntegerEnum,
   SchemaSchemaNumber,
   SchemaSchemaBoolean,
 ]);
@@ -223,13 +230,13 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
     case "string": {
       if (schema.enum) {
         const literals = JSON.stringify(schema.enum);
-        return { zodSchema: `z.enum(${literals})`, refs: [] };
+        return { zodSchema: `z.literal(${literals})`, refs: [] };
       }
       if (schema.format === "uri") {
-        return { zodSchema: "z.string().url()", refs: [] };
+        return { zodSchema: "z.url()", refs: [] };
       }
       if (schema.format === "date-time") {
-        return { zodSchema: "z.string().datetime()", refs: [] };
+        return { zodSchema: "z.iso.datetime()", refs: [] };
       }
       let schemaStr = "z.string()";
       if (schema.minLength !== undefined) {
@@ -243,12 +250,23 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
     case "string:nullable": {
       return { zodSchema: "z.string().nullable()", refs: [] };
     }
+    case "integer:enum": {
+      const literals = schema.enum.map((v) => JSON.stringify(v)).join(", ");
+      return { zodSchema: `z.literal([${literals}])`, refs: [] };
+    }
     case "integer": {
-      if (schema.enum) {
-        const literals = schema.enum.map((v) => JSON.stringify(v)).join(", ");
-        return { zodSchema: `z.union([${literals}])`, refs: [] };
+      let schemaStr = "z.int()";
+      if (schema.minimum !== undefined && schema.maximum !== undefined) {
+        const diff = schema.maximum - schema.minimum;
+        if (diff <= 10) {
+          const values: number[] = [];
+          for (let i = schema.minimum; i <= schema.maximum; i++) {
+            values.push(i);
+          }
+          const literals = values.join(", ");
+          return { zodSchema: `z.literal([${literals}])`, refs: [] };
+        }
       }
-      let schemaStr = "z.number().int()";
       if (schema.minimum !== undefined) {
         schemaStr += `.min(${schema.minimum})`;
       }
@@ -258,7 +276,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       return { zodSchema: schemaStr, refs: [] };
     }
     case "integer:nullable": {
-      return { zodSchema: "z.number().int().nullable()", refs: [] };
+      return { zodSchema: "z.int().nullable()", refs: [] };
     }
     case "number": {
       let schemaStr = "z.number()";

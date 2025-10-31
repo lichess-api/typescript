@@ -13,4 +13,6 @@ export class Lichess {
   constructor({ token }: { token: string }) {
     this.requestor = new Requestor({ token, baseUrl: BASE_URL });
   }
+
+  
 }
