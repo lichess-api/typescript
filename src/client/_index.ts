@@ -55,8 +55,9 @@ export class Lichess {
    * Set the kid mode status of the logged in user.
    * - <https://lichess.org/account/kid>
    */
-  async accountKidPost({ query }: { query: { v: boolean } }) {
+  async accountKidPost({ v }: { v: boolean }) {
     const path = "/api/account/kid" as const;
+    const query = { v } as const;
     const { json, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {

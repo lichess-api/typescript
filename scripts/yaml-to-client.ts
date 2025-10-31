@@ -82,8 +82,6 @@ const OAuth2Schema = z.tuple([z.object({ OAuth2: z.array(OAuth2Scope) })]);
 
 const SecuritySchema = z.union([z.array(AccessTokenScopeSchema), OAuth2Schema]);
 
-const ResponseStatus = z.coerce.number<string>();
-
 const StringJsonRef = z
   .string()
   .refine((str) => str.endsWith(".json"))
@@ -94,66 +92,101 @@ const SchemaSchemaExampleRef = z
   .strict()
   .transform((s) => ({ ...s, __schema: "$ref" as const }));
 
-const ResponseContentBase = z.object({
+const ResponseContentBaseContent = z.object({
   schema: SchemaSchema,
   example: SchemaSchemaExampleRef.optional(),
   examples: z.record(z.string(), SchemaSchemaRef).optional(),
 });
 
-const ResponseContextPlainText = ResponseContentBase.extend({})
+const ResponseContextPlainTextContent = ResponseContentBaseContent.extend({})
   .strict()
-  .transform((x) => ({ ...x, __content: "text" }));
+  .transform((x) => ({ ...x, __content: "text" }) as const);
 
-const ResponseContentJson = ResponseContentBase.extend({})
+const ResponseContentJsonContent = ResponseContentBaseContent.extend({})
   .strict()
-  .transform((x) => ({ ...x, __content: "json" }));
+  .transform((x) => ({ ...x, __content: "json" as const }));
 
-const ResponseContentNdjson = ResponseContentBase.extend({})
+const ResponseContentNdjsonContent = ResponseContentBaseContent.extend({})
   .strict()
-  .transform((x) => ({ ...x, __content: "ndjson" }));
+  .transform((x) => ({ ...x, __content: "ndjson" as const }));
 
-const ResponseContentChessPgn = ResponseContentBase.extend({})
+const ResponseContentChessPgnContent = ResponseContentBaseContent.extend({})
   .strict()
-  .transform((x) => ({ ...x, __content: "chess-pgn" }));
+  .transform((x) => ({ ...x, __content: "chess-pgn" as const }));
 
-const ResponseContent = z
+const ResponseContentBase = z
   .object({
-    "text/plain": ResponseContextPlainText.optional(),
-    "application/json": ResponseContentJson.optional(),
-    "application/vnd.lichess.v3+json": ResponseContentJson.optional(),
-    "application/x-chess-pgn": ResponseContentChessPgn.optional(),
-    "application/x-ndjson": ResponseContentNdjson.optional(),
+    "text/plain": ResponseContextPlainTextContent.optional(),
+    "application/x-chess-pgn": ResponseContentChessPgnContent.optional(),
+    "application/x-ndjson": ResponseContentNdjsonContent.optional(),
+  })
+  .strict();
+
+const ResponseContentJsonOnly = z
+  .union([
+    z
+      .object({ "application/json": ResponseContentJsonContent })
+      .strict()
+      .transform((x) => x["application/json"]),
+    z
+      .object({ "application/vnd.lichess.v3+json": ResponseContentJsonContent })
+      .strict()
+      .transform((x) => x["application/vnd.lichess.v3+json"]),
+  ])
+  .transform((x) => ({ ...x, __content_type: "json:only" as const }));
+
+const ResponseContentMixed = z
+  .object({
+    "text/plain": ResponseContextPlainTextContent.optional(),
+    "application/json": ResponseContentJsonContent.optional(),
+    "application/vnd.lichess.v3+json": ResponseContentJsonContent.optional(),
+    "application/x-chess-pgn": ResponseContentChessPgnContent.optional(),
+    "application/x-ndjson": ResponseContentNdjsonContent.optional(),
+  })
+  .strict()
+  .transform((x) => ({ ...x, __content_type: "mixed" as const }));
+
+const ResponseContentNoContent = z
+  .undefined()
+  .transform(() => ({ __content_type: "nocontent" }) as const);
+
+const ResponseContent = z.union([
+  ResponseContentJsonOnly,
+  ResponseContentMixed,
+  ResponseContentNoContent,
+]);
+type ResponseCaseContent = z.infer<typeof ResponseContent>;
+
+const ResponseSchemaHeaders = z
+  .object({
+    "Access-Control-Allow-Origin": z
+      .object({
+        schema: z.object({
+          type: z.literal("string"),
+          default: z.literal("'*'"),
+        }),
+      })
+      .strict(),
+    "Last-Modified": z
+      .object({
+        schema: z.object({
+          type: z.literal("string"),
+          example: z.string(),
+        }),
+      })
+      .strict()
+      .optional(),
   })
   .strict();
 
 const ResponseSchema = z
   .object({
     description: z.string(),
-    headers: z
-      .object({
-        "Access-Control-Allow-Origin": z
-          .object({
-            schema: z.object({
-              type: z.literal("string"),
-              default: z.literal("'*'"),
-            }),
-          })
-          .strict(),
-        "Last-Modified": z
-          .object({
-            schema: z.object({
-              type: z.literal("string"),
-              example: z.string(),
-            }),
-          })
-          .strict()
-          .optional(),
-      })
-      .strict()
-      .optional(),
-    content: ResponseContent.optional(),
+    headers: ResponseSchemaHeaders.optional(),
+    content: ResponseContent,
   })
   .strict();
+type ResponseCase = z.infer<typeof ResponseSchema>;
 
 const OperationParameterBase = z
   .object({
@@ -208,6 +241,13 @@ const OperationParameter = z.union([
   OperationQueryParameter,
   OperationPathParameter,
 ]);
+const OperationParameters = z.array(OperationParameter).optional();
+type OperationParameters = z.infer<typeof OperationParameters>;
+
+const ResponseStatus = z.string();
+
+const OperationResponses = z.record(ResponseStatus, ResponseSchema);
+type OperationResponses = z.infer<typeof OperationResponses>;
 
 const BaseTagSchemaOperation = z.object({
   operationId: z.string(),
@@ -215,8 +255,8 @@ const BaseTagSchemaOperation = z.object({
   description: z.string(),
   tags: z.array(z.string()),
   security: SecuritySchema,
-  parameters: z.array(OperationParameter).optional(),
-  responses: z.record(ResponseStatus, ResponseSchema),
+  parameters: OperationParameters,
+  responses: OperationResponses,
 });
 
 const RequestBodyContentJson = z
@@ -305,76 +345,66 @@ type TagSchema = z.infer<typeof TagSchemaSchema>;
 
 type Operation = NonNullable<TagSchema[keyof TagSchema]>;
 
+function processResponseCaseContent(content: ResponseCaseContent) {
+  switch (content.__content_type) {
+    case "nocontent": {
+      return "/* no content */" as const;
+    }
+    case "json:only": {
+      content.schema;
+      // const { zodSchema } = convertToZod(
+      //   resp.content["application/json"].schema,
+      //   "schemas."
+      // );
+      // caseBody =
+      // `        const schema = ${zodSchema};\n        const data = schema.parse(json);` as const;
+      return "/* json:only */" as const;
+    }
+    case "mixed": {
+      content;
+      return "/* mixed */" as const;
+    }
+  }
+}
+
+function processResponseCase({
+  statusStr,
+  resp,
+}: {
+  statusStr: string;
+  resp: ResponseCase;
+}) {
+  const status = Number(statusStr);
+  const caseBody = processResponseCaseContent(resp.content);
+
+  const responseCase = `case ${status}: {
+        ${caseBody}
+        return { status, data } as const;
+      }
+` as const;
+  return responseCase;
+}
+
 function processMethod({
   method,
 }: {
   method: Exclude<Operation, { __id: "__parameters" | "__servers" }>;
 }) {
-  return { responseCases: "/* switch cases */" } as const;
-  // Parameters
-  const allParams = method.parameters || [];
-  const pathParams = allParams.filter((p) => p.in === "path");
-  const queryParams = allParams.filter((p) => p.in === "query");
-
-  // Destructure names and type props
-  const destrNames: string[] = [];
-  const typeProps: string[] = [];
-
   switch (method.__id) {
     case "method:get": {
-      // Path params
-      let pathParamsType = "";
-      if (pathParams.length > 0) {
-        const propStrs = pathParams
-          .map((p) => {
-            const { zodSchema } = convertToZod(p.schema, "schemas.");
-            return `"${p.name}": ${zodSchema}`;
-          })
-          .join(",\n    ");
-        const pathParamsZod = `z.object({\n    ${propStrs}\n  })`;
-        pathParamsType = `pathParams: z.infer<typeof ${pathParamsZod}>`;
-        destrNames.push("pathParams");
-        typeProps.push(pathParamsType);
+      const responseCasesLines: string[] = [];
+
+      for (const [statusStr, resp] of Object.entries(method.responses)) {
+        const responseCaseLine = processResponseCase({ statusStr, resp });
+        responseCasesLines.push(responseCaseLine);
       }
+      const responseCases = responseCasesLines.join("\n");
 
-      // Query params
-      let queryType = "";
-      if (queryParams.length > 0) {
-        const propStrs = queryParams
-          .map((p) => {
-            const { zodSchema } = convertToZod(p.schema, "schemas.");
-            return `"${p.name}": ${zodSchema}`;
-          })
-          .join(",\n    ");
-        const queryZod = `z.object({\n    ${propStrs}\n  })`;
-        queryType = `query: z.infer<typeof ${queryZod}>`;
-        destrNames.push("query");
-        typeProps.push(queryType);
-      }
-
-      // Response handling
-      let responseCases = "";
-      const responses = method.responses || {};
-
-      for (const [statusStr, resp] of Object.entries(responses)) {
-        const status = Number(statusStr);
-        let caseBody = "        const data = json;";
-        if (resp.content?.["application/json"]?.schema) {
-          const { zodSchema } = convertToZod(
-            resp.content["application/json"].schema,
-            "schemas."
-          );
-          caseBody =
-            `        const schema = ${zodSchema};\n        const data = schema.parse(json);` as const;
-        }
-        responseCases +=
-          `      case ${status}: {\n${caseBody}\n        return { status, data } as const;\n      }\n` as const;
-      }
-
-      // return { responseCases } as const;
+      return { responseCases } as const;
     }
     case "method:post": {
       const requestBody = method.requestBody;
+      return { responseCases: "/* switch cases; method:post */" } as const;
       // Body
       let bodyType = "";
       if (requestBody?.content?.["application/json"]) {
@@ -389,13 +419,14 @@ function processMethod({
       return;
     }
     case "method:head": {
-      return;
+      return { responseCases: "/* switch cases; method:head */" } as const;
     }
     case "method:delete": {
-      return;
+      return { responseCases: "/* switch cases; method:delete */" } as const;
     }
     case "method:put": {
       const requestBody = method.requestBody;
+      return { responseCases: "/* switch cases; method:put */" } as const;
 
       // Body
       let bodyType = "";
@@ -419,6 +450,28 @@ function processRawPath(rawApiPath: string) {
   return { processedPath, hasPathParams } as const;
 }
 
+function processParams(params: OperationParameters) {
+  if (!params) {
+    return { anyParams: false } as const;
+  }
+  return { anyParams: true } as const;
+}
+
+function descriptionToJsdoc(description: string) {
+  const descriptionLines = (() => {
+    let descriptionLines = description.split("\n");
+    if (!descriptionLines.at(-1)) return descriptionLines.slice(0, -1);
+    return descriptionLines;
+  })();
+
+  const jsdocContent = descriptionLines
+    .map((line) => `   * ${line}` as const)
+    .join("\n") as `   * ${string}`;
+
+  const jsdoc = `/**\n${jsdocContent}\n   */` as const;
+  return jsdoc;
+}
+
 function processOperation(operation: Operation, rawApiPath: string) {
   if (operation.__id === "__parameters") {
     return "/* Shared params for methods below */";
@@ -435,31 +488,19 @@ function processOperation(operation: Operation, rawApiPath: string) {
     : (`"${processedPath}"` as const);
 
   // JSDoc
-  const descriptionLines = (() => {
-    let descriptionLines = operation.description.split("\n");
-    if (!descriptionLines.at(-1)) return descriptionLines.slice(0, -1);
-    return descriptionLines;
-  })();
-
-  const jsdocContent = descriptionLines
-    .map((line) => `   * ${line}` as const)
-    .join("\n") as `   * ${string}`;
-
-  const jsdoc = `/**\n${jsdocContent}\n   */` as const;
+  const jsdoc = descriptionToJsdoc(operation.description);
 
   const { responseCases } = processMethod({ method: operation })!;
 
-  // Function signature
-  // const destr = destrNames.length > 0 ? `{ ${destrNames.join(", ")} }` : "";
-  // const typeStr = typeProps.length > 0 ? `{ ${typeProps.join(", ")} }` : "";
+  // Parameters
+  const { anyParams } = processParams(operation.parameters);
+  // const pathParams = allParams.filter((p) => p.in === "path");
+  // const queryParams = allParams.filter((p) => p.in === "query");
 
-  // Request call
-  // let requestArgs = "path";
-  // if (queryParams.length > 0) requestArgs += ", query";
-  // if (bodyType) requestArgs += ", body";
-
-  const requestCode =
-    `const { json, status } = await this.requestor.${operation.__method}({ path, /* other args */ });` as const;
+  const requestCode = anyParams
+    ? (`/* const query = { ... } as const // if exist */
+    const { json, status } = await this.requestor.${operation.__method}({ path /* query, body */ });` as const)
+    : (`const { json, status } = await this.requestor.${operation.__method}({ path });` as const);
 
   const switchCode = `switch (status) {
       ${responseCases}
@@ -470,7 +511,7 @@ function processOperation(operation: Operation, rawApiPath: string) {
 
   const fullContent = `
   ${jsdoc}
-  async ${operation.operationId}(/* params */) {
+  async ${operation.operationId}(${anyParams ? "/* params: { ... } */" : ""}) {
     const path = ${stringifiedProcessedPath} as const;
     ${requestCode}
     ${switchCode}
