@@ -786,7 +786,7 @@ export class Lichess {
     const { json, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* chess-pgn */
         return { status, data } as const;
       }
 
@@ -1424,7 +1424,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* chess-pgn */
         return { status, data } as const;
       }
 
@@ -1447,7 +1447,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* chess-pgn */
         return { status, data } as const;
       }
 
@@ -1530,7 +1530,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* chess-pgn */
         return { status, data } as const;
       }
 
@@ -1885,7 +1885,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* chess-pgn */
         return { status, data } as const;
       }
 
@@ -1910,7 +1910,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* chess-pgn */
         return { status, data } as const;
       }
 
@@ -1934,7 +1934,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* chess-pgn */
         return { status, data } as const;
       }
 
@@ -3739,7 +3739,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
+        /* chess-pgn */
         return { status, data } as const;
       }
 

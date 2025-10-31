@@ -134,6 +134,12 @@ const ResponseContentNdjson = z
   .transform((x) => x["application/x-ndjson"])
   .transform((x) => ({ ...x, __content_type: "ndjson" as const }));
 
+const ResponseContentChessPgn = z
+  .object({ "application/x-chess-pgn": ResponseContentChessPgnContent })
+  .strict()
+  .transform((x) => x["application/x-chess-pgn"])
+  .transform((x) => ({ ...x, __content_type: "chess-pgn" as const }));
+
 const ResponseContentMixed = z
   .object({
     "text/plain": ResponseContextPlainTextContent.optional(),
@@ -152,6 +158,7 @@ const ResponseContentNoContent = z
 const ResponseContent = z.union([
   ResponseContentJson,
   ResponseContentNdjson,
+  ResponseContentChessPgn,
   ResponseContentMixed,
   ResponseContentNoContent,
 ]);
@@ -364,6 +371,10 @@ function processResponseCaseContent(content: ResponseCaseContent) {
       content;
       return "/* ndjson */" as const;
     }
+    case "chess-pgn": {
+      content;
+      return "/* chess-pgn */" as const;
+    }
     case "mixed": {
       content;
       return "/* mixed */" as const;
@@ -410,19 +421,18 @@ function processMethod({
     }
     case "method:post": {
       const requestBody = method.requestBody;
+      // // Body
+      // let bodyType = "";
+      // if (requestBody?.content?.["application/json"]) {
+      //   const { zodSchema } = convertToZod(
+      //     requestBody.content["application/json"].schema,
+      //     "schemas."
+      //   );
+      //   bodyType = `body: z.infer<typeof ${zodSchema}>`;
+      //   destrNames.push("body");
+      //   typeProps.push(bodyType);
+      // }
       return { responseCases: "/* switch cases; method:post */" } as const;
-      // Body
-      let bodyType = "";
-      if (requestBody?.content?.["application/json"]) {
-        const { zodSchema } = convertToZod(
-          requestBody.content["application/json"].schema,
-          "schemas."
-        );
-        bodyType = `body: z.infer<typeof ${zodSchema}>`;
-        destrNames.push("body");
-        typeProps.push(bodyType);
-      }
-      return;
     }
     case "method:head": {
       return { responseCases: "/* switch cases; method:head */" } as const;
@@ -432,20 +442,19 @@ function processMethod({
     }
     case "method:put": {
       const requestBody = method.requestBody;
-      return { responseCases: "/* switch cases; method:put */" } as const;
 
-      // Body
-      let bodyType = "";
-      if (requestBody?.content?.["application/json"]) {
-        const { zodSchema } = convertToZod(
-          requestBody.content["application/json"].schema,
-          "schemas."
-        );
-        bodyType = `body: z.infer<typeof ${zodSchema}>`;
-        destrNames.push("body");
-        typeProps.push(bodyType);
-      }
-      return;
+      // // Body
+      // let bodyType = "";
+      // if (requestBody?.content?.["application/json"]) {
+      //   const { zodSchema } = convertToZod(
+      //     requestBody.content["application/json"].schema,
+      //     "schemas."
+      //   );
+      //   bodyType = `body: z.infer<typeof ${zodSchema}>`;
+      //   destrNames.push("body");
+      //   typeProps.push(bodyType);
+      // }
+      return { responseCases: "/* switch cases; method:put */" } as const;
     }
   }
 }
