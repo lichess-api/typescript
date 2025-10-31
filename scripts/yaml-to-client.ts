@@ -301,128 +301,176 @@ const TagSchemaSchema = z
   .strict();
 type TagSchema = z.infer<typeof TagSchemaSchema>;
 
-function processTag(tagSchema: TagSchema, rawApiPath: string) {
-  const methodsCode: string[] = [];
-  return;
-  for (const operation of Object.values(tagSchema)) {
-    if (operation.__id === "__parameters") throw new Error("");
-    const operationId = operation.operationId;
-    const summary = operation.summary || "";
-    const description = operation.description || "";
+type Operation = NonNullable<TagSchema[keyof TagSchema]>;
 
-    // JSDoc
-    let jsdoc = "/**\n * " + summary.replace(/\n/g, "\n * ") + "\n";
-    if (description) {
-      const descLines = description.split("\n").map((line) =>
-        line
-          .trim()
-          .replace(/^\|\s*/, "")
-          .replace(/^- /, "- ")
-      );
-      jsdoc += descLines.map((line) => " * " + line).join("\n") + "\n";
-    }
-    jsdoc += " */\n";
+function processMethod(
+  method: Exclude<Operation, { __id: "__parameters" | "__servers" }>
+) {
+  switch (method.__id) {
+    case "method:get": {
+      // Parameters
+      const allParams = operation.parameters || [];
+      const pathParams = allParams.filter((p) => p.in === "path");
+      const queryParams = allParams.filter((p) => p.in === "query");
+      const requestBody = operation.requestBody;
 
-    // Parameters
-    const allParams = operation.parameters || [];
-    const pathParams = allParams.filter((p) => p.in === "path");
-    const queryParams = allParams.filter((p) => p.in === "query");
-    const requestBody = operation.requestBody;
+      // Destructure names and type props
+      const destrNames: string[] = [];
+      const typeProps: string[] = [];
 
-    // Destructure names and type props
-    const destrNames: string[] = [];
-    const typeProps: string[] = [];
+      // Path params
+      let pathParamsType = "";
+      if (pathParams.length > 0) {
+        const propStrs = pathParams
+          .map((p) => {
+            const { zodSchema } = convertToZod(p.schema, "schemas.");
+            return `"${p.name}": ${zodSchema}`;
+          })
+          .join(",\n    ");
+        const pathParamsZod = `z.object({\n    ${propStrs}\n  })`;
+        pathParamsType = `pathParams: z.infer<typeof ${pathParamsZod}>`;
+        destrNames.push("pathParams");
+        typeProps.push(pathParamsType);
+      }
 
-    // Path params
-    let pathParamsType = "";
-    if (pathParams.length > 0) {
-      const propStrs = pathParams
-        .map((p) => {
-          const { zodSchema } = convertToZod(p.schema, "schemas.");
-          return `"${p.name}": ${zodSchema}`;
-        })
-        .join(",\n    ");
-      const pathParamsZod = `z.object({\n    ${propStrs}\n  })`;
-      pathParamsType = `pathParams: z.infer<typeof ${pathParamsZod}>`;
-      destrNames.push("pathParams");
-      typeProps.push(pathParamsType);
-    }
+      // Query params
+      let queryType = "";
+      if (queryParams.length > 0) {
+        const propStrs = queryParams
+          .map((p) => {
+            const { zodSchema } = convertToZod(p.schema, "schemas.");
+            return `"${p.name}": ${zodSchema}`;
+          })
+          .join(",\n    ");
+        const queryZod = `z.object({\n    ${propStrs}\n  })`;
+        queryType = `query: z.infer<typeof ${queryZod}>`;
+        destrNames.push("query");
+        typeProps.push(queryType);
+      }
 
-    // Query params
-    let queryType = "";
-    if (queryParams.length > 0) {
-      const propStrs = queryParams
-        .map((p) => {
-          const { zodSchema } = convertToZod(p.schema, "schemas.");
-          return `"${p.name}": ${zodSchema}`;
-        })
-        .join(",\n    ");
-      const queryZod = `z.object({\n    ${propStrs}\n  })`;
-      queryType = `query: z.infer<typeof ${queryZod}>`;
-      destrNames.push("query");
-      typeProps.push(queryType);
-    }
-
-    // Body
-    let bodyType = "";
-    if (requestBody?.content?.["application/json"]) {
-      const { zodSchema } = convertToZod(
-        requestBody.content["application/json"].schema,
-        "schemas."
-      );
-      bodyType = `body: z.infer<typeof ${zodSchema}>`;
-      destrNames.push("body");
-      typeProps.push(bodyType);
-    }
-
-    // Function signature
-    const destr = destrNames.length > 0 ? `{ ${destrNames.join(", ")} }` : "";
-    const typeStr = typeProps.length > 0 ? `{ ${typeProps.join(", ")} }` : "";
-    const fullSig = `async ${operationId}${destr ? `(${destr}` : "("}${
-      typeStr ? `: ${typeStr}` : ""
-    }) `;
-
-    // Path construction
-    let pathCode: string;
-    if (pathParams.length > 0) {
-      const templatePath = rawApiPath.replace(
-        /\{([^}]+)\}/g,
-        (_, name: string) => `\${pathParams.${name}}`
-      );
-      pathCode = `    const path = \`${templatePath}\` as const;`;
-    } else {
-      pathCode = `    const path = \`${rawApiPath}\` as const;`;
-    }
-
-    // Request call
-    let requestArgs = "path";
-    if (queryParams.length > 0) requestArgs += ", query";
-    if (bodyType) requestArgs += ", body";
-    const requestCode = `    const { json, status } = await this.requestor.${operation.__method}({ ${requestArgs} });`;
-
-    // Response handling
-    let responseCases = "";
-    const responses = operation.responses || {};
-    for (const [statusStr, resp] of Object.entries(responses)) {
-      const status = Number(statusStr);
-      let caseBody = "        const data = json;";
-      if (resp.content?.["application/json"]?.schema) {
+      // Body
+      let bodyType = "";
+      if (requestBody?.content?.["application/json"]) {
         const { zodSchema } = convertToZod(
-          resp.content["application/json"].schema,
+          requestBody.content["application/json"].schema,
           "schemas."
         );
-        caseBody =
-          `        const schema = ${zodSchema};\n        const data = schema.parse(json);` as const;
+        bodyType = `body: z.infer<typeof ${zodSchema}>`;
+        destrNames.push("body");
+        typeProps.push(bodyType);
       }
-      responseCases +=
-        `      case ${status}: {\n${caseBody}\n        return { status, data } as const;\n      }\n` as const;
-    }
-    const switchCode =
-      `    switch (status) {\n${responseCases}      default: {\n        throw new Error(\`Unexpected status \${status}: \${JSON.stringify(json)}\`);\n      }\n    }` as const;
 
-    // Full method
-    const methodCode =
-      `${jsdoc}${fullSig}{\n  ${pathCode}\n  ${requestCode}\n  ${switchCode}\n  }` as const;
+      // Function signature
+      const destr = destrNames.length > 0 ? `{ ${destrNames.join(", ")} }` : "";
+      const typeStr = typeProps.length > 0 ? `{ ${typeProps.join(", ")} }` : "";
+      const fullSig = `async ${operationId}${destr ? `(${destr}` : "("}${
+        typeStr ? `: ${typeStr}` : ""
+      }) `;
+
+      // Path construction
+      let pathCode: string;
+      if (pathParams.length > 0) {
+        const templatePath = rawApiPath.replace(
+          /\{([^}]+)\}/g,
+          (_, name: string) => `\${pathParams.${name}}`
+        );
+        pathCode = `    const path = \`${templatePath}\` as const;`;
+      } else {
+        pathCode = `    const path = \`${rawApiPath}\` as const;`;
+      }
+
+      // Request call
+      let requestArgs = "path";
+      if (queryParams.length > 0) requestArgs += ", query";
+      if (bodyType) requestArgs += ", body";
+      const requestCode = `    const { json, status } = await this.requestor.${operation.__method}({ ${requestArgs} });`;
+
+      // Response handling
+      let responseCases = "";
+      const responses = operation.responses || {};
+      for (const [statusStr, resp] of Object.entries(responses)) {
+        const status = Number(statusStr);
+        let caseBody = "        const data = json;";
+        if (resp.content?.["application/json"]?.schema) {
+          const { zodSchema } = convertToZod(
+            resp.content["application/json"].schema,
+            "schemas."
+          );
+          caseBody =
+            `        const schema = ${zodSchema};\n        const data = schema.parse(json);` as const;
+        }
+        responseCases +=
+          `      case ${status}: {\n${caseBody}\n        return { status, data } as const;\n      }\n` as const;
+      }
+      const switchCode =
+        `    switch (status) {\n${responseCases}      default: {\n        throw new Error(\`Unexpected status \${status}: \${JSON.stringify(json)}\`);\n      }\n    }` as const;
+
+      // Full method
+      const methodCode =
+        `${jsdoc}${fullSig}{\n  ${pathCode}\n  ${requestCode}\n  ${switchCode}\n  }` as const;
+
+      return methodCode;
+    }
+    case "method:post": {
+      return;
+    }
+    case "method:head": {
+      return;
+    }
+    case "method:delete": {
+      return;
+    }
+    case "method:put": {
+      return;
+    }
+  }
+}
+
+function processOperation(operation: Operation, rawApiPath: string) {
+  if (operation.__id === "__parameters" || operation.__id === "__servers") {
+    return "/* To be implemented */";
+    throw new Error("To be implemented");
+  }
+
+  const operationId = operation.operationId;
+
+  const description = operation.description;
+
+  // JSDoc
+  const descriptionLines = description
+    .split("\n")
+    .map((line) =>
+      line
+        /* not sure this is needed */
+        .trim()
+        .replace(/^\|\s*/, "")
+        .replace(/^- /, "- ")
+    )
+    .slice(0, -1);
+  const jsdocContent = descriptionLines
+    .map((line) => ` * ${line}` as const)
+    .join("\n");
+
+  const jsdoc = `/**\n${jsdocContent}\n */` as const;
+
+  // const _ = processMethod(operation);
+
+  const fullContent = `
+${jsdoc}
+async ${operationId}(/* params */) {
+/* content */
+}
+` as const;
+
+  return fullContent;
+}
+
+function processTag(tagSchema: TagSchema, rawApiPath: string) {
+  const methodsCode: string[] = [];
+
+  for (const operation of Object.values(tagSchema)) {
+    const methodCode = processOperation(operation, rawApiPath);
+    console.log(methodCode);
     methodsCode.push(methodCode);
   }
   return methodsCode;
@@ -430,7 +478,6 @@ function processTag(tagSchema: TagSchema, rawApiPath: string) {
 
 async function processSchema(schema: OpenApiSchema) {
   const tagsDir = "specs/tags" as const;
-  const clientDir = "src/client" as const;
 
   const methodsCode: string[] = [];
 
@@ -439,14 +486,12 @@ async function processSchema(schema: OpenApiSchema) {
     const fullYamlPath = `${tagsDir}/${tagPath}` as const;
     const yamlStr = await Bun.file(fullYamlPath).text();
     const schema = Bun.YAML.parse(yamlStr);
-    console.log({ rawApiPath, schema });
     const tagSchema = TagSchemaSchema.parse(schema);
-    console.log({ tagSchema });
     const newMethods = processTag(tagSchema, rawApiPath);
-    methodsCode.concat(newMethods);
+    methodsCode.push(...newMethods);
   }
 
-  const methodsStr = methodsCode.join("\n\n");
+  const methodsStr = methodsCode.join("\n");
 
   const API_URL = schema.servers[0].url;
 
@@ -470,6 +515,7 @@ export class Lichess {
 }
 ` as const;
 
+  const clientDir = "src/client" as const;
   const clientCodePath = `${clientDir}/index.ts` as const;
 
   Bun.write(clientCodePath, clientCodeTs);
