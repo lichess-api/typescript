@@ -252,27 +252,29 @@ const RequestBodySchema = z
 
 const TagSchemaSchemaGet = BaseTagSchemaOperation.extend({})
   .strict()
-  .transform((s) => ({ ...s, __id: "method:get" as const }));
+  .transform((s) => ({ ...s, __id: "method:get", __method: "get" }) as const);
 
 const TagSchemaSchemaPost = BaseTagSchemaOperation.extend({
   requestBody: RequestBodySchema.optional(),
 })
   .strict()
-  .transform((s) => ({ ...s, __id: "method:post" as const }));
+  .transform((s) => ({ ...s, __id: "method:post", __method: "post" }) as const);
 
 const TagSchemaSchemaHead = BaseTagSchemaOperation.extend({})
   .strict()
-  .transform((s) => ({ ...s, __id: "method:head" as const }));
+  .transform((s) => ({ ...s, __id: "method:head", __method: "head" }) as const);
 
 const TagSchemaSchemaDelete = BaseTagSchemaOperation.extend({})
   .strict()
-  .transform((s) => ({ ...s, __id: "method:delete" as const }));
+  .transform(
+    (s) => ({ ...s, __id: "method:delete", __method: "delete" }) as const
+  );
 
 const TagSchemaSchemaPut = BaseTagSchemaOperation.extend({
   requestBody: RequestBodySchema.optional(),
 })
   .strict()
-  .transform((s) => ({ ...s, __id: "method:put" as const }));
+  .transform((s) => ({ ...s, __id: "method:put", __method: "put" }) as const);
 
 const TagSchemaSchema = z
   .object({
@@ -303,21 +305,23 @@ type TagSchema = z.infer<typeof TagSchemaSchema>;
 
 type Operation = NonNullable<TagSchema[keyof TagSchema]>;
 
-function processMethod(
-  method: Exclude<Operation, { __id: "__parameters" | "__servers" }>
-) {
+function processMethod({
+  method,
+}: {
+  method: Exclude<Operation, { __id: "__parameters" | "__servers" }>;
+}) {
+  return { responseCases: "/* switch cases */" } as const;
+  // Parameters
+  const allParams = method.parameters || [];
+  const pathParams = allParams.filter((p) => p.in === "path");
+  const queryParams = allParams.filter((p) => p.in === "query");
+
+  // Destructure names and type props
+  const destrNames: string[] = [];
+  const typeProps: string[] = [];
+
   switch (method.__id) {
     case "method:get": {
-      // Parameters
-      const allParams = operation.parameters || [];
-      const pathParams = allParams.filter((p) => p.in === "path");
-      const queryParams = allParams.filter((p) => p.in === "query");
-      const requestBody = operation.requestBody;
-
-      // Destructure names and type props
-      const destrNames: string[] = [];
-      const typeProps: string[] = [];
-
       // Path params
       let pathParamsType = "";
       if (pathParams.length > 0) {
@@ -348,46 +352,10 @@ function processMethod(
         typeProps.push(queryType);
       }
 
-      // Body
-      let bodyType = "";
-      if (requestBody?.content?.["application/json"]) {
-        const { zodSchema } = convertToZod(
-          requestBody.content["application/json"].schema,
-          "schemas."
-        );
-        bodyType = `body: z.infer<typeof ${zodSchema}>`;
-        destrNames.push("body");
-        typeProps.push(bodyType);
-      }
-
-      // Function signature
-      const destr = destrNames.length > 0 ? `{ ${destrNames.join(", ")} }` : "";
-      const typeStr = typeProps.length > 0 ? `{ ${typeProps.join(", ")} }` : "";
-      const fullSig = `async ${operationId}${destr ? `(${destr}` : "("}${
-        typeStr ? `: ${typeStr}` : ""
-      }) `;
-
-      // Path construction
-      let pathCode: string;
-      if (pathParams.length > 0) {
-        const templatePath = rawApiPath.replace(
-          /\{([^}]+)\}/g,
-          (_, name: string) => `\${pathParams.${name}}`
-        );
-        pathCode = `    const path = \`${templatePath}\` as const;`;
-      } else {
-        pathCode = `    const path = \`${rawApiPath}\` as const;`;
-      }
-
-      // Request call
-      let requestArgs = "path";
-      if (queryParams.length > 0) requestArgs += ", query";
-      if (bodyType) requestArgs += ", body";
-      const requestCode = `    const { json, status } = await this.requestor.${operation.__method}({ ${requestArgs} });`;
-
       // Response handling
       let responseCases = "";
-      const responses = operation.responses || {};
+      const responses = method.responses || {};
+
       for (const [statusStr, resp] of Object.entries(responses)) {
         const status = Number(statusStr);
         let caseBody = "        const data = json;";
@@ -402,16 +370,22 @@ function processMethod(
         responseCases +=
           `      case ${status}: {\n${caseBody}\n        return { status, data } as const;\n      }\n` as const;
       }
-      const switchCode =
-        `    switch (status) {\n${responseCases}      default: {\n        throw new Error(\`Unexpected status \${status}: \${JSON.stringify(json)}\`);\n      }\n    }` as const;
 
-      // Full method
-      const methodCode =
-        `${jsdoc}${fullSig}{\n  ${pathCode}\n  ${requestCode}\n  ${switchCode}\n  }` as const;
-
-      return methodCode;
+      // return { responseCases } as const;
     }
     case "method:post": {
+      const requestBody = method.requestBody;
+      // Body
+      let bodyType = "";
+      if (requestBody?.content?.["application/json"]) {
+        const { zodSchema } = convertToZod(
+          requestBody.content["application/json"].schema,
+          "schemas."
+        );
+        bodyType = `body: z.infer<typeof ${zodSchema}>`;
+        destrNames.push("body");
+        typeProps.push(bodyType);
+      }
       return;
     }
     case "method:head": {
@@ -421,45 +395,86 @@ function processMethod(
       return;
     }
     case "method:put": {
+      const requestBody = method.requestBody;
+
+      // Body
+      let bodyType = "";
+      if (requestBody?.content?.["application/json"]) {
+        const { zodSchema } = convertToZod(
+          requestBody.content["application/json"].schema,
+          "schemas."
+        );
+        bodyType = `body: z.infer<typeof ${zodSchema}>`;
+        destrNames.push("body");
+        typeProps.push(bodyType);
+      }
       return;
     }
   }
 }
 
+function processRawPath(rawApiPath: string) {
+  const processedPath = rawApiPath.replaceAll("{", "${");
+  const hasPathParams = rawApiPath.includes("{");
+  return { processedPath, hasPathParams } as const;
+}
+
 function processOperation(operation: Operation, rawApiPath: string) {
-  if (operation.__id === "__parameters" || operation.__id === "__servers") {
-    return "/* To be implemented */";
-    throw new Error("To be implemented");
+  if (operation.__id === "__parameters") {
+    return "/* Shared params for methods below */";
   }
 
-  const operationId = operation.operationId;
+  if (operation.__id === "__servers") {
+    const baseUrl = operation[0].url;
+    return `/* Base URL for methods below: ${baseUrl} */` as const;
+  }
 
-  const description = operation.description;
+  const { processedPath, hasPathParams } = processRawPath(rawApiPath);
+  const stringifiedProcessedPath = hasPathParams
+    ? (`\`${processedPath}\`` as const)
+    : (`"${processedPath}"` as const);
 
   // JSDoc
-  const descriptionLines = description
-    .split("\n")
-    .map((line) =>
-      line
-        /* not sure this is needed */
-        .trim()
-        .replace(/^\|\s*/, "")
-        .replace(/^- /, "- ")
-    )
-    .slice(0, -1);
+  const descriptionLines = (() => {
+    let descriptionLines = operation.description.split("\n");
+    if (!descriptionLines.at(-1)) return descriptionLines.slice(0, -1);
+    return descriptionLines;
+  })();
+
   const jsdocContent = descriptionLines
-    .map((line) => ` * ${line}` as const)
-    .join("\n");
+    .map((line) => `   * ${line}` as const)
+    .join("\n") as `   * ${string}`;
 
-  const jsdoc = `/**\n${jsdocContent}\n */` as const;
+  const jsdoc = `/**\n${jsdocContent}\n   */` as const;
 
-  // const _ = processMethod(operation);
+  const { responseCases } = processMethod({ method: operation })!;
+
+  // Function signature
+  // const destr = destrNames.length > 0 ? `{ ${destrNames.join(", ")} }` : "";
+  // const typeStr = typeProps.length > 0 ? `{ ${typeProps.join(", ")} }` : "";
+
+  // Request call
+  // let requestArgs = "path";
+  // if (queryParams.length > 0) requestArgs += ", query";
+  // if (bodyType) requestArgs += ", body";
+
+  const requestCode =
+    `const { json, status } = await this.requestor.${operation.__method}({ path, /* other args */ });` as const;
+
+  const switchCode = `switch (status) {
+      ${responseCases}
+      default: {
+        throw new Error("Error");
+      }
+    }` as const;
 
   const fullContent = `
-${jsdoc}
-async ${operationId}(/* params */) {
-/* content */
-}
+  ${jsdoc}
+  async ${operation.operationId}(/* params */) {
+    const path = ${stringifiedProcessedPath} as const;
+    ${requestCode}
+    ${switchCode}
+  }
 ` as const;
 
   return fullContent;
