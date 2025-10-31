@@ -1,6 +1,16 @@
 import * as z from "zod";
 
-async function handle_accountEmail_response(response: Response) {
+import { BASE_URL } from "~/constants";
+
+/**
+ * Read the email address of the logged in user.
+ */
+export async function accountEmail() {
+  const baseUrl = BASE_URL;
+  const path = "/api/account/email" as const;
+  const url = new URL(path, baseUrl);
+  const request = new Request(url, { method: "GET" });
+  const response = await fetch(request);
   const status = response.status;
   switch (status) {
     case 200: {
@@ -15,9 +25,9 @@ async function handle_accountEmail_response(response: Response) {
   }
 }
 
-export default handle_accountEmail_response;
-
 // get:
+//  security:
+//    - OAuth2: ["email:read"]
 //   responses:
 //     "200":
 //       headers:
