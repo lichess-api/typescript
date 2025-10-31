@@ -1,5 +1,18 @@
-/* imports */
+import * as z from "zod";
 
-const API_URL = "https://lichess.org";
+import * as schemas from "~/schemas";
 
-/* handlers */
+import { Requestor } from "./requestor";
+
+export const BASE_URL = "https://lichess.org";
+type BASE_URL = typeof BASE_URL;
+
+export class Lichess {
+  private readonly requestor: Requestor<BASE_URL>;
+
+  constructor({ token }: { token: string }) {
+    this.requestor = new Requestor({ token, baseUrl: BASE_URL });
+  }
+
+  /* methods */
+}

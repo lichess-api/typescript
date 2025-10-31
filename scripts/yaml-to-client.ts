@@ -47,11 +47,24 @@ function processSchema(schema: OpenApiSchema) {
 
   const API_URL = schema.servers[0].url;
 
-  const clientCodeTs = `/* imports */
+  const clientCodeTs = `import * as z from "zod";
 
-const API_URL = "${API_URL}";
+import * as schemas from "~/schemas";
 
-/* handlers */
+import { Requestor } from "./requestor";
+
+export const BASE_URL = "${API_URL}";
+type BASE_URL = typeof BASE_URL;
+
+export class Lichess {
+  private readonly requestor: Requestor<BASE_URL>;
+
+  constructor({ token }: { token: string }) {
+    this.requestor = new Requestor({ token, baseUrl: BASE_URL });
+  }
+
+  /* methods */
+}
 ` as const;
 
   const clientCodePath = `${clientDir}/index.ts` as const;

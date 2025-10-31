@@ -15,7 +15,9 @@ export class Requestor<T extends string> {
     const url = new URL(path, baseUrl ?? this.baseUrl);
     const request = new Request(url, { method: "GET", headers: this.headers });
     const response = await fetch(request);
-    return response;
+    const json: unknown = await response.json();
+    const status = response.status;
+    return { json, status } as const;
   }
 
   async post<TQueryParams extends QueryParams>({
@@ -33,6 +35,8 @@ export class Requestor<T extends string> {
     }
     const request = new Request(url, { method: "POST" });
     const response = await fetch(request);
-    return response;
+    const json: unknown = await response.json();
+    const status = response.status;
+    return { json, status } as const;
   }
 }
