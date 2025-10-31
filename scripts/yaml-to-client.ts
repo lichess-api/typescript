@@ -3,7 +3,7 @@ import { z } from "zod";
 import {
   SchemaSchemaRef,
   SchemaSchema,
-  convertToZod,
+  convertToZod_ as convertToZod,
   Primitive,
   SchemaSchemaPrimitive,
   SchemaSchemaBoolean,
@@ -101,7 +101,7 @@ const ResponseContentBaseContent = z.object({
 
 const ResponseContextPlainTextContent = ResponseContentBaseContent.extend({})
   .strict()
-  .transform((x) => ({ ...x, __content: "text" }) as const);
+  .transform((x) => ({ ...x, __content: "text" } as const));
 
 const ResponseContentJsonContent = ResponseContentBaseContent.extend({})
   .strict()
@@ -153,7 +153,7 @@ const ResponseContentMixed = z
 
 const ResponseContentNoContent = z
   .undefined()
-  .transform(() => ({ __content_type: "nocontent" }) as const);
+  .transform(() => ({ __content_type: "nocontent" } as const));
 
 const ResponseContent = z.union([
   ResponseContentJson,
@@ -299,29 +299,29 @@ const RequestBodySchema = z
 
 const TagSchemaSchemaGet = BaseTagSchemaOperation.extend({})
   .strict()
-  .transform((s) => ({ ...s, __id: "method:get", __method: "get" }) as const);
+  .transform((s) => ({ ...s, __id: "method:get", __method: "get" } as const));
 
 const TagSchemaSchemaPost = BaseTagSchemaOperation.extend({
   requestBody: RequestBodySchema.optional(),
 })
   .strict()
-  .transform((s) => ({ ...s, __id: "method:post", __method: "post" }) as const);
+  .transform((s) => ({ ...s, __id: "method:post", __method: "post" } as const));
 
 const TagSchemaSchemaHead = BaseTagSchemaOperation.extend({})
   .strict()
-  .transform((s) => ({ ...s, __id: "method:head", __method: "head" }) as const);
+  .transform((s) => ({ ...s, __id: "method:head", __method: "head" } as const));
 
 const TagSchemaSchemaDelete = BaseTagSchemaOperation.extend({})
   .strict()
   .transform(
-    (s) => ({ ...s, __id: "method:delete", __method: "delete" }) as const
+    (s) => ({ ...s, __id: "method:delete", __method: "delete" } as const)
   );
 
 const TagSchemaSchemaPut = BaseTagSchemaOperation.extend({
   requestBody: RequestBodySchema.optional(),
 })
   .strict()
-  .transform((s) => ({ ...s, __id: "method:put", __method: "put" }) as const);
+  .transform((s) => ({ ...s, __id: "method:put", __method: "put" } as const));
 
 const TagSchemaSchema = z
   .object({
@@ -358,14 +358,11 @@ function processResponseCaseContent(content: ResponseCaseContent) {
       return "/* no content */" as const;
     }
     case "json": {
-      content.schema;
-      // const { zodSchema } = convertToZod(
-      //   resp.content["application/json"].schema,
-      //   "schemas."
-      // );
-      // caseBody =
-      // `        const schema = ${zodSchema};\n        const data = schema.parse(json);` as const;
-      return "/* json */" as const;
+      console.log(content.schema);
+      const { zodSchema } = convertToZod(content.schema, "schemas.");
+      const caseBody = `const schema = ${zodSchema};
+        const data = schema.parse(json);` as const;
+      return caseBody;
     }
     case "ndjson": {
       content;
@@ -397,8 +394,7 @@ function processResponseCase({
   const responseCase = `case ${status}: {
         ${caseBody}
         return { status, data } as const;
-      }
-` as const;
+      }` as const;
   return responseCase;
 }
 

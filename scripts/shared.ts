@@ -382,5 +382,5 @@ function convertToZod(
   return convertToZod_(SchemaSchema.parse(schema), prefix);
 }
 
-export { SchemaSchema, convertToZod, assertNever };
+export { SchemaSchema, convertToZod, assertNever, convertToZod_ };
 export type { Schema, SchemaUnparsed, ConvertResult };
