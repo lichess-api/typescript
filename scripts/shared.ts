@@ -180,7 +180,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
     return {
       zodSchema: `z.literal(${JSON.stringify(schema.const)})`,
       refs: [],
-    };
+    } as const;
   }
 
   switch (schema.__schema) {
@@ -188,7 +188,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       const ref = schema.$ref;
       const name = ref.split("/").pop()!.replace(".yaml", "");
       const prefixedName = prefix + name;
-      return { zodSchema: prefixedName, refs: prefix ? [] : [name] };
+      return { zodSchema: prefixedName, refs: prefix ? [] : [name] } as const;
     }
     case "oneOf": {
       const subResults = schema.oneOf.map((item) => convertToZod(item, prefix));
@@ -198,7 +198,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       return {
         zodSchema: `z.union([${zodSchemas.join(", ")}])`,
         refs: Array.from(allRefs),
-      };
+      } as const;
     }
     case "allOf": {
       const leftPart = convertToZod(schema.allOf[0], prefix);
@@ -207,7 +207,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       return {
         zodSchema: `z.intersection(${leftPart.zodSchema}, ${rightPart.zodSchema})`,
         refs: Array.from(allRefs),
-      };
+      } as const;
     }
     case "anyOf": {
       const refNames: string[] = [];
@@ -222,21 +222,21 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
           schema.discriminator.propertyName
         }", [${refNames.join(", ")}])`,
         refs: Array.from(allRefs),
-      };
+      } as const;
     }
     case "null": {
-      return { zodSchema: "z.null()", refs: [] };
+      return { zodSchema: "z.null()", refs: [] } as const;
     }
     case "string": {
       if (schema.enum) {
         const literals = JSON.stringify(schema.enum);
-        return { zodSchema: `z.literal(${literals})`, refs: [] };
+        return { zodSchema: `z.literal(${literals})`, refs: [] } as const;
       }
       if (schema.format === "uri") {
-        return { zodSchema: "z.url()", refs: [] };
+        return { zodSchema: "z.url()", refs: [] } as const;
       }
       if (schema.format === "date-time") {
-        return { zodSchema: "z.iso.datetime()", refs: [] };
+        return { zodSchema: "z.iso.datetime()", refs: [] } as const;
       }
       let schemaStr = "z.string()";
       if (schema.minLength !== undefined) {
@@ -245,14 +245,14 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       if (schema.maxLength !== undefined) {
         schemaStr += `.max(${schema.maxLength})`;
       }
-      return { zodSchema: schemaStr, refs: [] };
+      return { zodSchema: schemaStr, refs: [] } as const;
     }
     case "string:nullable": {
-      return { zodSchema: "z.string().nullable()", refs: [] };
+      return { zodSchema: "z.string().nullable()", refs: [] } as const;
     }
     case "integer:enum": {
       const literals = schema.enum.map((v) => JSON.stringify(v)).join(", ");
-      return { zodSchema: `z.literal([${literals}])`, refs: [] };
+      return { zodSchema: `z.literal([${literals}])`, refs: [] } as const;
     }
     case "integer": {
       let schemaStr = "z.int()";
@@ -264,7 +264,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
             values.push(i);
           }
           const literals = values.join(", ");
-          return { zodSchema: `z.literal([${literals}])`, refs: [] };
+          return { zodSchema: `z.literal([${literals}])`, refs: [] } as const;
         }
       }
       if (schema.minimum !== undefined) {
@@ -273,10 +273,10 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       if (schema.maximum !== undefined) {
         schemaStr += `.max(${schema.maximum})`;
       }
-      return { zodSchema: schemaStr, refs: [] };
+      return { zodSchema: schemaStr, refs: [] } as const;
     }
     case "integer:nullable": {
-      return { zodSchema: "z.int().nullable()", refs: [] };
+      return { zodSchema: "z.int().nullable()", refs: [] } as const;
     }
     case "number": {
       let schemaStr = "z.number()";
@@ -286,10 +286,10 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       if (schema.maximum !== undefined) {
         schemaStr += `.max(${schema.maximum})`;
       }
-      return { zodSchema: schemaStr, refs: [] };
+      return { zodSchema: schemaStr, refs: [] } as const;
     }
     case "boolean": {
-      return { zodSchema: "z.boolean()", refs: [] };
+      return { zodSchema: "z.boolean()", refs: [] } as const;
     }
     case "additionalProperties": {
       const { zodSchema: valueSchemaStr, refs } = convertToZod(
@@ -299,7 +299,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       return {
         zodSchema: `z.record(z.string(), ${valueSchemaStr})`,
         refs,
-      };
+      } as const;
     }
     case "object": {
       const props = schema.properties || {};
@@ -322,12 +322,15 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
           : "{\n" +
             entries.map(([k, v]) => `  "${k}": ${v},`).join("\n") +
             "\n}";
-      return { zodSchema: `z.object(${inner})`, refs: Array.from(allRefs) };
+      return {
+        zodSchema: `z.object(${inner})`,
+        refs: Array.from(allRefs),
+      } as const;
     }
     case "array": {
       const items = schema.items;
       if (!items) {
-        return { zodSchema: "z.array(z.unknown())", refs: [] };
+        return { zodSchema: "z.array(z.unknown())", refs: [] } as const;
       }
       const { zodSchema: itemSchema, refs: itemRefs } = convertToZod(
         items,
