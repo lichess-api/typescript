@@ -15,6 +15,9 @@ const BaseSchema = z.object({
   // `description` and `deprecated` can be on any schema
   description: z.string().optional(),
   deprecated: z.boolean().optional(),
+
+  // might exist on `additionalProperties`
+  "x-additionalPropertiesName": z.string().optional(),
 });
 
 const StringYamlRef = z

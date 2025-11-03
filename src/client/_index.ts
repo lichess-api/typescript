@@ -19,7 +19,10 @@ export class Lichess {
    */
   async accountEmail() {
     const path = "/api/account/email" as const;
-    const { json, status } = await this.requestor.get({ path });
+    const { json, status } = await this.requestor.get({
+      handler: "json",
+      path,
+    });
     switch (status) {
       case 200: {
         const schema = z.object({ email: z.string() });
@@ -38,7 +41,10 @@ export class Lichess {
    */
   async accountKid() {
     const path = "/api/account/kid" as const;
-    const { json, status } = await this.requestor.get({ path });
+    const { json, status } = await this.requestor.get({
+      handler: "json",
+      path,
+    });
     switch (status) {
       case 200: {
         const schema = z.object({ kid: z.boolean() });
@@ -58,7 +64,11 @@ export class Lichess {
   async accountKidPost({ v }: { v: boolean }) {
     const path = "/api/account/kid" as const;
     const query = { v } as const;
-    const { json, status } = await this.requestor.post({ path, query });
+    const { json, status } = await this.requestor.post({
+      handler: "json",
+      path,
+      query,
+    });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -78,7 +88,10 @@ export class Lichess {
    */
   async account() {
     const path = "/api/account/kid" as const;
-    const { json, status } = await this.requestor.get({ path });
+    const { json, status } = await this.requestor.get({
+      handler: "json",
+      path,
+    });
     switch (status) {
       case 200: {
         const schema = z.object({

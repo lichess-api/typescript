@@ -1474,7 +1474,10 @@ export class Lichess {
 
     const { json, status } = await this.requestor.head({ path /* body */ });
     switch (status) {
-      /* switch cases; method:head */
+      case 204: {
+        /* no content */
+        return { status, data } as const;
+      }
       default: {
         throw new Error("Error");
       }
@@ -1573,7 +1576,10 @@ export class Lichess {
 
     const { json, status } = await this.requestor.delete({ path /* body */ });
     switch (status) {
-      /* switch cases; method:delete */
+      case 204: {
+        /* no content */
+        return { status, data } as const;
+      }
       default: {
         throw new Error("Error");
       }
@@ -3208,7 +3214,16 @@ export class Lichess {
 
     const { json, status } = await this.requestor.delete({ path /* body */ });
     switch (status) {
-      /* switch cases; method:delete */
+      case 200: {
+        const schema = schemas.Ok;
+        const data = schema.parse(json);
+        return { status, data } as const;
+      }
+      case 404: {
+        const schema = schemas.NotFound;
+        const data = schema.parse(json);
+        return { status, data } as const;
+      }
       default: {
         throw new Error("Error");
       }
@@ -3373,7 +3388,11 @@ export class Lichess {
     const path = `/api/external-engine/${id}` as const;
     const { json, status } = await this.requestor.delete({ path });
     switch (status) {
-      /* switch cases; method:delete */
+      case 200: {
+        const schema = schemas.Ok;
+        const data = schema.parse(json);
+        return { status, data } as const;
+      }
       default: {
         throw new Error("Error");
       }
@@ -3540,7 +3559,10 @@ export class Lichess {
     const path = "/api/token" as const;
     const { json, status } = await this.requestor.delete({ path });
     switch (status) {
-      /* switch cases; method:delete */
+      case 204: {
+        /* no content */
+        return { status, data } as const;
+      }
       default: {
         throw new Error("Error");
       }

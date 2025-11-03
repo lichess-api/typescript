@@ -403,19 +403,22 @@ function processMethod({
 }: {
   method: Exclude<Operation, { __id: "__parameters" | "__servers" }>;
 }) {
-  switch (method.__id) {
-    case "method:get": {
-      const responseCasesLines: string[] = [];
+  const responseCasesLines: string[] = [];
 
-      for (const [statusStr, resp] of Object.entries(method.responses)) {
-        const responseCaseLine = processResponseCase({ statusStr, resp });
-        responseCasesLines.push(responseCaseLine);
-      }
-      const responseCases = responseCasesLines.join("\n");
+  for (const [statusStr, resp] of Object.entries(method.responses)) {
+    const responseCaseLine = processResponseCase({ statusStr, resp });
+    responseCasesLines.push(responseCaseLine);
+  }
+  const responseCases = responseCasesLines.join("\n");
 
+  switch (method.__method) {
+    case "get":
+    case "head":
+    case "delete": {
       return { responseCases } as const;
     }
-    case "method:post": {
+    case "post":
+    case "put": {
       const requestBody = method.requestBody;
       // // Body
       // let bodyType = "";
@@ -428,31 +431,11 @@ function processMethod({
       //   destrNames.push("body");
       //   typeProps.push(bodyType);
       // }
-      return { responseCases: "/* switch cases; method:post */" } as const;
-    }
-    case "method:head": {
-      return { responseCases: "/* switch cases; method:head */" } as const;
-    }
-    case "method:delete": {
-      return { responseCases: "/* switch cases; method:delete */" } as const;
-    }
-    case "method:put": {
-      const requestBody = method.requestBody;
-
-      // // Body
-      // let bodyType = "";
-      // if (requestBody?.content?.["application/json"]) {
-      //   const { zodSchema } = convertToZod(
-      //     requestBody.content["application/json"].schema,
-      //     "schemas."
-      //   );
-      //   bodyType = `body: z.infer<typeof ${zodSchema}>`;
-      //   destrNames.push("body");
-      //   typeProps.push(bodyType);
-      // }
-      return { responseCases: "/* switch cases; method:put */" } as const;
+      return { responseCases: `/* switch cases; ${method.__id} */` } as const;
     }
   }
+
+  assertNever(method);
 }
 
 function processRawPath(rawApiPath: string) {
