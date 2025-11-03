@@ -522,15 +522,24 @@ function processOperation(operation: Operation, rawApiPath: string) {
   // Parameters
   const { hasAnyParams, hasQueryParams } = processParams(operation.parameters);
 
-  const requestCode = hasAnyParams
-    ? (`${
-        hasQueryParams ? "/* const query = { ... } as const // if exist */" : ""
-      }
-    const { json, status } = await this.requestor.${
-      operation.__method
-    }({ path ${hasQueryParams ? "/* query */" : ""} /*, body */ });` as const)
-    : (`const { json, status } = await this.requestor.${operation.__method}({ path });` as const);
+  const pathAssignment = `const path = ${stringifiedProcessedPath} as const;`;
 
+  const requestCode = (() => {
+    if (!hasAnyParams) {
+      return `const { json, status } = await this.requestor.${operation.__method}({ path });` as const;
+    }
+
+    const queryComment = hasQueryParams
+      ? "/* const query = { ... } as const */"
+      : "";
+    const pathArg = hasQueryParams ? "/* query */" : "";
+    const bodyComment = hasAnyParams ? "/* body */" : "";
+
+    return `${queryComment}
+    const { json, status } = await this.requestor.${operation.__method}({ path ${pathArg} ${bodyComment} });` as const;
+  })();
+
+  const paramsComment = hasAnyParams ? "/* params: { ... } */" : "";
   const switchCode = `switch (status) {
       ${responseCases}
       default: {
@@ -540,10 +549,8 @@ function processOperation(operation: Operation, rawApiPath: string) {
 
   const fullContent = `
   ${jsdoc}
-  async ${operation.operationId}(${
-    hasAnyParams ? "/* params: { ... } */" : ""
-  }) {
-    const path = ${stringifiedProcessedPath} as const;
+  async ${operation.operationId}(${paramsComment}) {
+    ${pathAssignment}
     ${requestCode}
     ${switchCode}
   }

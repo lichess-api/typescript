@@ -22,9 +22,9 @@ export class Lichess {
    */
   async apiUsersStatus(/* params: { ... } */) {
     const path = "/api/users/status" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -77,7 +77,7 @@ export class Lichess {
   async playerTopNbPerfType(/* params: { ... } */) {
     const path = `/api/player/top/${nb}/${perfType}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Leaderboard;
@@ -95,9 +95,9 @@ export class Lichess {
    */
   async apiUser(/* params: { ... } */) {
     const path = `/api/user/${username}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -120,7 +120,7 @@ export class Lichess {
   async apiUserRatingHistory(/* params: { ... } */) {
     const path = `/api/user/${username}/rating-history` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.RatingHistory;
@@ -140,7 +140,7 @@ export class Lichess {
   async apiUserPerf(/* params: { ... } */) {
     const path = `/api/user/${username}/perf/${perf}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.PerfStat;
@@ -159,7 +159,7 @@ export class Lichess {
   async apiUserActivity(/* params: { ... } */) {
     const path = `/api/user/${username}/activity` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.UserActivity);
@@ -197,7 +197,7 @@ export class Lichess {
   async apiPuzzleId(/* params: { ... } */) {
     const path = `/api/puzzle/${id}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleAndGame;
@@ -219,9 +219,9 @@ export class Lichess {
    */
   async apiPuzzleNext(/* params: { ... } */) {
     const path = "/api/puzzle/next" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -244,9 +244,9 @@ export class Lichess {
    */
   async apiPuzzleBatchSelect(/* params: { ... } */) {
     const path = `/api/puzzle/batch/${angle}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -265,9 +265,9 @@ export class Lichess {
    */
   async apiPuzzleBatchSolve(/* params: { ... } */) {
     const path = `/api/puzzle/batch/${angle}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.post({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       /* switch cases; method:post */
@@ -284,9 +284,9 @@ export class Lichess {
    */
   async apiPuzzleActivity(/* params: { ... } */) {
     const path = "/api/puzzle/activity" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -305,7 +305,7 @@ export class Lichess {
   async apiPuzzleReplay(/* params: { ... } */) {
     const path = `/api/puzzle/replay/${days}/${theme}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleReplay;
@@ -331,7 +331,7 @@ export class Lichess {
   async apiPuzzleDashboard(/* params: { ... } */) {
     const path = `/api/puzzle/dashboard/${days}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleDashboard;
@@ -351,9 +351,9 @@ export class Lichess {
    */
   async apiStormDashboard(/* params: { ... } */) {
     const path = `/api/storm/dashboard/${username}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -395,7 +395,7 @@ export class Lichess {
   async racerGet(/* params: { ... } */) {
     const path = `/api/racer/${id}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleRaceResults;
@@ -515,9 +515,9 @@ export class Lichess {
    */
   async accountKidPost(/* params: { ... } */) {
     const path = "/api/account/kid" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.post({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       /* switch cases; method:post */
@@ -532,9 +532,9 @@ export class Lichess {
    */
   async timeline(/* params: { ... } */) {
     const path = "/api/timeline" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -554,9 +554,9 @@ export class Lichess {
    */
   async gamePgn(/* params: { ... } */) {
     const path = `/game/export/${gameId}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -576,9 +576,9 @@ export class Lichess {
    */
   async apiUserCurrentGame(/* params: { ... } */) {
     const path = `/api/user/${username}/current-game` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -603,9 +603,9 @@ export class Lichess {
    */
   async apiGamesUser(/* params: { ... } */) {
     const path = `/api/games/user/${username}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -627,9 +627,9 @@ export class Lichess {
    */
   async gamesExportIds(/* params: { ... } */) {
     const path = "/api/games/export/_ids" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.post({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       /* switch cases; method:post */
@@ -650,9 +650,9 @@ export class Lichess {
    */
   async gamesByUsers(/* params: { ... } */) {
     const path = "/api/stream/games-by-users" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.post({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       /* switch cases; method:post */
@@ -672,7 +672,7 @@ export class Lichess {
   async gamesByIds(/* params: { ... } */) {
     const path = `/api/stream/games/${streamId}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -688,7 +688,7 @@ export class Lichess {
   async gamesByIdsAdd(/* params: { ... } */) {
     const path = `/api/stream/games/${streamId}/add` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -704,9 +704,9 @@ export class Lichess {
    */
   async apiAccountPlaying(/* params: { ... } */) {
     const path = "/api/account/playing" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -761,7 +761,7 @@ export class Lichess {
   async streamGame(/* params: { ... } */) {
     const path = `/api/stream/game/${id}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* ndjson */
@@ -820,9 +820,9 @@ export class Lichess {
    */
   async apiExportBookmarks(/* params: { ... } */) {
     const path = "/api/games/export/bookmarks" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -897,7 +897,7 @@ export class Lichess {
   async tvChannelFeed(/* params: { ... } */) {
     const path = `/api/tv/${channel}/feed` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* ndjson */
@@ -915,9 +915,9 @@ export class Lichess {
    */
   async tvChannelGames(/* params: { ... } */) {
     const path = `/api/tv/${channel}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -977,9 +977,9 @@ export class Lichess {
    */
   async tournament(/* params: { ... } */) {
     const path = `/api/tournament/${id}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1020,7 +1020,7 @@ export class Lichess {
   async apiTournamentJoin(/* params: { ... } */) {
     const path = `/api/tournament/${id}/join` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1036,7 +1036,7 @@ export class Lichess {
   async apiTournamentWithdraw(/* params: { ... } */) {
     const path = `/api/tournament/${id}/withdraw` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1051,7 +1051,7 @@ export class Lichess {
   async apiTournamentTerminate(/* params: { ... } */) {
     const path = `/api/tournament/${id}/terminate` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1067,7 +1067,7 @@ export class Lichess {
   async apiTournamentTeamBattlePost(/* params: { ... } */) {
     const path = `/api/tournament/team-battle/${id}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1085,9 +1085,9 @@ export class Lichess {
    */
   async gamesByTournament(/* params: { ... } */) {
     const path = `/api/tournament/${id}/games` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1109,9 +1109,9 @@ export class Lichess {
    */
   async resultsByTournament(/* params: { ... } */) {
     const path = `/api/tournament/${id}/results` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1130,7 +1130,7 @@ export class Lichess {
   async teamsByTournament(/* params: { ... } */) {
     const path = `/api/tournament/${id}/teams` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -1169,9 +1169,9 @@ export class Lichess {
    */
   async apiUserNameTournamentCreated(/* params: { ... } */) {
     const path = `/api/user/${username}/tournament/created` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1195,9 +1195,9 @@ export class Lichess {
    */
   async apiUserNameTournamentPlayed(/* params: { ... } */) {
     const path = `/api/user/${username}/tournament/played` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1221,7 +1221,7 @@ export class Lichess {
   async apiSwissNew(/* params: { ... } */) {
     const path = `/api/swiss/new/${teamId}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1260,7 +1260,7 @@ export class Lichess {
   async apiSwissUpdate(/* params: { ... } */) {
     const path = `/api/swiss/${id}/edit` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1277,7 +1277,7 @@ export class Lichess {
   async apiSwissScheduleNextRound(/* params: { ... } */) {
     const path = `/api/swiss/${id}/schedule-next-round` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1292,7 +1292,7 @@ export class Lichess {
   async apiSwissJoin(/* params: { ... } */) {
     const path = `/api/swiss/${id}/join` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1308,7 +1308,7 @@ export class Lichess {
   async apiSwissWithdraw(/* params: { ... } */) {
     const path = `/api/swiss/${id}/withdraw` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1323,7 +1323,7 @@ export class Lichess {
   async apiSwissTerminate(/* params: { ... } */) {
     const path = `/api/swiss/${id}/terminate` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1340,7 +1340,7 @@ export class Lichess {
   async swissTrf(/* params: { ... } */) {
     const path = `/swiss/${id}.trf` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* mixed */
@@ -1361,9 +1361,9 @@ export class Lichess {
    */
   async gamesBySwiss(/* params: { ... } */) {
     const path = `/api/swiss/${id}/games` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1385,9 +1385,9 @@ export class Lichess {
    */
   async resultsBySwiss(/* params: { ... } */) {
     const path = `/api/swiss/${id}/results` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1407,9 +1407,9 @@ export class Lichess {
    */
   async apiTeamSwiss(/* params: { ... } */) {
     const path = `/api/team/${teamId}/swiss` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1429,9 +1429,9 @@ export class Lichess {
    */
   async studyChapterPgn(/* params: { ... } */) {
     const path = `/api/study/${studyId}/${chapterId}.pgn` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1451,9 +1451,9 @@ export class Lichess {
    */
   async studyAllChaptersPgn(/* params: { ... } */) {
     const path = `/api/study/${studyId}.pgn` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1472,7 +1472,7 @@ export class Lichess {
   async studyAllChaptersHead(/* params: { ... } */) {
     const path = `/api/study/${studyId}.pgn` as const;
 
-    const { json, status } = await this.requestor.head({ path /*, body */ });
+    const { json, status } = await this.requestor.head({ path /* body */ });
     switch (status) {
       /* switch cases; method:head */
       default: {
@@ -1490,7 +1490,7 @@ export class Lichess {
   async apiStudyImportPGN(/* params: { ... } */) {
     const path = `/api/study/${studyId}/import-pgn` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1511,7 +1511,7 @@ export class Lichess {
   async apiStudyChapterTags(/* params: { ... } */) {
     const path = `/api/study/${studyId}/${chapterId}/tags` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1527,9 +1527,9 @@ export class Lichess {
    */
   async studyExportAllPgn(/* params: { ... } */) {
     const path = `/study/by/${username}/export.pgn` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1551,7 +1551,7 @@ export class Lichess {
   async studyListMetadata(/* params: { ... } */) {
     const path = `/api/study/by/${username}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* ndjson */
@@ -1571,7 +1571,7 @@ export class Lichess {
   async apiStudyStudyIdChapterIdDelete(/* params: { ... } */) {
     const path = `/api/study/${studyId}/${chapterId}` as const;
 
-    const { json, status } = await this.requestor.delete({ path /*, body */ });
+    const { json, status } = await this.requestor.delete({ path /* body */ });
     switch (status) {
       /* switch cases; method:delete */
       default: {
@@ -1587,9 +1587,9 @@ export class Lichess {
    */
   async broadcastsOfficial(/* params: { ... } */) {
     const path = "/api/broadcast" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1607,9 +1607,9 @@ export class Lichess {
    */
   async broadcastsTop(/* params: { ... } */) {
     const path = "/api/broadcast/top" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1631,9 +1631,9 @@ export class Lichess {
    */
   async broadcastsByUser(/* params: { ... } */) {
     const path = `/api/broadcast/by/${username}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1660,9 +1660,9 @@ export class Lichess {
    */
   async broadcastsSearch(/* params: { ... } */) {
     const path = "/api/broadcast/search" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1703,7 +1703,7 @@ export class Lichess {
   async broadcastTourGet(/* params: { ... } */) {
     const path = `/api/broadcast/${broadcastTournamentId}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastWithRounds;
@@ -1722,7 +1722,7 @@ export class Lichess {
   async broadcastPlayersGet(/* params: { ... } */) {
     const path = `/broadcast/${broadcastTournamentId}/players` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.BroadcastPlayerEntry);
@@ -1742,7 +1742,7 @@ export class Lichess {
     const path =
       `/broadcast/${broadcastTournamentId}/players/${playerId}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastPlayerEntryWithFideAndGames;
@@ -1768,7 +1768,7 @@ export class Lichess {
   async broadcastTourUpdate(/* params: { ... } */) {
     const path = `/broadcast/${broadcastTournamentId}/edit` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1786,7 +1786,7 @@ export class Lichess {
   async broadcastRoundCreate(/* params: { ... } */) {
     const path = `/broadcast/${broadcastTournamentId}/new` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1802,7 +1802,7 @@ export class Lichess {
     const path =
       `/api/broadcast/${broadcastTournamentSlug}/${broadcastRoundSlug}/${broadcastRoundId}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastRound;
@@ -1824,7 +1824,7 @@ export class Lichess {
   async broadcastRoundUpdate(/* params: { ... } */) {
     const path = `/broadcast/round/${broadcastRoundId}/edit` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1839,7 +1839,7 @@ export class Lichess {
   async broadcastRoundReset(/* params: { ... } */) {
     const path = `/api/broadcast/round/${broadcastRoundId}/reset` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1855,7 +1855,7 @@ export class Lichess {
   async broadcastPush(/* params: { ... } */) {
     const path = `/api/broadcast/round/${broadcastRoundId}/push` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -1874,7 +1874,7 @@ export class Lichess {
   async broadcastStreamRoundPgn(/* params: { ... } */) {
     const path = `/api/stream/broadcast/round/${broadcastRoundId}.pgn` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* chess-pgn */
@@ -1896,7 +1896,7 @@ export class Lichess {
   async broadcastRoundPgn(/* params: { ... } */) {
     const path = `/api/broadcast/round/${broadcastRoundId}.pgn` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* chess-pgn */
@@ -1917,7 +1917,7 @@ export class Lichess {
   async broadcastAllRoundsPgn(/* params: { ... } */) {
     const path = `/api/broadcast/${broadcastTournamentId}.pgn` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* chess-pgn */
@@ -1937,9 +1937,9 @@ export class Lichess {
    */
   async broadcastMyRoundsGet(/* params: { ... } */) {
     const path = "/api/broadcast/my-rounds" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -1958,7 +1958,7 @@ export class Lichess {
   async fidePlayerGet(/* params: { ... } */) {
     const path = `/api/fide/player/${playerId}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.FIDEPlayer;
@@ -1976,9 +1976,9 @@ export class Lichess {
    */
   async fidePlayerSearch(/* params: { ... } */) {
     const path = "/api/fide/player" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -2024,7 +2024,7 @@ export class Lichess {
   async teamShow(/* params: { ... } */) {
     const path = `/api/team/${teamId}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Team;
@@ -2042,9 +2042,9 @@ export class Lichess {
    */
   async teamAll(/* params: { ... } */) {
     const path = "/api/team/all" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -2064,7 +2064,7 @@ export class Lichess {
   async teamOfUsername(/* params: { ... } */) {
     const path = `/api/team/of/${username}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.Team);
@@ -2082,9 +2082,9 @@ export class Lichess {
    */
   async teamSearch(/* params: { ... } */) {
     const path = "/api/team/search" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -2105,9 +2105,9 @@ export class Lichess {
    */
   async teamIdUsers(/* params: { ... } */) {
     const path = `/api/team/${teamId}/users` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -2127,9 +2127,9 @@ export class Lichess {
    */
   async apiTeamArena(/* params: { ... } */) {
     const path = `/api/team/${teamId}/arena` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -2153,7 +2153,7 @@ export class Lichess {
   async teamIdJoin(/* params: { ... } */) {
     const path = `/team/${teamId}/join` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2169,7 +2169,7 @@ export class Lichess {
   async teamIdQuit(/* params: { ... } */) {
     const path = `/team/${teamId}/quit` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2183,9 +2183,9 @@ export class Lichess {
    */
   async teamRequests(/* params: { ... } */) {
     const path = `/api/team/${teamId}/requests` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -2205,7 +2205,7 @@ export class Lichess {
   async teamRequestAccept(/* params: { ... } */) {
     const path = `/api/team/${teamId}/request/${userId}/accept` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2220,7 +2220,7 @@ export class Lichess {
   async teamRequestDecline(/* params: { ... } */) {
     const path = `/api/team/${teamId}/request/${userId}/decline` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2236,7 +2236,7 @@ export class Lichess {
   async teamIdKickUserId(/* params: { ... } */) {
     const path = `/api/team/${teamId}/kick/${userId}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2252,7 +2252,7 @@ export class Lichess {
   async teamIdPmAll(/* params: { ... } */) {
     const path = `/team/${teamId}/pm-all` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2310,9 +2310,9 @@ export class Lichess {
    */
   async apiCrosstable(/* params: { ... } */) {
     const path = `/api/crosstable/${user1}/${user2}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -2331,9 +2331,9 @@ export class Lichess {
    */
   async apiPlayerAutocomplete(/* params: { ... } */) {
     const path = "/api/player/autocomplete" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -2356,7 +2356,7 @@ export class Lichess {
   async readNote(/* params: { ... } */) {
     const path = `/api/user/${username}/note` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.UserNote);
@@ -2375,7 +2375,7 @@ export class Lichess {
   async writeNote(/* params: { ... } */) {
     const path = `/api/user/${username}/note` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2407,7 +2407,7 @@ export class Lichess {
   async followUser(/* params: { ... } */) {
     const path = `/api/rel/follow/${username}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2422,7 +2422,7 @@ export class Lichess {
   async unfollowUser(/* params: { ... } */) {
     const path = `/api/rel/unfollow/${username}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2437,7 +2437,7 @@ export class Lichess {
   async blockUser(/* params: { ... } */) {
     const path = `/api/rel/block/${username}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2452,7 +2452,7 @@ export class Lichess {
   async unblockUser(/* params: { ... } */) {
     const path = `/api/rel/unblock/${username}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2542,7 +2542,7 @@ export class Lichess {
   async boardGameStream(/* params: { ... } */) {
     const path = `/api/board/game/stream/${gameId}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* ndjson */
@@ -2565,9 +2565,9 @@ export class Lichess {
    */
   async boardGameMove(/* params: { ... } */) {
     const path = `/api/board/game/${gameId}/move/${move}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.post({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       /* switch cases; method:post */
@@ -2616,7 +2616,7 @@ export class Lichess {
   async boardGameAbort(/* params: { ... } */) {
     const path = `/api/board/game/${gameId}/abort` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2631,7 +2631,7 @@ export class Lichess {
   async boardGameResign(/* params: { ... } */) {
     const path = `/api/board/game/${gameId}/resign` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2648,7 +2648,7 @@ export class Lichess {
   async boardGameDraw(/* params: { ... } */) {
     const path = `/api/board/game/${gameId}/draw/${accept}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2665,7 +2665,7 @@ export class Lichess {
   async boardGameTakeback(/* params: { ... } */) {
     const path = `/api/board/game/${gameId}/takeback/${accept}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2680,7 +2680,7 @@ export class Lichess {
   async boardGameClaimVictory(/* params: { ... } */) {
     const path = `/api/board/game/${gameId}/claim-victory` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2695,7 +2695,7 @@ export class Lichess {
   async boardGameClaimDraw(/* params: { ... } */) {
     const path = `/api/board/game/${gameId}/claim-draw` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2711,7 +2711,7 @@ export class Lichess {
   async boardGameBerserk(/* params: { ... } */) {
     const path = `/api/board/game/${gameId}/berserk` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2725,9 +2725,9 @@ export class Lichess {
    */
   async apiBotOnline(/* params: { ... } */) {
     const path = "/api/bot/online" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -2773,7 +2773,7 @@ export class Lichess {
   async botGameStream(/* params: { ... } */) {
     const path = `/api/bot/game/stream/${gameId}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* ndjson */
@@ -2796,9 +2796,9 @@ export class Lichess {
    */
   async botGameMove(/* params: { ... } */) {
     const path = `/api/bot/game/${gameId}/move/${move}` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.post({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       /* switch cases; method:post */
@@ -2814,7 +2814,7 @@ export class Lichess {
   async botGameChatGet(/* params: { ... } */) {
     const path = `/api/bot/game/${gameId}/chat` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* ndjson */
@@ -2832,7 +2832,7 @@ export class Lichess {
   async botGameChat(/* params: { ... } */) {
     const path = `/api/bot/game/${gameId}/chat` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2847,7 +2847,7 @@ export class Lichess {
   async botGameAbort(/* params: { ... } */) {
     const path = `/api/bot/game/${gameId}/abort` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2862,7 +2862,7 @@ export class Lichess {
   async botGameResign(/* params: { ... } */) {
     const path = `/api/bot/game/${gameId}/resign` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2879,7 +2879,7 @@ export class Lichess {
   async botGameDraw(/* params: { ... } */) {
     const path = `/api/bot/game/${gameId}/draw/${accept}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2896,7 +2896,7 @@ export class Lichess {
   async botGameTakeback(/* params: { ... } */) {
     const path = `/api/bot/game/${gameId}/takeback/${accept}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2911,7 +2911,7 @@ export class Lichess {
   async botGameClaimVictory(/* params: { ... } */) {
     const path = `/api/bot/game/${gameId}/claim-victory` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2926,7 +2926,7 @@ export class Lichess {
   async botGameClaimDraw(/* params: { ... } */) {
     const path = `/api/bot/game/${gameId}/claim-draw` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2966,7 +2966,7 @@ export class Lichess {
   async challengeCreate(/* params: { ... } */) {
     const path = `/api/challenge/${username}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -2981,7 +2981,7 @@ export class Lichess {
   async challengeShow(/* params: { ... } */) {
     const path = `/api/challenge/${challengeId}/show` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.ChallengeJson;
@@ -3000,9 +3000,9 @@ export class Lichess {
    */
   async challengeAccept(/* params: { ... } */) {
     const path = `/api/challenge/${challengeId}/accept` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.post({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       /* switch cases; method:post */
@@ -3018,7 +3018,7 @@ export class Lichess {
   async challengeDecline(/* params: { ... } */) {
     const path = `/api/challenge/${challengeId}/decline` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -3034,9 +3034,9 @@ export class Lichess {
    */
   async challengeCancel(/* params: { ... } */) {
     const path = `/api/challenge/${challengeId}/cancel` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.post({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       /* switch cases; method:post */
@@ -3092,9 +3092,9 @@ export class Lichess {
    */
   async challengeStartClocks(/* params: { ... } */) {
     const path = `/api/challenge/${gameId}/start-clocks` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.post({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       /* switch cases; method:post */
@@ -3165,7 +3165,7 @@ export class Lichess {
   async bulkPairingStartClocks(/* params: { ... } */) {
     const path = `/api/bulk-pairing/${id}/start-clocks` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -3180,7 +3180,7 @@ export class Lichess {
   async bulkPairingGet(/* params: { ... } */) {
     const path = `/api/bulk-pairing/${id}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.BulkPairing;
@@ -3206,7 +3206,7 @@ export class Lichess {
   async bulkPairingDelete(/* params: { ... } */) {
     const path = `/api/bulk-pairing/${id}` as const;
 
-    const { json, status } = await this.requestor.delete({ path /*, body */ });
+    const { json, status } = await this.requestor.delete({ path /* body */ });
     switch (status) {
       /* switch cases; method:delete */
       default: {
@@ -3220,9 +3220,9 @@ export class Lichess {
    */
   async bulkPairingIdGamesGet(/* params: { ... } */) {
     const path = `/api/bulk-pairing/${id}/games` as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -3241,7 +3241,7 @@ export class Lichess {
   async roundAddTime(/* params: { ... } */) {
     const path = `/api/round/${gameId}/add-time/${seconds}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -3272,7 +3272,7 @@ export class Lichess {
   async inboxUsername(/* params: { ... } */) {
     const path = `/inbox/${username}` as const;
 
-    const { json, status } = await this.requestor.post({ path /*, body */ });
+    const { json, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       /* switch cases; method:post */
       default: {
@@ -3290,9 +3290,9 @@ export class Lichess {
    */
   async apiCloudEval(/* params: { ... } */) {
     const path = "/api/cloud-eval" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -3504,9 +3504,9 @@ export class Lichess {
    */
   async oauth(/* params: { ... } */) {
     const path = "/oauth" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -3573,9 +3573,9 @@ export class Lichess {
    */
   async openingExplorerMaster(/* params: { ... } */) {
     const path = "/masters" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -3600,9 +3600,9 @@ export class Lichess {
    */
   async openingExplorerLichess(/* params: { ... } */) {
     const path = "/lichess" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -3635,9 +3635,9 @@ export class Lichess {
    */
   async openingExplorerPlayer(/* params: { ... } */) {
     const path = "/player" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -3660,7 +3660,7 @@ export class Lichess {
   async openingExplorerMasterGame(/* params: { ... } */) {
     const path = `/master/pgn/${gameId}` as const;
 
-    const { json, status } = await this.requestor.get({ path /*, body */ });
+    const { json, status } = await this.requestor.get({ path /* body */ });
     switch (status) {
       case 200: {
         /* chess-pgn */
@@ -3681,9 +3681,9 @@ export class Lichess {
    */
   async tablebaseStandard(/* params: { ... } */) {
     const path = "/standard" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -3704,9 +3704,9 @@ export class Lichess {
    */
   async tablebaseAtomic(/* params: { ... } */) {
     const path = "/atomic" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
@@ -3727,9 +3727,9 @@ export class Lichess {
    */
   async antichessAtomic(/* params: { ... } */) {
     const path = "/antichess" as const;
-    /* const query = { ... } as const // if exist */
+    /* const query = { ... } as const */
     const { json, status } = await this.requestor.get({
-      path /* query */ /*, body */,
+      path /* query */ /* body */,
     });
     switch (status) {
       case 200: {
