@@ -355,26 +355,31 @@ type Operation = NonNullable<TagSchema[keyof TagSchema]>;
 function processResponseCaseContent(content: ResponseCaseContent) {
   switch (content.__content_type) {
     case "nocontent": {
-      const caseBody = "/* no content */" as const;
+      const caseBody = "return { status, response } as const;" as const;
       return { caseBody } as const;
     }
     case "json": {
       console.log(content.schema);
       const { zodSchema } = convertToZod(content.schema, "schemas.");
       const caseBody = `const schema = ${zodSchema};
-        const data = schema.parse(json);` as const;
+        const json = await response.clone().json();
+        const data = schema.parse(json);
+        return { status, response, data } as const;` as const;
       return { caseBody } as const;
     }
     case "ndjson": {
-      const caseBody = "/* ndjson */" as const;
+      const caseBody =
+        "/* ndjson */ return { status, response } as const;" as const;
       return { caseBody } as const;
     }
     case "chess-pgn": {
-      const caseBody = "/* chess-pgn */" as const;
+      const caseBody =
+        "/* chess-pgn */ return { status, response } as const;" as const;
       return { caseBody } as const;
     }
     case "mixed": {
-      const caseBody = "/* mixed */" as const;
+      const caseBody =
+        "/* mixed */ return { status, response } as const;" as const;
       return { caseBody } as const;
     }
   }
@@ -394,7 +399,6 @@ function processResponseCase({
 
   const responseCase = `case ${status}: {
         ${caseBody}
-        return { status, data } as const;
       }` as const;
   return responseCase;
 }
@@ -542,9 +546,9 @@ function processOperation(operation: Operation, rawApiPath: string) {
     hasPathParams && hasQueryParams
       ? ("/* params: { ~path, ~query } */" as const)
       : hasPathParams
-        ? ("/* params: { ~path } */" as const)
+        ? ("params: { /* ~path */ }" as const)
         : hasQueryParams
-          ? ("/* params: { ~query } */" as const)
+          ? ("params: { /* ~query */ }" as const)
           : ("" as const);
 
   const switchCode = `switch (status) {

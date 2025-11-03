@@ -19,15 +19,13 @@ export class Lichess {
    */
   async accountEmail() {
     const path = "/api/account/email" as const;
-    const { json, status } = await this.requestor.get({
-      handler: "json",
-      path,
-    });
+    const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const json = await response.clone().json();
         const schema = z.object({ email: z.string() });
         const data = schema.parse(json);
-        return { status, data } as const;
+        return { status, response, data } as const;
       }
       default: {
         throw new Error("Error");
@@ -41,15 +39,13 @@ export class Lichess {
    */
   async accountKid() {
     const path = "/api/account/kid" as const;
-    const { json, status } = await this.requestor.get({
-      handler: "json",
-      path,
-    });
+    const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const json = await response.clone().json();
         const schema = z.object({ kid: z.boolean() });
         const data = schema.parse(json);
-        return { status, data } as const;
+        return { status, response, data } as const;
       }
       default: {
         throw new Error("Error");
@@ -61,19 +57,16 @@ export class Lichess {
    * Set the kid mode status of the logged in user.
    * - <https://lichess.org/account/kid>
    */
-  async accountKidPost({ v }: { v: boolean }) {
+  async accountKidPost(params: { v: boolean }) {
     const path = "/api/account/kid" as const;
-    const query = { v } as const;
-    const { json, status } = await this.requestor.post({
-      handler: "json",
-      path,
-      query,
-    });
+    const query = params;
+    const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
+        const json = await response.clone().json();
         const schema = schemas.Ok;
         const data = schema.parse(json);
-        return { status, data } as const;
+        return { status, response, data } as const;
       }
       default: {
         throw new Error("Error");
@@ -88,18 +81,16 @@ export class Lichess {
    */
   async account() {
     const path = "/api/account/kid" as const;
-    const { json, status } = await this.requestor.get({
-      handler: "json",
-      path,
-    });
+    const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const json = await response.clone().json();
         const schema = z.object({
           prefs: schemas.UserPreferences,
           language: z.string(),
         });
         const data = schema.parse(json);
-        return { status, data } as const;
+        return { status, response, data } as const;
       }
       default: {
         throw new Error("Error");
