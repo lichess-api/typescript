@@ -463,9 +463,25 @@ function processRawPath(rawApiPath: string) {
 
 function processParams(params: OperationParameters) {
   if (!params) {
-    return { anyParams: false } as const;
+    return {
+      hasAnyParams: false,
+      hasQueryParams: false,
+      hasPathParams: false,
+    } as const;
   }
-  return { anyParams: true } as const;
+
+  const queryParams = params.filter((param) => param.in === "query");
+  const pathParams = params.filter((param) => param.in === "path");
+  const hasQueryParams = queryParams.length > 0;
+  const hasPathParams = pathParams.length > 0;
+
+  return {
+    hasAnyParams: true,
+    hasPathParams,
+    hasQueryParams,
+    queryParams,
+    pathParams,
+  } as const;
 }
 
 function descriptionToJsdoc(description: string) {
@@ -504,13 +520,15 @@ function processOperation(operation: Operation, rawApiPath: string) {
   const { responseCases } = processMethod({ method: operation })!;
 
   // Parameters
-  const { anyParams } = processParams(operation.parameters);
-  // const pathParams = allParams.filter((p) => p.in === "path");
-  // const queryParams = allParams.filter((p) => p.in === "query");
+  const { hasAnyParams, hasQueryParams } = processParams(operation.parameters);
 
-  const requestCode = anyParams
-    ? (`/* const query = { ... } as const // if exist */
-    const { json, status } = await this.requestor.${operation.__method}({ path /* query, body */ });` as const)
+  const requestCode = hasAnyParams
+    ? (`${
+        hasQueryParams ? "/* const query = { ... } as const // if exist */" : ""
+      }
+    const { json, status } = await this.requestor.${
+      operation.__method
+    }({ path ${hasQueryParams ? "/* query */" : ""} /*, body */ });` as const)
     : (`const { json, status } = await this.requestor.${operation.__method}({ path });` as const);
 
   const switchCode = `switch (status) {
@@ -522,7 +540,9 @@ function processOperation(operation: Operation, rawApiPath: string) {
 
   const fullContent = `
   ${jsdoc}
-  async ${operation.operationId}(${anyParams ? "/* params: { ... } */" : ""}) {
+  async ${operation.operationId}(${
+    hasAnyParams ? "/* params: { ... } */" : ""
+  }) {
     const path = ${stringifiedProcessedPath} as const;
     ${requestCode}
     ${switchCode}
