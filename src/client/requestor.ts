@@ -16,14 +16,10 @@ type ResponseHandler = "json" | "ndjson" | "chess-pgn";
 
 type ResponseHandlerMap = typeof responseHandlerMap;
 
-type RequestHandlerParams<
-  TResponseHandler extends ResponseHandler,
-  TQueryParams extends QueryParams
-> = {
+type RequestHandlerParams<TQueryParams extends QueryParams> = {
   path: string;
   baseUrl?: string;
   query?: TQueryParams;
-  handler: TResponseHandler;
 };
 
 type RequestMethod = "GET" | "POST" | "HEAD" | "PUT" | "DELETE";
@@ -39,7 +35,7 @@ export class Requestor<T extends string> {
 
   private buildRequest<
     TReequestMethod extends RequestMethod,
-    TQueryParams extends QueryParams
+    TQueryParams extends QueryParams,
   >({
     method,
     path,
@@ -59,7 +55,13 @@ export class Requestor<T extends string> {
     return request;
   }
 
-  handleResponse<THandler extends ResponseHandler>(
+  private async makeAndHandleRequest(request: Request) {
+    const response = await fetch(request);
+    const status = response.status;
+    return { response, status } as const;
+  }
+
+  processResponse<THandler extends ResponseHandler>(
     response: Response,
     handler: THandler
   ): ReturnType<ResponseHandlerMap[THandler]> {
@@ -68,52 +70,53 @@ export class Requestor<T extends string> {
     >;
   }
 
-  async get<
-    TResponseHandler extends ResponseHandler,
-    TQueryParams extends QueryParams
-  >({
-    handler,
-    path,
-    baseUrl,
-  }: RequestHandlerParams<TResponseHandler, TQueryParams>) {
-    const request = this.buildRequest({ method: "GET", path, baseUrl });
-    const response = await fetch(request);
-    return this.handleResponse(response, handler);
-  }
-
-  async post<
-    TResponseHandler extends ResponseHandler,
-    TQueryParams extends QueryParams
-  >({
-    handler,
+  async get<TQueryParams extends QueryParams>({
     path,
     baseUrl,
     query,
-  }: RequestHandlerParams<TResponseHandler, TQueryParams>) {
+  }: RequestHandlerParams<TQueryParams>) {
+    const request = this.buildRequest({ method: "GET", path, baseUrl, query });
+    return this.makeAndHandleRequest(request);
+  }
+
+  async post<TQueryParams extends QueryParams>({
+    path,
+    baseUrl,
+    query,
+  }: RequestHandlerParams<TQueryParams>) {
     const request = this.buildRequest({ method: "POST", path, baseUrl, query });
-    const response = await fetch(request);
-    return responseHandlerMap[handler](response);
+    return this.makeAndHandleRequest(request);
   }
 
-  async head<
-    TResponseHandler extends ResponseHandler,
-    TQueryParams extends QueryParams
-  >({ path, baseUrl }: RequestHandlerParams<TResponseHandler, TQueryParams>) {
-    const request = this.buildRequest({ method: "HEAD", path, baseUrl });
-    const response = await fetch(request);
-    const json: unknown = await response.json();
-    const status = response.status;
-    return { json, status } as const;
+  async head<TQueryParams extends QueryParams>({
+    path,
+    baseUrl,
+    query,
+  }: RequestHandlerParams<TQueryParams>) {
+    const request = this.buildRequest({ method: "HEAD", path, baseUrl, query });
+    return this.makeAndHandleRequest(request);
   }
 
-  async delete<
-    TResponseHandler extends ResponseHandler,
-    TQueryParams extends QueryParams
-  >({ path, baseUrl }: RequestHandlerParams<TResponseHandler, TQueryParams>) {
-    const request = this.buildRequest({ method: "DELETE", path, baseUrl });
-    const response = await fetch(request);
-    const json: unknown = await response.json();
-    const status = response.status;
-    return { json, status } as const;
+  async delete<TQueryParams extends QueryParams>({
+    path,
+    baseUrl,
+    query,
+  }: RequestHandlerParams<TQueryParams>) {
+    const request = this.buildRequest({
+      method: "DELETE",
+      path,
+      baseUrl,
+      query,
+    });
+    return this.makeAndHandleRequest(request);
+  }
+
+  async put<TQueryParams extends QueryParams>({
+    path,
+    baseUrl,
+    query,
+  }: RequestHandlerParams<TQueryParams>) {
+    const request = this.buildRequest({ method: "PUT", path, baseUrl, query });
+    return this.makeAndHandleRequest(request);
   }
 }

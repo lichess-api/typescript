@@ -355,26 +355,27 @@ type Operation = NonNullable<TagSchema[keyof TagSchema]>;
 function processResponseCaseContent(content: ResponseCaseContent) {
   switch (content.__content_type) {
     case "nocontent": {
-      return "/* no content */" as const;
+      const caseBody = "/* no content */" as const;
+      return { caseBody } as const;
     }
     case "json": {
       console.log(content.schema);
       const { zodSchema } = convertToZod(content.schema, "schemas.");
       const caseBody = `const schema = ${zodSchema};
         const data = schema.parse(json);` as const;
-      return caseBody;
+      return { caseBody } as const;
     }
     case "ndjson": {
-      content;
-      return "/* ndjson */" as const;
+      const caseBody = "/* ndjson */" as const;
+      return { caseBody } as const;
     }
     case "chess-pgn": {
-      content;
-      return "/* chess-pgn */" as const;
+      const caseBody = "/* chess-pgn */" as const;
+      return { caseBody } as const;
     }
     case "mixed": {
-      content;
-      return "/* mixed */" as const;
+      const caseBody = "/* mixed */" as const;
+      return { caseBody } as const;
     }
   }
 
@@ -389,7 +390,7 @@ function processResponseCase({
   resp: ResponseCase;
 }) {
   const status = Number(statusStr);
-  const caseBody = processResponseCaseContent(resp.content);
+  const { caseBody } = processResponseCaseContent(resp.content);
 
   const responseCase = `case ${status}: {
         ${caseBody}
@@ -415,23 +416,35 @@ function processMethod({
     case "get":
     case "head":
     case "delete": {
-      return { responseCases } as const;
+      return {
+        responseCases,
+        requestBody: undefined,
+        requestBodySchema: null,
+      } as const;
     }
     case "post":
     case "put": {
       const requestBody = method.requestBody;
-      // // Body
-      // let bodyType = "";
-      // if (requestBody?.content?.["application/json"]) {
-      //   const { zodSchema } = convertToZod(
-      //     requestBody.content["application/json"].schema,
-      //     "schemas."
-      //   );
-      //   bodyType = `body: z.infer<typeof ${zodSchema}>`;
-      //   destrNames.push("body");
-      //   typeProps.push(bodyType);
-      // }
-      return { responseCases: `/* switch cases; ${method.__id} */` } as const;
+      if (!requestBody) {
+        return { responseCases, requestBody, requestBodySchema: null } as const;
+      }
+      const requestBodyType = requestBody.content.__type;
+      const requestBodySchema = (() => {
+        switch (requestBodyType) {
+          case "json": {
+            return requestBody.content["application/json"].schema;
+          }
+          case "text/plain": {
+            return requestBody.content["text/plain"].schema;
+          }
+          case "x-www-form-urlencoded": {
+            return requestBody.content["application/x-www-form-urlencoded"]
+              .schema;
+          }
+        }
+        assertNever(requestBodyType);
+      })();
+      return { responseCases, requestBody, requestBodySchema } as const;
     }
   }
 
@@ -500,29 +513,40 @@ function processOperation(operation: Operation, rawApiPath: string) {
   // JSDoc
   const jsdoc = descriptionToJsdoc(operation.description);
 
-  const { responseCases } = processMethod({ method: operation })!;
+  const { responseCases, requestBodySchema } = processMethod({
+    method: operation,
+  })!;
 
   // Parameters
   const { hasAnyParams, hasQueryParams } = processParams(operation.parameters);
 
   const pathAssignment = `const path = ${stringifiedProcessedPath} as const;`;
 
+  const bodyComment = requestBodySchema ? "/* body */" : "";
+
   const requestCode = (() => {
     if (!hasAnyParams) {
-      return `const { json, status } = await this.requestor.${operation.__method}({ path });` as const;
+      return `const { response, status } = await this.requestor.${operation.__method}({ path });` as const;
     }
 
     const queryComment = hasQueryParams
       ? "/* const query = { ... } as const */"
       : "";
     const pathArg = hasQueryParams ? "/* query */" : "";
-    const bodyComment = hasAnyParams ? "/* body */" : "";
 
     return `${queryComment}
-    const { json, status } = await this.requestor.${operation.__method}({ path ${pathArg} ${bodyComment} });` as const;
+    const { response, status } = await this.requestor.${operation.__method}({ path ${pathArg} ${bodyComment} });` as const;
   })();
 
-  const paramsComment = hasAnyParams ? "/* params: { ... } */" : "";
+  const paramsComment =
+    hasPathParams && hasQueryParams
+      ? ("/* params: { ~path, ~query } */" as const)
+      : hasPathParams
+        ? ("/* params: { ~path } */" as const)
+        : hasQueryParams
+          ? ("/* params: { ~query } */" as const)
+          : ("" as const);
+
   const switchCode = `switch (status) {
       ${responseCases}
       default: {
@@ -532,7 +556,7 @@ function processOperation(operation: Operation, rawApiPath: string) {
 
   const fullContent = `
   ${jsdoc}
-  async ${operation.operationId}(${paramsComment}) {
+  async ${operation.operationId}(${paramsComment}${bodyComment}) {
     ${pathAssignment}
     ${requestCode}
     ${switchCode}
