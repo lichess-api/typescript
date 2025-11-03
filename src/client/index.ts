@@ -748,16 +748,16 @@ export class Lichess {
               opponent: z.object({
                 id: z.string(),
                 username: z.string(),
-                rating: z.number().optional(),
-                ratingDiff: z.number().optional(),
-                ai: z.number().optional(),
+                rating: z.int().optional(),
+                ratingDiff: z.int().optional(),
+                ai: z.int().optional(),
               }),
               isMyTurn: z.boolean(),
-              secondsLeft: z.number(),
+              secondsLeft: z.int(),
               tournamentId: z.string().optional(),
               swissId: z.string().optional(),
               winner: schemas.GameColor.optional(),
-              ratingDiff: z.number().optional(),
+              ratingDiff: z.int().optional(),
             })
           ),
         });
@@ -1171,13 +1171,13 @@ export class Lichess {
           id: z.string(),
           teams: z.array(
             z.object({
-              rank: z.number(),
+              rank: z.int(),
               id: z.string(),
-              score: z.number(),
+              score: z.int(),
               players: z.array(
                 z.object({
                   user: schemas.LightUser,
-                  score: z.number().optional(),
+                  score: z.int().optional(),
                 })
               ),
             })
@@ -1684,6 +1684,8 @@ export class Lichess {
   /**
    * Get all incoming, ongoing, and finished official broadcasts.
    * The broadcasts are sorted by created date, most recent first.
+   *
+   * If you are authenticated as the user whose broadcasts you are requesting, you will also see your private and unlisted broadcasts.
    */
   async broadcastsByUser(/* params: { ... } */) {
     const path = `/api/broadcast/by/${username}` as const;

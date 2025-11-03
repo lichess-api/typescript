@@ -22,8 +22,8 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.2",
-    "@lichess-org/types": "^2.0.93",
+    "@biomejs/biome": "2.3.3",
+    "@lichess-org/types": "^2.0.94",
     "tsdown": "^0.15.12",
     "typescript": "^5.9.3"
   },
