@@ -288,11 +288,10 @@ export class Lichess {
   /**
    * Set puzzles as solved and update ratings.
    */
-  async apiPuzzleBatchSolve(
-    params: {
-      /* ~path, ~query */
-    } /* body */
-  ) {
+  async apiPuzzleBatchSolve(params: {
+    /* ~path, ~query */
+    /* body */
+  }) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
     const query = {
       /* ~query~ */
@@ -475,9 +474,11 @@ export class Lichess {
    * An API is not a way to fully export a website. We do not provide a full download of the Lichess users.
    * This endpoint is limited to 8,000 users every 10 minutes, and 120,000 every day.
    */
-  async apiUsers(/* body */) {
+  async apiUsers(params: {
+    /* body */
+  }) {
     const path = "/api/users" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.User);
@@ -698,11 +699,10 @@ export class Lichess {
    * 300 IDs can be submitted.
    * Ongoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.
    */
-  async gamesExportIds(
-    params: {
-      /* ~query */
-    } /* body */
-  ) {
+  async gamesExportIds(params: {
+    /* ~query */
+    /* body */
+  }) {
     const path = "/api/games/export/_ids" as const;
     const query = {
       /* ~query~ */
@@ -730,11 +730,10 @@ export class Lichess {
    * Maximum number of users: 300.
    * The method is `POST` so a longer list of IDs can be sent in the request body.
    */
-  async gamesByUsers(
-    params: {
-      /* ~query */
-    } /* body */
-  ) {
+  async gamesByUsers(params: {
+    /* ~query */
+    /* body */
+  }) {
     const path = "/api/stream/games-by-users" as const;
     const query = {
       /* ~query~ */
@@ -760,11 +759,10 @@ export class Lichess {
    * Maximum number of games: 500 for anonymous requests, or 1000 for [OAuth2 authenticated](#section/Introduction/Authentication) requests.
    * While the stream is open, it is possible to [add new game IDs to watch](#operation/gamesByIdsAdd).
    */
-  async gamesByIds(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async gamesByIds(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/stream/games/${params.streamId}` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -782,11 +780,10 @@ export class Lichess {
    * Add new game IDs for [an existing stream](#operation/gamesByIds) to watch.
    * The stream will immediately outputs the games that already exists, then emit an event each time a game is started or finished.
    */
-  async gamesByIdsAdd(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async gamesByIdsAdd(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/stream/games/${params.streamId}/add` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -894,9 +891,11 @@ export class Lichess {
    * To analyse a position or a line, just construct an analysis board URL (most standard tags supported if URL-encoded):
    * [https://lichess.org/analysis/pgn/e4_e5_Nf3_Nc6_Bc4_Bc5_Bxf7+](https://lichess.org/analysis/pgn/e4_e5_Nf3_Nc6_Bc4_Bc5_Bxf7+)
    */
-  async gameImport(/* body */) {
+  async gameImport(params: {
+    /* body */
+  }) {
     const path = "/api/import" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -1077,9 +1076,11 @@ export class Lichess {
    *   - 15s and 0+1 variant tournaments cannot be rated
    *   - Clock time in comparison to tournament length must be reasonable: 3 <= (minutes * 60) / (96 * clockTime + 48 * clockIncrement + 15) <= 150
    */
-  async apiTournamentPost(/* body */) {
+  async apiTournamentPost(params: {
+    /* body */
+  }) {
     const path = "/api/tournament" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournamentFull;
@@ -1132,13 +1133,12 @@ export class Lichess {
    *   - 15s and 0+1 variant tournaments cannot be rated
    *   - Clock time in comparison to tournament length must be reasonable: 3 <= (minutes * 60) / (96 * clockTime + 48 * clockIncrement + 15) <= 150
    */
-  async apiTournamentUpdate(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiTournamentUpdate(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/tournament/${params.id}` as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournamentFull;
@@ -1162,11 +1162,10 @@ export class Lichess {
    * Join an Arena tournament, possibly with a password and/or a team.
    * Also unpauses if you had previously [paused](#operation/apiTournamentWithdraw) the tournament.
    */
-  async apiTournamentJoin(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiTournamentJoin(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/tournament/${params.id}/join` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -1250,11 +1249,10 @@ export class Lichess {
    * Set the teams and number of leaders of a team battle.
    * To update the other attributes of a team battle, use the [tournament update endpoint](#operation/apiTournamentUpdate).
    */
-  async apiTournamentTeamBattlePost(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiTournamentTeamBattlePost(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/tournament/team-battle/${params.id}` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -1426,11 +1424,10 @@ export class Lichess {
    *   - clock.limit + clock.increment > 0
    *   - 15s and 0+1 variant tournaments cannot be rated
    */
-  async apiSwissNew(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiSwissNew(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/swiss/new/${params.teamId}` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -1483,11 +1480,10 @@ export class Lichess {
    *   - clock.limit + clock.increment > 0
    *   - 15s and 0+1 variant tournaments cannot be rated
    */
-  async apiSwissUpdate(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiSwissUpdate(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/swiss/${params.id}/edit` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -1521,11 +1517,10 @@ export class Lichess {
    * This sets the `roundInterval` field to `99999999`, i.e. manual scheduling.
    * All further rounds will need to be manually scheduled, unless the `roundInterval` field is changed back to automatic scheduling.
    */
-  async apiSwissScheduleNextRound(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiSwissScheduleNextRound(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/swiss/${params.id}/schedule-next-round` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -1554,11 +1549,10 @@ export class Lichess {
   /**
    * Join a Swiss tournament, possibly with a password.
    */
-  async apiSwissJoin(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiSwissJoin(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/swiss/${params.id}/join` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -1798,11 +1792,10 @@ export class Lichess {
    * then multiple chapters will be created within the study.
    * Note that a study can contain at most 64 chapters.
    */
-  async apiStudyImportPGN(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiStudyImportPGN(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/study/${params.studyId}/import-pgn` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -1834,11 +1827,10 @@ export class Lichess {
    *
    * The chapter keeps the tags that you don't provide.
    */
-  async apiStudyChapterTags(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiStudyChapterTags(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}/tags` as const;
 
@@ -2035,9 +2027,11 @@ export class Lichess {
    * Create a new broadcast tournament to relay external games.
    * This endpoint accepts the same form data as the [web form](https://lichess.org/broadcast/new).
    */
-  async broadcastTourCreate(/* body */) {
+  async broadcastTourCreate(params: {
+    /* body */
+  }) {
     const path = "/broadcast/new" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastWithRounds;
@@ -2135,11 +2129,10 @@ export class Lichess {
    * This endpoint accepts the same form data as the web form.
    * All fields must be populated with data. Missing fields will override the broadcast with empty data.
    */
-  async broadcastTourUpdate(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async broadcastTourUpdate(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/broadcast/${params.broadcastTournamentId}/edit` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -2168,11 +2161,10 @@ export class Lichess {
    *
    * Choose one between `syncUrl`, `syncUrls`, `syncIds` and `syncUsers`, if it is missing, the broadcast needs to be fed by [pushing PGN to it](#operation/broadcastPush)
    */
-  async broadcastRoundCreate(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async broadcastRoundCreate(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/broadcast/${params.broadcastTournamentId}/new` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -2224,11 +2216,10 @@ export class Lichess {
    * All fields must be populated with data. Missing fields will override the broadcast with empty data.
    * For instance, if you omit `startDate`, then any pre-existing start date will be removed.
    */
-  async broadcastRoundUpdate(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async broadcastRoundUpdate(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/broadcast/round/${params.broadcastRoundId}/edit` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -2278,11 +2269,10 @@ export class Lichess {
    * Update a broadcast with new PGN.
    * Only for broadcasts without a source URL.
    */
-  async broadcastPush(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async broadcastPush(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path =
       `/api/broadcast/round/${params.broadcastRoundId}/push` as const;
 
@@ -2610,11 +2600,10 @@ export class Lichess {
    * `message` parameter is not given, then the call fails with
    * `403 Forbidden`.
    */
-  async teamIdJoin(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async teamIdJoin(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/team/${params.teamId}/join` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -2751,11 +2740,10 @@ export class Lichess {
    * Send a private message to all members of a team.
    * You must be a team leader with the "Messages" permission.
    */
-  async teamIdPmAll(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async teamIdPmAll(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/team/${params.teamId}/pm-all` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -2897,11 +2885,10 @@ export class Lichess {
   /**
    * Add a private note available only to you about this account.
    */
-  async writeNote(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async writeNote(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/user/${params.username}/note` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -3073,9 +3060,11 @@ export class Lichess {
    * Specify the `days` per turn value.
    * The response is not streamed, it immediately completes with the seek ID. The seek remains active on the server until it is joined by someone.
    */
-  async apiBoardSeek(/* body */) {
+  async apiBoardSeek(params: {
+    /* body */
+  }) {
     const path = "/api/board/seek" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         /* mixed */ return { status, response } as const;
@@ -3184,13 +3173,12 @@ export class Lichess {
   /**
    * Post a message to the player or spectator chat, in a game being played with the Board API.
    */
-  async boardGameChatPost(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async boardGameChatPost(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/board/game/${params.gameId}/chat` as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -3548,11 +3536,10 @@ export class Lichess {
   /**
    * Post a message to the player or spectator chat, in a game being played with the Bot API.
    */
-  async botGameChat(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async botGameChat(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/bot/game/${params.gameId}/chat` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -3778,11 +3765,10 @@ export class Lichess {
    * Challenges for realtime games (not correspondence) expire after 20s if not accepted.
    * To prevent that, use the `keepAliveStream` flag described below.
    */
-  async challengeCreate(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async challengeCreate(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/challenge/${params.username}` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -3861,11 +3847,10 @@ export class Lichess {
   /**
    * Decline an incoming challenge.
    */
-  async challengeDecline(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async challengeDecline(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/challenge/${params.challengeId}/decline` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -3924,9 +3909,11 @@ export class Lichess {
    * Start a game with Lichess AI.
    * You will be notified on the [event stream](#operation/apiStreamEvent) that a new game has started.
    */
-  async challengeAi(/* body */) {
+  async challengeAi(params: {
+    /* body */
+  }) {
     const path = "/api/challenge/ai" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 201: {
         const schema = z.object({
@@ -3970,9 +3957,11 @@ export class Lichess {
    * then you can use the [challenge cancel endpoint](#operation/challengeCancel) to cancel it.
    * To directly pair 2 known players, use [this endpoint](#operation/bulkPairingList) instead.
    */
-  async challengeOpen(/* body */) {
+  async challengeOpen(params: {
+    /* body */
+  }) {
     const path = "/api/challenge/open" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.ChallengeOpenJson;
@@ -4062,9 +4051,11 @@ export class Lichess {
    * Fix the issues, manually or programmatically, then retry to schedule the bulk.
    * A successful bulk creation returns a JSON bulk document. Its ID can be used for further operations.
    */
-  async bulkPairingCreate(/* body */) {
+  async bulkPairingCreate(params: {
+    /* body */
+  }) {
     const path = "/api/bulk-pairing" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.BulkPairing;
@@ -4222,9 +4213,11 @@ export class Lichess {
    * Create and obtain `challenge:write` tokens for multiple users.
    * If a similar token already exists for a user, it is reused. This endpoint is idempotent.
    */
-  async adminChallengeTokens(/* body */) {
+  async adminChallengeTokens(params: {
+    /* body */
+  }) {
     const path = "/api/token/admin-challenge" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.record(z.string(), z.string());
@@ -4247,11 +4240,10 @@ export class Lichess {
   /**
    * Send a private message to another player.
    */
-  async inboxUsername(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async inboxUsername(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/inbox/${params.username}` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
@@ -4331,9 +4323,11 @@ export class Lichess {
    * and used on the analysis board.
    * After registering, the provider should start waiting for analyis requests.
    */
-  async apiExternalEngineCreate(/* body */) {
+  async apiExternalEngineCreate(params: {
+    /* body */
+  }) {
     const path = "/api/external-engine" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.ExternalEngine;
@@ -4394,13 +4388,12 @@ export class Lichess {
   /**
    * Updates the properties of an external engine.
    */
-  async apiExternalEnginePut(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiExternalEnginePut(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/external-engine/${params.id}` as const;
-    const { response, status } = await this.requestor.put({ path });
+    const { response, status } = await this.requestor.put({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.ExternalEngine;
@@ -4425,13 +4418,12 @@ export class Lichess {
    * Analysis stops when the client goes away, the requested limit
    * is reached, or the provider goes away.
    */
-  async apiExternalEngineAnalyse(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiExternalEngineAnalyse(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/external-engine/${params.id}/analyse` as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -4452,9 +4444,11 @@ export class Lichess {
    * After acquiring a request, the provider should immediately
    * [start streaming the results](#tag/External-engine/operation/apiExternalEngineSubmit).
    */
-  async apiExternalEngineAcquire(/* body */) {
+  async apiExternalEngineAcquire(params: {
+    /* body */
+  }) {
     const path = "/api/external-engine/work" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -4493,13 +4487,12 @@ export class Lichess {
    * The server may close the connection at any time, indicating that
    * the requester has gone away and analysis should be stopped.
    */
-  async apiExternalEngineSubmit(
-    params: {
-      /* ~path */
-    } /* body */
-  ) {
+  async apiExternalEngineSubmit(params: {
+    /* ~path */
+    /* body */
+  }) {
     const path = `/api/external-engine/work/${params.id}` as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         return { status, response } as const;
@@ -4565,9 +4558,11 @@ export class Lichess {
   /**
    * OAuth2 token endpoint. Exchanges an authorization code for an access token.
    */
-  async apiToken(/* body */) {
+  async apiToken(params: {
+    /* body */
+  }) {
     const path = "/api/token" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -4613,9 +4608,11 @@ export class Lichess {
    * or `null` if the token is invalid.
    * The method is `POST` so a longer list of tokens can be sent in the request body.
    */
-  async tokenTest(/* body */) {
+  async tokenTest(params: {
+    /* body */
+  }) {
     const path = "/api/token/test" as const;
-    const { response, status } = await this.requestor.post({ path });
+    const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = z.record(

@@ -540,11 +540,12 @@ function processOperation(operation: Operation, rawApiPath: string) {
 
   const pathAssignment = `const path = ${stringifiedProcessedPath} as const;`;
 
+  const bodyParamsComment = requestBodySchema ? "/* body */" : "";
   const bodyComment = requestBodySchema ? "/* body */" : "";
 
   const requestCode = (() => {
     if (!hasAnyParams) {
-      return `const { response, status } = await this.requestor.${operation.__method}({ path });` as const;
+      return `const { response, status } = await this.requestor.${operation.__method}({ path ${bodyComment} });` as const;
     }
 
     const queryComment =
@@ -561,12 +562,14 @@ function processOperation(operation: Operation, rawApiPath: string) {
   })();
 
   const paramsComment = hasQueryAndPathParams
-    ? ("params: { /* ~path, ~query */ }" as const)
+    ? (`params: { /* ~path, ~query */ ${bodyParamsComment}}` as const)
     : hasPathParams
-      ? ("params: { /* ~path */ }" as const)
+      ? (`params: { /* ~path */ ${bodyParamsComment}}` as const)
       : hasQueryParams
-        ? ("params: { /* ~query */ }" as const)
-        : ("" as const);
+        ? (`params: { /* ~query */ ${bodyParamsComment}}` as const)
+        : requestBodySchema
+          ? (`params: {${bodyParamsComment}}` as const)
+          : ("" as const);
 
   const switchCode = `switch (status) {
       ${responseCases}
@@ -577,7 +580,7 @@ function processOperation(operation: Operation, rawApiPath: string) {
 
   const fullContent = `
   ${jsdoc}
-  async ${operation.operationId}(${paramsComment}${bodyComment}) {
+  async ${operation.operationId}(${paramsComment}) {
     ${pathAssignment}
     ${requestCode}
     ${switchCode}
