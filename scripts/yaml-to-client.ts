@@ -222,26 +222,34 @@ const SchemaSchemaBooleanLike = z
   })
   .brand("SchemaSchemaBooleanLike");
 
+const QueryParamSchemaSchema = z.union([
+  SchemaSchemaPrimitive,
+  z.object({ type: z.literal("array"), items: SchemaSchemaPrimitive }),
+  SchemaSchemaRefToPrimitive,
+  z.object({ type: z.literal("array"), items: SchemaSchemaRefToPrimitive }),
+  SchemaSchemaNullableRefToPrimitive,
+]);
+
+type QueryParamSchema = z.infer<typeof QueryParamSchemaSchema>;
+
 const OperationQueryParameter = OperationParameterBase.extend({
   in: z.literal("query"),
   required: z.boolean().optional(),
-  schema: z.union([
-    SchemaSchemaPrimitive,
-    z.object({ type: z.literal("array"), items: SchemaSchemaPrimitive }),
-    SchemaSchemaRefToPrimitive,
-    z.object({ type: z.literal("array"), items: SchemaSchemaRefToPrimitive }),
-    SchemaSchemaNullableRefToPrimitive,
-  ]),
+  schema: QueryParamSchemaSchema,
 }).strict();
+
+const PathParamSchemaSchema = z.union([
+  SchemaSchemaPrimitive,
+  SchemaSchemaRefToPrimitive,
+  SchemaSchemaBooleanLike,
+]);
+
+type PathParamSchema = z.infer<typeof PathParamSchemaSchema>;
 
 const OperationPathParameter = OperationParameterBase.extend({
   in: z.literal("path"),
   required: z.literal(true),
-  schema: z.union([
-    SchemaSchemaPrimitive,
-    SchemaSchemaRefToPrimitive,
-    SchemaSchemaBooleanLike,
-  ]),
+  schema: PathParamSchemaSchema,
 }).strict();
 
 const OperationParameter = z.union([
@@ -493,6 +501,8 @@ function processParams(params: OperationParameters) {
   } as const;
 }
 
+function extractParams() {}
+
 function descriptionToJsdoc(description: string) {
   const descriptionLines = (() => {
     let descriptionLines = description.split("\n");
@@ -536,6 +546,7 @@ function processOperation(operation: Operation, rawApiPath: string): string {
     hasQueryAndPathParams,
     hasOnlyQueryParams,
     hasAnyParams,
+    queryParams,
   } = processParams(operation.parameters);
 
   const pathAssignment =
