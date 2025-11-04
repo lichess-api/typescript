@@ -21,7 +21,7 @@ export class Lichess {
    * Use it to track players and know when they're connected on lichess and playing games.
    */
   async apiUsersStatus(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/users/status" as const;
     const query = params;
@@ -77,10 +77,9 @@ export class Lichess {
    * See <https://lichess.org/player/top/200/bullet>.
    */
   async playerTopNbPerfType(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/player/top/${params.nb}/${params.perfType}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -99,7 +98,7 @@ export class Lichess {
    * Read public data of a user.
    */
   async apiUser(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/user/${params.username}` as const;
     const query = {
@@ -126,10 +125,9 @@ export class Lichess {
    * `month` starts at zero (January).
    */
   async apiUserRatingHistory(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/user/${params.username}/rating-history` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -149,10 +147,9 @@ export class Lichess {
    * Similar to the [performance pages on the website](https://lichess.org/@/thibault/perf/bullet).
    */
   async apiUserPerf(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/user/${params.username}/perf/${params.perf}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -171,10 +168,9 @@ export class Lichess {
    * Read data to generate the activity feed of a user.
    */
   async apiUserActivity(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/user/${params.username}/activity` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -213,10 +209,9 @@ export class Lichess {
    * Get a single Lichess puzzle in JSON format.
    */
   async apiPuzzleId(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/puzzle/${params.id}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -239,7 +234,7 @@ export class Lichess {
    * **DO NOT** use this endpoint to enumerate puzzles for mass download. Instead, download the [full public puzzle database](https://database.lichess.org/#puzzles).
    */
   async apiPuzzleNext(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/puzzle/next" as const;
     const query = params;
@@ -265,7 +260,7 @@ export class Lichess {
    * **DO NOT** use this endpoint to enumerate puzzles for mass download. Instead, download the [full public puzzle database](https://database.lichess.org/#puzzles).
    */
   async apiPuzzleBatchSelect(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
     const query = {
@@ -289,16 +284,20 @@ export class Lichess {
    * Set puzzles as solved and update ratings.
    */
   async apiPuzzleBatchSolve(params: {
-    /* ~path, ~query */
-    /* body */
+    /* ~path~, ~query~ */
+    /* ~body~ */
   }) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
     const query = {
       /* ~query~ */
     } as const;
+    const body = {
+      /* ~body~ */
+    } as const;
     const { response, status } = await this.requestor.post({
       path,
-      query /* body */,
+      query,
+      body,
     });
     switch (status) {
       case 200: {
@@ -319,14 +318,15 @@ export class Lichess {
    * We recommend streaming the response, for it can be very long.
    */
   async apiPuzzleActivity(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/puzzle/activity" as const;
     const query = params;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -338,10 +338,9 @@ export class Lichess {
    * Gets the puzzle IDs of remaining puzzles to re-attempt in JSON format.
    */
   async apiPuzzleReplay(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/puzzle/replay/${params.days}/${params.theme}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -368,10 +367,9 @@ export class Lichess {
    * Allows re-creating the [improvement/strengths](https://lichess.org/training/dashboard/30/improvementAreas) interfaces.
    */
   async apiPuzzleDashboard(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/puzzle/dashboard/${params.days}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -392,7 +390,7 @@ export class Lichess {
    * Use `?days=0` if you only care about the highscores.
    */
   async apiStormDashboard(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/storm/dashboard/${params.username}` as const;
     const query = {
@@ -443,10 +441,9 @@ export class Lichess {
    * for 30 minutes. After that delay, they are permanently deleted.
    */
   async racerGet(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/racer/${params.id}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -475,10 +472,11 @@ export class Lichess {
    * This endpoint is limited to 8,000 users every 10 minutes, and 120,000 every day.
    */
   async apiUsers(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/users" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.User);
@@ -579,7 +577,7 @@ export class Lichess {
    * - <https://lichess.org/account/kid>
    */
   async accountKidPost(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/account/kid" as const;
     const query = params;
@@ -601,7 +599,7 @@ export class Lichess {
    * Get the timeline events of the logged in user.
    */
   async timeline(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/timeline" as const;
     const query = params;
@@ -624,7 +622,7 @@ export class Lichess {
    * Ongoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.
    */
   async gamePgn(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/game/export/${params.gameId}` as const;
     const query = {
@@ -633,7 +631,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -647,7 +646,7 @@ export class Lichess {
    * Ongoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.
    */
   async apiUserCurrentGame(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/user/${params.username}/current-game` as const;
     const query = {
@@ -656,7 +655,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -675,7 +675,7 @@ export class Lichess {
    *   - Authenticated, downloading your own games: 60 games per second
    */
   async apiGamesUser(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/games/user/${params.username}` as const;
     const query = {
@@ -684,7 +684,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -700,20 +701,25 @@ export class Lichess {
    * Ongoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.
    */
   async gamesExportIds(params: {
-    /* ~query */
-    /* body */
+    /* ~query~ */
+    /* ~body~ */
   }) {
     const path = "/api/games/export/_ids" as const;
     const query = {
       /* ~query~ */
     } as const;
+    const body = {
+      /* ~body~ */
+    } as const;
     const { response, status } = await this.requestor.post({
       path,
-      query /* body */,
+      query,
+      body,
     });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -731,20 +737,25 @@ export class Lichess {
    * The method is `POST` so a longer list of IDs can be sent in the request body.
    */
   async gamesByUsers(params: {
-    /* ~query */
-    /* body */
+    /* ~query~ */
+    /* ~body~ */
   }) {
     const path = "/api/stream/games-by-users" as const;
     const query = {
       /* ~query~ */
     } as const;
+    const body = {
+      /* ~body~ */
+    } as const;
     const { response, status } = await this.requestor.post({
       path,
-      query /* body */,
+      query,
+      body,
     });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -760,15 +771,18 @@ export class Lichess {
    * While the stream is open, it is possible to [add new game IDs to watch](#operation/gamesByIdsAdd).
    */
   async gamesByIds(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/stream/games/${params.streamId}` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -781,12 +795,14 @@ export class Lichess {
    * The stream will immediately outputs the games that already exists, then emit an event each time a game is started or finished.
    */
   async gamesByIdsAdd(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/stream/games/${params.streamId}/add` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -806,7 +822,7 @@ export class Lichess {
    * The most urgent games are listed first.
    */
   async apiAccountPlaying(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/account/playing" as const;
     const query = params;
@@ -863,14 +879,14 @@ export class Lichess {
    * No more than 8 game streams can be opened at the same time from the same IP address.
    */
   async streamGame(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/stream/game/${params.id}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       case 429: {
         const schema = z.object({ error: z.string().optional() });
@@ -892,10 +908,11 @@ export class Lichess {
    * [https://lichess.org/analysis/pgn/e4_e5_Nf3_Nc6_Bc4_Bc5_Bxf7+](https://lichess.org/analysis/pgn/e4_e5_Nf3_Nc6_Bc4_Bc5_Bxf7+)
    */
   async gameImport(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/import" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -920,7 +937,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* chess-pgn */ return { status, response } as const;
+        /* chess-pgn */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -934,14 +952,15 @@ export class Lichess {
    * We recommend streaming the response, for it can be very long.
    */
   async apiExportBookmarks(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/games/export/bookmarks" as const;
     const query = params;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -996,7 +1015,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1009,14 +1029,14 @@ export class Lichess {
    * Try it with `curl https://lichess.org/api/tv/rapid/feed`.
    */
   async tvChannelFeed(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/tv/${params.channel}/feed` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1029,7 +1049,7 @@ export class Lichess {
    * Available in PGN or [ndjson](#section/Introduction/Streaming-with-ND-JSON) format, depending on the request `Accept` header.
    */
   async tvChannelGames(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/tv/${params.channel}` as const;
     const query = {
@@ -1038,7 +1058,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1077,10 +1098,11 @@ export class Lichess {
    *   - Clock time in comparison to tournament length must be reasonable: 3 <= (minutes * 60) / (96 * clockTime + 48 * clockIncrement + 15) <= 150
    */
   async apiTournamentPost(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/tournament" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournamentFull;
@@ -1106,7 +1128,7 @@ export class Lichess {
    * Get detailed info about recently finished, current, or upcoming tournament's duels, player standings, and other info.
    */
   async tournament(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/tournament/${params.id}` as const;
     const query = params;
@@ -1134,11 +1156,12 @@ export class Lichess {
    *   - Clock time in comparison to tournament length must be reasonable: 3 <= (minutes * 60) / (96 * clockTime + 48 * clockIncrement + 15) <= 150
    */
   async apiTournamentUpdate(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/tournament/${params.id}` as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournamentFull;
@@ -1163,12 +1186,14 @@ export class Lichess {
    * Also unpauses if you had previously [paused](#operation/apiTournamentWithdraw) the tournament.
    */
   async apiTournamentJoin(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/tournament/${params.id}/join` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -1193,10 +1218,9 @@ export class Lichess {
    * It's possible to join again later. Points and streaks are preserved.
    */
   async apiTournamentWithdraw(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/tournament/${params.id}/withdraw` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -1221,10 +1245,9 @@ export class Lichess {
    * Terminate an Arena tournament
    */
   async apiTournamentTerminate(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/tournament/${params.id}/terminate` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -1250,12 +1273,14 @@ export class Lichess {
    * To update the other attributes of a team battle, use the [tournament update endpoint](#operation/apiTournamentUpdate).
    */
   async apiTournamentTeamBattlePost(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/tournament/team-battle/${params.id}` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournamentFull;
@@ -1283,7 +1308,7 @@ export class Lichess {
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 games per second
    */
   async gamesByTournament(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/tournament/${params.id}/games` as const;
     const query = {
@@ -1292,7 +1317,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1308,7 +1334,7 @@ export class Lichess {
    * Use on finished tournaments for guaranteed consistency.
    */
   async resultsByTournament(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/tournament/${params.id}/results` as const;
     const query = {
@@ -1317,7 +1343,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1329,10 +1356,9 @@ export class Lichess {
    * Teams of a team battle tournament, with top players, sorted by rank (best first).
    */
   async teamsByTournament(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/tournament/${params.id}/teams` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -1372,7 +1398,7 @@ export class Lichess {
    *   - Authenticated, downloading your own tournaments: 50 tournaments per second
    */
   async apiUserNameTournamentCreated(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/user/${params.username}/tournament/created` as const;
     const query = {
@@ -1381,7 +1407,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1399,7 +1426,7 @@ export class Lichess {
    *   - Authenticated, downloading your own tournaments: 50 tournaments per second
    */
   async apiUserNameTournamentPlayed(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/user/${params.username}/tournament/played` as const;
     const query = {
@@ -1408,7 +1435,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1425,12 +1453,14 @@ export class Lichess {
    *   - 15s and 0+1 variant tournaments cannot be rated
    */
   async apiSwissNew(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/swiss/new/${params.teamId}` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.SwissTournament;
@@ -1456,7 +1486,7 @@ export class Lichess {
    * Get detailed info about a Swiss tournament.
    */
   async swiss(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/swiss/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -1481,12 +1511,14 @@ export class Lichess {
    *   - 15s and 0+1 variant tournaments cannot be rated
    */
   async apiSwissUpdate(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/swiss/${params.id}/edit` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.SwissTournament;
@@ -1518,12 +1550,14 @@ export class Lichess {
    * All further rounds will need to be manually scheduled, unless the `roundInterval` field is changed back to automatic scheduling.
    */
   async apiSwissScheduleNextRound(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/swiss/${params.id}/schedule-next-round` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 204: {
         return { status, response } as const;
@@ -1550,12 +1584,14 @@ export class Lichess {
    * Join a Swiss tournament, possibly with a password.
    */
   async apiSwissJoin(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/swiss/${params.id}/join` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -1580,10 +1616,9 @@ export class Lichess {
    * It's possible to join again later. Points are preserved.
    */
   async apiSwissWithdraw(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/swiss/${params.id}/withdraw` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -1602,10 +1637,9 @@ export class Lichess {
    * Terminate a Swiss tournament
    */
   async apiSwissTerminate(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/swiss/${params.id}/terminate` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -1632,14 +1666,14 @@ export class Lichess {
    * Example: <https://lichess.org/swiss/j8rtJ5GL.trf>
    */
   async swissTrf(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/swiss/${params.id}.trf` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1655,7 +1689,7 @@ export class Lichess {
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 games per second
    */
   async gamesBySwiss(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/swiss/${params.id}/games` as const;
     const query = {
@@ -1664,7 +1698,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1680,7 +1715,7 @@ export class Lichess {
    * Use on finished tournaments for guaranteed consistency.
    */
   async resultsBySwiss(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/swiss/${params.id}/results` as const;
     const query = {
@@ -1689,7 +1724,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1703,7 +1739,7 @@ export class Lichess {
    * Tournaments are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
   async apiTeamSwiss(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/team/${params.teamId}/swiss` as const;
     const query = {
@@ -1712,7 +1748,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1726,7 +1763,7 @@ export class Lichess {
    * If not, only public (non-unlisted) study chapters are read.
    */
   async studyChapterPgn(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}.pgn` as const;
@@ -1736,7 +1773,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* chess-pgn */ return { status, response } as const;
+        /* chess-pgn */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1750,7 +1788,7 @@ export class Lichess {
    * If not, only public (non-unlisted) study chapters are read.
    */
   async studyAllChaptersPgn(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/study/${params.studyId}.pgn` as const;
     const query = {
@@ -1759,7 +1797,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* chess-pgn */ return { status, response } as const;
+        /* chess-pgn */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1771,10 +1810,9 @@ export class Lichess {
    * Only get the study headers, including `Last-Modified`.
    */
   async studyAllChaptersHead(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/study/${params.studyId}.pgn` as const;
-
     const { response, status } = await this.requestor.head({ path });
     switch (status) {
       case 204: {
@@ -1793,12 +1831,14 @@ export class Lichess {
    * Note that a study can contain at most 64 chapters.
    */
   async apiStudyImportPGN(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/study/${params.studyId}/import-pgn` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.StudyImportPgnChapters;
@@ -1828,13 +1868,15 @@ export class Lichess {
    * The chapter keeps the tags that you don't provide.
    */
   async apiStudyChapterTags(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}/tags` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 204: {
         return { status, response } as const;
@@ -1857,7 +1899,7 @@ export class Lichess {
    * If not, only public (non-unlisted) studies are included.
    */
   async studyExportAllPgn(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/study/by/${params.username}/export.pgn` as const;
     const query = {
@@ -1866,7 +1908,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* chess-pgn */ return { status, response } as const;
+        /* chess-pgn */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1881,14 +1924,14 @@ export class Lichess {
    * Studies are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
   async studyListMetadata(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/study/by/${params.username}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1902,10 +1945,9 @@ export class Lichess {
    * an empty one will be automatically created to replace it.
    */
   async apiStudyStudyIdChapterIdDelete(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/study/${params.studyId}/${params.chapterId}` as const;
-
     const { response, status } = await this.requestor.delete({ path });
     switch (status) {
       case 204: {
@@ -1923,14 +1965,15 @@ export class Lichess {
    * Broadcasts are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
   async broadcastsOfficial(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/broadcast" as const;
     const query = params;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -1942,7 +1985,7 @@ export class Lichess {
    * The same data, in the same order, as can be seen on [https://lichess.org/broadcast](/broadcast).
    */
   async broadcastsTop(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/broadcast/top" as const;
     const query = params;
@@ -1967,7 +2010,7 @@ export class Lichess {
    * If you are authenticated as the user whose broadcasts you are requesting, you will also see your private and unlisted broadcasts.
    */
   async broadcastsByUser(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/broadcast/by/${params.username}` as const;
     const query = {
@@ -1999,7 +2042,7 @@ export class Lichess {
    * Search across recent official broadcasts.
    */
   async broadcastsSearch(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/broadcast/search" as const;
     const query = params;
@@ -2028,10 +2071,11 @@ export class Lichess {
    * This endpoint accepts the same form data as the [web form](https://lichess.org/broadcast/new).
    */
   async broadcastTourCreate(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/broadcast/new" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastWithRounds;
@@ -2055,10 +2099,9 @@ export class Lichess {
    * Get information about a broadcast tournament.
    */
   async broadcastTourGet(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/broadcast/${params.broadcastTournamentId}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -2077,10 +2120,9 @@ export class Lichess {
    * Get the list of players of a broadcast tournament, if available.
    */
   async broadcastPlayersGet(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/broadcast/${params.broadcastTournamentId}/players` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -2099,11 +2141,10 @@ export class Lichess {
    * Get the details of a specific player and their games from a broadcast tournament.
    */
   async broadcastPlayerGet(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/broadcast/${params.broadcastTournamentId}/players/${params.playerId}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -2130,12 +2171,14 @@ export class Lichess {
    * All fields must be populated with data. Missing fields will override the broadcast with empty data.
    */
   async broadcastTourUpdate(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/broadcast/${params.broadcastTournamentId}/edit` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -2162,12 +2205,14 @@ export class Lichess {
    * Choose one between `syncUrl`, `syncUrls`, `syncIds` and `syncUsers`, if it is missing, the broadcast needs to be fed by [pushing PGN to it](#operation/broadcastPush)
    */
   async broadcastRoundCreate(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/broadcast/${params.broadcastTournamentId}/new` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastRoundNew;
@@ -2191,11 +2236,10 @@ export class Lichess {
    * Get information about a broadcast round.
    */
   async broadcastRoundGet(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/api/broadcast/${params.broadcastTournamentSlug}/${params.broadcastRoundSlug}/${params.broadcastRoundId}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -2217,12 +2261,14 @@ export class Lichess {
    * For instance, if you omit `startDate`, then any pre-existing start date will be removed.
    */
   async broadcastRoundUpdate(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/broadcast/round/${params.broadcastRoundId}/edit` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastRound;
@@ -2246,11 +2292,10 @@ export class Lichess {
    * Remove any games from the broadcast round and reset it to its initial state.
    */
   async broadcastRoundReset(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/api/broadcast/round/${params.broadcastRoundId}/reset` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -2270,13 +2315,15 @@ export class Lichess {
    * Only for broadcasts without a source URL.
    */
   async broadcastPush(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path =
       `/api/broadcast/round/${params.broadcastRoundId}/push` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastPgnPush;
@@ -2304,15 +2351,15 @@ export class Lichess {
    * and no pollings means no latency, and minimum impact on the server.
    */
   async broadcastStreamRoundPgn(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/api/stream/broadcast/round/${params.broadcastRoundId}.pgn` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* chess-pgn */ return { status, response } as const;
+        /* chess-pgn */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -2328,14 +2375,14 @@ export class Lichess {
    * a new PGN every time a game is updated, in real-time.
    */
   async broadcastRoundPgn(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/broadcast/round/${params.broadcastRoundId}.pgn` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* chess-pgn */ return { status, response } as const;
+        /* chess-pgn */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -2350,14 +2397,14 @@ export class Lichess {
    * You may want to [download only the games of a single round](#operation/broadcastRoundPgn) instead.
    */
   async broadcastAllRoundsPgn(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/broadcast/${params.broadcastTournamentId}.pgn` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* chess-pgn */ return { status, response } as const;
+        /* chess-pgn */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -2372,14 +2419,15 @@ export class Lichess {
    * Rounds are ordered by rank, which is roughly chronological, most recent first, slightly pondered with popularity.
    */
   async broadcastMyRoundsGet(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/broadcast/my-rounds" as const;
     const query = params;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -2391,10 +2439,9 @@ export class Lichess {
    * Get information about a FIDE player.
    */
   async fidePlayerGet(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/fide/player/${params.playerId}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -2413,7 +2460,7 @@ export class Lichess {
    * List of FIDE players search results for a query.
    */
   async fidePlayerSearch(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/fide/player" as const;
     const query = params;
@@ -2462,10 +2509,9 @@ export class Lichess {
    * Public info about a team. Includes the list of publicly visible leaders.
    */
   async teamShow(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/team/${params.teamId}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -2484,7 +2530,7 @@ export class Lichess {
    * Paginator of the most popular teams.
    */
   async teamAll(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/team/all" as const;
     const query = params;
@@ -2506,10 +2552,9 @@ export class Lichess {
    * All the teams a player is a member of.
    */
   async teamOfUsername(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/team/of/${params.username}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -2528,7 +2573,7 @@ export class Lichess {
    * Paginator of team search results for a keyword.
    */
   async teamSearch(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/team/search" as const;
     const query = params;
@@ -2552,7 +2597,7 @@ export class Lichess {
    * Up to 5,000 users are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
   async teamIdUsers(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/team/${params.teamId}/users` as const;
     const query = {
@@ -2561,7 +2606,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -2575,7 +2621,7 @@ export class Lichess {
    * Tournaments are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
   async apiTeamArena(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/team/${params.teamId}/arena` as const;
     const query = {
@@ -2584,7 +2630,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -2601,12 +2648,14 @@ export class Lichess {
    * `403 Forbidden`.
    */
   async teamIdJoin(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/team/${params.teamId}/join` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -2625,10 +2674,9 @@ export class Lichess {
    * - <https://lichess.org/team>
    */
   async teamIdQuit(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/team/${params.teamId}/quit` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -2647,7 +2695,7 @@ export class Lichess {
    * Get pending join requests of your team
    */
   async teamRequests(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/team/${params.teamId}/requests` as const;
     const query = {
@@ -2671,11 +2719,10 @@ export class Lichess {
    * Accept someone's request to join your team
    */
   async teamRequestAccept(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/api/team/${params.teamId}/request/${params.userId}/accept` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -2694,11 +2741,10 @@ export class Lichess {
    * Decline someone's request to join your team
    */
   async teamRequestDecline(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/api/team/${params.teamId}/request/${params.userId}/decline` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -2718,10 +2764,9 @@ export class Lichess {
    * - <https://lichess.org/team>
    */
   async teamIdKickUserId(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/team/${params.teamId}/kick/${params.userId}` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -2741,12 +2786,14 @@ export class Lichess {
    * You must be a team leader with the "Messages" permission.
    */
   async teamIdPmAll(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/team/${params.teamId}/pm-all` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -2815,7 +2862,7 @@ export class Lichess {
    * If the `matchup` flag is provided, and the users are currently playing, also gets the current match game number and scores.
    */
   async apiCrosstable(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/crosstable/${params.user1}/${params.user2}` as const;
     const query = {
@@ -2839,7 +2886,7 @@ export class Lichess {
    * Provides autocompletion options for an incomplete username.
    */
   async apiPlayerAutocomplete(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/player/autocomplete" as const;
     const query = params;
@@ -2864,10 +2911,9 @@ export class Lichess {
    * Get the private notes that you have added for a user.
    */
   async readNote(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/user/${params.username}/note` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -2886,12 +2932,14 @@ export class Lichess {
    * Add a private note available only to you about this account.
    */
   async writeNote(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/user/${params.username}/note` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -2913,7 +2961,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -2925,10 +2974,9 @@ export class Lichess {
    * Follow a player, adding them to your list of Lichess friends.
    */
   async followUser(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/rel/follow/${params.username}` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -2947,10 +2995,9 @@ export class Lichess {
    * Unfollow a player, removing them from your list of Lichess friends.
    */
   async unfollowUser(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/rel/unfollow/${params.username}` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -2969,10 +3016,9 @@ export class Lichess {
    * Block a player, adding them to your list of blocked Lichess users.
    */
   async blockUser(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/rel/block/${params.username}` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -2991,10 +3037,9 @@ export class Lichess {
    * Unblock a player, removing them from your list of blocked Lichess users.
    */
   async unblockUser(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/rel/unblock/${params.username}` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3030,7 +3075,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -3061,13 +3107,15 @@ export class Lichess {
    * The response is not streamed, it immediately completes with the seek ID. The seek remains active on the server until it is joined by someone.
    */
   async apiBoardSeek(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/board/seek" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       case 400: {
         const schema = schemas.Error;
@@ -3097,14 +3145,14 @@ export class Lichess {
    * The server closes the stream when the game ends, or if the game has already ended.
    */
   async boardGameStream(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/board/game/stream/${params.gameId}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
@@ -3123,7 +3171,7 @@ export class Lichess {
    * The move can also contain a draw offer/agreement.
    */
   async boardGameMove(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path =
       `/api/board/game/${params.gameId}/move/${params.move}` as const;
@@ -3156,13 +3204,14 @@ export class Lichess {
    * Get the messages posted in the game chat
    */
   async boardGameChatGet(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/board/game/${params.gameId}/chat` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -3174,11 +3223,12 @@ export class Lichess {
    * Post a message to the player or spectator chat, in a game being played with the Board API.
    */
   async boardGameChatPost(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/board/game/${params.gameId}/chat` as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -3202,10 +3252,9 @@ export class Lichess {
    * Abort a game being played with the Board API.
    */
   async boardGameAbort(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/board/game/${params.gameId}/abort` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3230,10 +3279,9 @@ export class Lichess {
    * Resign a game being played with the Board API.
    */
   async boardGameResign(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/board/game/${params.gameId}/resign` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3260,11 +3308,10 @@ export class Lichess {
    * - `no`: Decline a draw offer from the opponent.
    */
   async boardGameDraw(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/api/board/game/${params.gameId}/draw/${params.accept}` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3291,11 +3338,10 @@ export class Lichess {
    * - `no`: Decline a takeback offer from the opponent.
    */
   async boardGameTakeback(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/api/board/game/${params.gameId}/takeback/${params.accept}` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3320,10 +3366,9 @@ export class Lichess {
    * Claim victory when the opponent has left the game for a while.
    */
   async boardGameClaimVictory(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/board/game/${params.gameId}/claim-victory` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3348,10 +3393,9 @@ export class Lichess {
    * Claim draw when the opponent has left the game for a while.
    */
   async boardGameClaimDraw(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/board/game/${params.gameId}/claim-draw` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3377,10 +3421,9 @@ export class Lichess {
    * Only available in arena tournaments that allow berserk, and before each player has made a move.
    */
   async boardGameBerserk(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/board/game/${params.gameId}/berserk` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3405,14 +3448,15 @@ export class Lichess {
    * Stream the [online bot users](https://lichess.org/player/bots), as [ndjson](#section/Introduction/Streaming-with-ND-JSON). Throttled to 50 bot users per second.
    */
   async apiBotOnline(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/bot/online" as const;
     const query = params;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -3462,14 +3506,14 @@ export class Lichess {
    * The first line is always of type `gameFull`.
    */
   async botGameStream(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/bot/game/stream/${params.gameId}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
@@ -3488,7 +3532,7 @@ export class Lichess {
    * The move can also contain a draw offer/agreement.
    */
   async botGameMove(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/bot/game/${params.gameId}/move/${params.move}` as const;
     const query = {
@@ -3518,14 +3562,14 @@ export class Lichess {
    * Get the messages posted in the game chat
    */
   async botGameChatGet(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/bot/game/${params.gameId}/chat` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -3537,12 +3581,14 @@ export class Lichess {
    * Post a message to the player or spectator chat, in a game being played with the Bot API.
    */
   async botGameChat(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/bot/game/${params.gameId}/chat` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -3566,10 +3612,9 @@ export class Lichess {
    * Abort a game being played with the Bot API.
    */
   async botGameAbort(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/bot/game/${params.gameId}/abort` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3594,10 +3639,9 @@ export class Lichess {
    * Resign a game being played with the Bot API.
    */
   async botGameResign(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/bot/game/${params.gameId}/resign` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3624,11 +3668,10 @@ export class Lichess {
    * - `no`: Decline a draw offer from the opponent.
    */
   async botGameDraw(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/api/bot/game/${params.gameId}/draw/${params.accept}` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3655,11 +3698,10 @@ export class Lichess {
    * - `no`: Decline a takeback offer from the opponent.
    */
   async botGameTakeback(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/api/bot/game/${params.gameId}/takeback/${params.accept}` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3684,10 +3726,9 @@ export class Lichess {
    * Claim victory when the opponent has left the game for a while.
    */
   async botGameClaimVictory(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/bot/game/${params.gameId}/claim-victory` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3712,10 +3753,9 @@ export class Lichess {
    * Claim draw when the opponent has left the game for a while.
    */
   async botGameClaimDraw(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/bot/game/${params.gameId}/claim-draw` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -3766,12 +3806,14 @@ export class Lichess {
    * To prevent that, use the `keepAliveStream` flag described below.
    */
   async challengeCreate(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/challenge/${params.username}` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.ChallengeJson;
@@ -3795,10 +3837,9 @@ export class Lichess {
    * Get details about a challenge, even if it has been recently accepted, canceled or declined.
    */
   async challengeShow(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/challenge/${params.challengeId}/show` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -3818,7 +3859,7 @@ export class Lichess {
    * You should receive a `gameStart` event on the [incoming events stream](#operation/apiStreamEvent).
    */
   async challengeAccept(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/challenge/${params.challengeId}/accept` as const;
     const query = {
@@ -3848,12 +3889,14 @@ export class Lichess {
    * Decline an incoming challenge.
    */
   async challengeDecline(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/challenge/${params.challengeId}/decline` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -3879,7 +3922,7 @@ export class Lichess {
    * Works for user challenges and open challenges alike.
    */
   async challengeCancel(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/challenge/${params.challengeId}/cancel` as const;
     const query = {
@@ -3910,10 +3953,11 @@ export class Lichess {
    * You will be notified on the [event stream](#operation/apiStreamEvent) that a new game has started.
    */
   async challengeAi(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/challenge/ai" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 201: {
         const schema = z.object({
@@ -3958,10 +4002,11 @@ export class Lichess {
    * To directly pair 2 known players, use [this endpoint](#operation/bulkPairingList) instead.
    */
   async challengeOpen(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/challenge/open" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.ChallengeOpenJson;
@@ -3989,7 +4034,7 @@ export class Lichess {
    * For AI games with only one player, omit the `token2` parameter.
    */
   async challengeStartClocks(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/challenge/${params.gameId}/start-clocks` as const;
     const query = {
@@ -4052,10 +4097,11 @@ export class Lichess {
    * A successful bulk creation returns a JSON bulk document. Its ID can be used for further operations.
    */
   async bulkPairingCreate(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/bulk-pairing" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.BulkPairing;
@@ -4082,10 +4128,9 @@ export class Lichess {
    * If the clocks have already started (`bulk.startClocksAt` is in the past), then this does nothing.
    */
   async bulkPairingStartClocks(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/bulk-pairing/${params.id}/start-clocks` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -4110,10 +4155,9 @@ export class Lichess {
    * Get a single bulk pairing by its ID.
    */
   async bulkPairingGet(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/bulk-pairing/${params.id}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -4140,10 +4184,9 @@ export class Lichess {
    * Canceling a bulk pairing does not refund the rate limit cost of that bulk pairing.
    */
   async bulkPairingDelete(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/bulk-pairing/${params.id}` as const;
-
     const { response, status } = await this.requestor.delete({ path });
     switch (status) {
       case 200: {
@@ -4168,7 +4211,7 @@ export class Lichess {
    * Download games of a bulk in PGN or [ndjson](#section/Introduction/Streaming-with-ND-JSON) format, depending on the request `Accept` header.
    */
   async bulkPairingIdGamesGet(params: {
-    /* ~path, ~query */
+    /* ~path~, ~query~ */
   }) {
     const path = `/api/bulk-pairing/${params.id}/games` as const;
     const query = {
@@ -4177,7 +4220,8 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */ return { status, response } as const;
+        /* mixed */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -4189,11 +4233,10 @@ export class Lichess {
    * Add seconds to the opponent's clock. Can be used to create games with time odds.
    */
   async roundAddTime(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path =
       `/api/round/${params.gameId}/add-time/${params.seconds}` as const;
-
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -4214,10 +4257,11 @@ export class Lichess {
    * If a similar token already exists for a user, it is reused. This endpoint is idempotent.
    */
   async adminChallengeTokens(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/token/admin-challenge" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = z.record(z.string(), z.string());
@@ -4241,12 +4285,14 @@ export class Lichess {
    * Send a private message to another player.
    */
   async inboxUsername(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/inbox/${params.username}` as const;
-
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = {
+      /* ~body~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
@@ -4274,7 +4320,7 @@ export class Lichess {
    * If you want to download a lot of positions, [get the full list](https://database.lichess.org/#evals) from our exported database.
    */
   async apiCloudEval(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/api/cloud-eval" as const;
     const query = params;
@@ -4324,10 +4370,11 @@ export class Lichess {
    * After registering, the provider should start waiting for analyis requests.
    */
   async apiExternalEngineCreate(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/external-engine" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.ExternalEngine;
@@ -4347,7 +4394,7 @@ export class Lichess {
    * Get properties and credentials of an external engine.
    */
   async apiExternalEngineGet(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/external-engine/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -4368,7 +4415,7 @@ export class Lichess {
    * Unregisters an external engine.
    */
   async apiExternalEngineDelete(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/api/external-engine/${params.id}` as const;
     const { response, status } = await this.requestor.delete({ path });
@@ -4389,11 +4436,12 @@ export class Lichess {
    * Updates the properties of an external engine.
    */
   async apiExternalEnginePut(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/external-engine/${params.id}` as const;
-    const { response, status } = await this.requestor.put({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.put({ path, body });
     switch (status) {
       case 200: {
         const schema = schemas.ExternalEngine;
@@ -4419,14 +4467,16 @@ export class Lichess {
    * is reached, or the provider goes away.
    */
   async apiExternalEngineAnalyse(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/external-engine/${params.id}/analyse` as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -4445,10 +4495,11 @@ export class Lichess {
    * [start streaming the results](#tag/External-engine/operation/apiExternalEngineSubmit).
    */
   async apiExternalEngineAcquire(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/external-engine/work" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -4488,11 +4539,12 @@ export class Lichess {
    * the requester has gone away and analysis should be stopped.
    */
   async apiExternalEngineSubmit(params: {
-    /* ~path */
-    /* body */
+    /* ~path~ */
+    /* ~body~ */
   }) {
     const path = `/api/external-engine/work/${params.id}` as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         return { status, response } as const;
@@ -4540,7 +4592,7 @@ export class Lichess {
    * [obtain an access token](#operation/apiToken).
    */
   async oauth(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/oauth" as const;
     const query = params;
@@ -4559,10 +4611,11 @@ export class Lichess {
    * OAuth2 token endpoint. Exchanges an authorization code for an access token.
    */
   async apiToken(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/token" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -4609,10 +4662,11 @@ export class Lichess {
    * The method is `POST` so a longer list of tokens can be sent in the request body.
    */
   async tokenTest(params: {
-    /* body */
+    /* ~body~ */
   }) {
     const path = "/api/token/test" as const;
-    const { response, status } = await this.requestor.post({ path /* body */ });
+    const body = params;
+    const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
         const schema = z.record(
@@ -4644,7 +4698,7 @@ export class Lichess {
    * Example: `curl https://explorer.lichess.ovh/masters?play=d2d4,d7d5,c2c4,c7c6,c4d5`
    */
   async openingExplorerMaster(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/masters" as const;
     const query = params;
@@ -4672,7 +4726,7 @@ export class Lichess {
    * Example: `curl https://explorer.lichess.ovh/lichess?variant=standard&speeds=blitz,rapid,classical&ratings=2200,2500&fen=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR%20w%20KQkq%20-%200%201`
    */
   async openingExplorerLichess(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/lichess" as const;
     const query = params;
@@ -4708,14 +4762,15 @@ export class Lichess {
    * Example: `curl https://explorer.lichess.ovh/player?player=revoof&color=white&play=d2d4,d7d5&recentGames=1`
    */
   async openingExplorerPlayer(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/player" as const;
     const query = params;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* ndjson */ return { status, response } as const;
+        /* ndjson */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -4731,14 +4786,14 @@ export class Lichess {
    * Example: `curl https://explorer.lichess.ovh/masters/pgn/aAbqI4ey`
    */
   async openingExplorerMasterGame(params: {
-    /* ~path */
+    /* ~path~ */
   }) {
     const path = `/master/pgn/${params.gameId}` as const;
-
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        /* chess-pgn */ return { status, response } as const;
+        /* chess-pgn */
+        return { status, response } as const;
       }
       default: {
         throw new Error("Error");
@@ -4754,7 +4809,7 @@ export class Lichess {
    * Example: `curl http://tablebase.lichess.ovh/standard?fen=4k3/6KP/8/8/8/8/7p/8_w_-_-_0_1`
    */
   async tablebaseStandard(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/standard" as const;
     const query = params;
@@ -4778,7 +4833,7 @@ export class Lichess {
    * **Endpoint: <https://tablebase.lichess.ovh>**
    */
   async tablebaseAtomic(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/atomic" as const;
     const query = params;
@@ -4802,7 +4857,7 @@ export class Lichess {
    * **Endpoint: <https://tablebase.lichess.ovh>**
    */
   async antichessAtomic(params: {
-    /* ~query */
+    /* ~query~ */
   }) {
     const path = "/antichess" as const;
     const query = params;

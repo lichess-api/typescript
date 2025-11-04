@@ -368,18 +368,18 @@ function processResponseCaseContent(content: ResponseCaseContent) {
       return { caseBody } as const;
     }
     case "ndjson": {
-      const caseBody =
-        "/* ndjson */ return { status, response } as const;" as const;
+      const caseBody = `/* ndjson */
+          return { status, response } as const;` as const;
       return { caseBody } as const;
     }
     case "chess-pgn": {
-      const caseBody =
-        "/* chess-pgn */ return { status, response } as const;" as const;
+      const caseBody = `/* chess-pgn */
+          return { status, response } as const;` as const;
       return { caseBody } as const;
     }
     case "mixed": {
-      const caseBody =
-        "/* mixed */ return { status, response } as const;" as const;
+      const caseBody = `/* mixed */
+          return { status, response } as const;` as const;
       return { caseBody } as const;
     }
   }
@@ -508,9 +508,9 @@ function descriptionToJsdoc(description: string) {
   return jsdoc;
 }
 
-function processOperation(operation: Operation, rawApiPath: string) {
+function processOperation(operation: Operation, rawApiPath: string): string {
   if (operation.__id === "__parameters") {
-    return "/* Shared params for methods below */";
+    return "/* Shared params for methods below */" as const;
   }
 
   if (operation.__id === "__servers") {
@@ -532,41 +532,51 @@ function processOperation(operation: Operation, rawApiPath: string) {
 
   // Parameters
   const {
-    hasAnyParams,
     hasQueryParams,
     hasQueryAndPathParams,
     hasOnlyQueryParams,
+    hasAnyParams,
   } = processParams(operation.parameters);
 
-  const pathAssignment = `const path = ${stringifiedProcessedPath} as const;`;
-
-  const bodyParamsComment = requestBodySchema ? "/* body */" : "";
-  const bodyComment = requestBodySchema ? "/* body */" : "";
+  const pathAssignment =
+    `const path = ${stringifiedProcessedPath} as const;` as const;
 
   const requestCode = (() => {
-    if (!hasAnyParams) {
-      return `const { response, status } = await this.requestor.${operation.__method}({ path ${bodyComment} });` as const;
+    const bodyArg = requestBodySchema ? (", body" as const) : ("" as const);
+
+    const bodyComment =
+      requestBodySchema && !hasAnyParams
+        ? ("const body = params;\n" as const)
+        : requestBodySchema
+          ? ("const body = { /* ~body~ */ } as const;\n" as const)
+          : ("" as const);
+
+    if (!hasQueryParams) {
+      return `${bodyComment}const { response, status } = await this.requestor.${operation.__method}({ path${bodyArg} });` as const;
     }
 
     const queryComment =
       hasOnlyQueryParams && !requestBodySchema
-        ? "const query = params;"
+        ? ("const query = params;\n" as const)
         : hasQueryParams
-          ? "const query = { /* ~query~ */ } as const;"
-          : "";
+          ? ("const query = { /* ~query~ */ } as const;\n" as const)
+          : ("" as const);
 
     const queryArg = hasQueryParams ? ", query" : "";
 
-    return `${queryComment}
-    const { response, status } = await this.requestor.${operation.__method}({ path ${queryArg} ${bodyComment} });` as const;
+    return `${queryComment}${bodyComment}const { response, status } = await this.requestor.${operation.__method}({ path${queryArg}${bodyArg} });` as const;
   })();
 
+  const bodyParamsComment = requestBodySchema
+    ? ("/* ~body~ */" as const)
+    : ("" as const);
+
   const paramsComment = hasQueryAndPathParams
-    ? (`params: { /* ~path, ~query */ ${bodyParamsComment}}` as const)
+    ? (`params: { /* ~path~, ~query~ */ ${bodyParamsComment}}` as const)
     : hasPathParams
-      ? (`params: { /* ~path */ ${bodyParamsComment}}` as const)
+      ? (`params: { /* ~path~ */ ${bodyParamsComment}}` as const)
       : hasQueryParams
-        ? (`params: { /* ~query */ ${bodyParamsComment}}` as const)
+        ? (`params: { /* ~query~ */ ${bodyParamsComment}}` as const)
         : requestBodySchema
           ? (`params: {${bodyParamsComment}}` as const)
           : ("" as const);
