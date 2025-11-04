@@ -190,7 +190,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
     case "$ref": {
       const ref = schema.$ref;
       const name = ref.split("/").pop()!.replace(".yaml", "");
-      const prefixedName = prefix + name;
+      const prefixedName = `${prefix}${name}` as const;
       return { zodSchema: prefixedName, refs: prefix ? [] : [name] } as const;
     }
     case "oneOf": {
