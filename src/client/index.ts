@@ -24,8 +24,8 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/users/status" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = z.array(
@@ -41,7 +41,7 @@ export class Lichess {
             patronColor: schemas.PatronColor.optional(),
           })
         );
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -61,7 +61,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.Top10s;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -79,13 +79,13 @@ export class Lichess {
   async playerTopNbPerfType(params: {
     /* ~path */
   }) {
-    const path = `/api/player/top/${nb}/${perfType}` as const;
+    const path = `/api/player/top/${params.nb}/${params.perfType}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Leaderboard;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -98,14 +98,18 @@ export class Lichess {
   /**
    * Read public data of a user.
    */
-  async apiUser(/* params: { ~path, ~query } */) {
-    const path = `/api/user/${username}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async apiUser(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/user/${params.username}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.UserExtended;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -124,13 +128,13 @@ export class Lichess {
   async apiUserRatingHistory(params: {
     /* ~path */
   }) {
-    const path = `/api/user/${username}/rating-history` as const;
+    const path = `/api/user/${params.username}/rating-history` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.RatingHistory;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -147,13 +151,13 @@ export class Lichess {
   async apiUserPerf(params: {
     /* ~path */
   }) {
-    const path = `/api/user/${username}/perf/${perf}` as const;
+    const path = `/api/user/${params.username}/perf/${params.perf}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.PerfStat;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -169,13 +173,13 @@ export class Lichess {
   async apiUserActivity(params: {
     /* ~path */
   }) {
-    const path = `/api/user/${username}/activity` as const;
+    const path = `/api/user/${params.username}/activity` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.UserActivity);
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -195,7 +199,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleAndGame;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -211,13 +215,13 @@ export class Lichess {
   async apiPuzzleId(params: {
     /* ~path */
   }) {
-    const path = `/api/puzzle/${id}` as const;
+    const path = `/api/puzzle/${params.id}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleAndGame;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -238,12 +242,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/puzzle/next" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleAndGame;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -260,14 +264,18 @@ export class Lichess {
    *
    * **DO NOT** use this endpoint to enumerate puzzles for mass download. Instead, download the [full public puzzle database](https://database.lichess.org/#puzzles).
    */
-  async apiPuzzleBatchSelect(/* params: { ~path, ~query } */) {
-    const path = `/api/puzzle/batch/${angle}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async apiPuzzleBatchSelect(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/puzzle/batch/${params.angle}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleBatchSelect;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -281,18 +289,22 @@ export class Lichess {
    * Set puzzles as solved and update ratings.
    */
   async apiPuzzleBatchSolve(
-    /* params: { ~path, ~query } */
-    /* body */
+    params: {
+      /* ~path, ~query */
+    } /* body */
   ) {
-    const path = `/api/puzzle/batch/${angle}` as const;
-    /* const query = { ... } as const */
+    const path = `/api/puzzle/batch/${params.angle}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
     const { response, status } = await this.requestor.post({
-      path /* query */ /* body */,
+      path,
+      query /* body */,
     });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleBatchSolveResponse;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -311,8 +323,8 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/puzzle/activity" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -329,19 +341,19 @@ export class Lichess {
   async apiPuzzleReplay(params: {
     /* ~path */
   }) {
-    const path = `/api/puzzle/replay/${days}/${theme}` as const;
+    const path = `/api/puzzle/replay/${params.days}/${params.theme}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleReplay;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 404: {
         const schema = z.object({ error: z.string().optional() });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -359,13 +371,13 @@ export class Lichess {
   async apiPuzzleDashboard(params: {
     /* ~path */
   }) {
-    const path = `/api/puzzle/dashboard/${days}` as const;
+    const path = `/api/puzzle/dashboard/${params.days}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleDashboard;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -380,14 +392,18 @@ export class Lichess {
    * Contains the aggregated highscores, and the history of storm runs aggregated by days.
    * Use `?days=0` if you only care about the highscores.
    */
-  async apiStormDashboard(/* params: { ~path, ~query } */) {
-    const path = `/api/storm/dashboard/${username}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async apiStormDashboard(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/storm/dashboard/${params.username}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleStormDashboard;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -409,7 +425,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleRacer;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -430,19 +446,19 @@ export class Lichess {
   async racerGet(params: {
     /* ~path */
   }) {
-    const path = `/api/racer/${id}` as const;
+    const path = `/api/racer/${params.id}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleRaceResults;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -465,7 +481,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.array(schemas.User);
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -484,7 +500,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.UserExtended;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -503,7 +519,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.object({ email: z.string().optional() });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -527,7 +543,7 @@ export class Lichess {
           prefs: schemas.UserPreferences.optional(),
           language: z.string().optional(),
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -547,7 +563,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.object({ kid: z.boolean().optional() });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -565,14 +581,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/account/kid" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.post({
-      path /* query */,
-    });
+    const query = params;
+    const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -589,12 +603,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/timeline" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.Timeline;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -608,10 +622,14 @@ export class Lichess {
    * Download one game in either PGN or JSON format.
    * Ongoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.
    */
-  async gamePgn(/* params: { ~path, ~query } */) {
-    const path = `/game/export/${gameId}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async gamePgn(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/game/export/${params.gameId}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* mixed */ return { status, response } as const;
@@ -627,10 +645,14 @@ export class Lichess {
    * Available in either PGN or JSON format.
    * Ongoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.
    */
-  async apiUserCurrentGame(/* params: { ~path, ~query } */) {
-    const path = `/api/user/${username}/current-game` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async apiUserCurrentGame(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/user/${params.username}/current-game` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* mixed */ return { status, response } as const;
@@ -651,10 +673,14 @@ export class Lichess {
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 games per second
    *   - Authenticated, downloading your own games: 60 games per second
    */
-  async apiGamesUser(/* params: { ~path, ~query } */) {
-    const path = `/api/games/user/${username}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async apiGamesUser(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/games/user/${params.username}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* mixed */ return { status, response } as const;
@@ -678,9 +704,12 @@ export class Lichess {
     } /* body */
   ) {
     const path = "/api/games/export/_ids" as const;
-    /* const query = { ... } as const */
+    const query = {
+      /* ~query~ */
+    } as const;
     const { response, status } = await this.requestor.post({
-      path /* query */ /* body */,
+      path,
+      query /* body */,
     });
     switch (status) {
       case 200: {
@@ -707,9 +736,12 @@ export class Lichess {
     } /* body */
   ) {
     const path = "/api/stream/games-by-users" as const;
-    /* const query = { ... } as const */
+    const query = {
+      /* ~query~ */
+    } as const;
     const { response, status } = await this.requestor.post({
-      path /* query */ /* body */,
+      path,
+      query /* body */,
     });
     switch (status) {
       case 200: {
@@ -733,7 +765,7 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/stream/games/${streamId}` as const;
+    const path = `/api/stream/games/${params.streamId}` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
@@ -755,13 +787,13 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/stream/games/${streamId}/add` as const;
+    const path = `/api/stream/games/${params.streamId}/add` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -780,8 +812,8 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/account/playing" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -815,7 +847,7 @@ export class Lichess {
             })
           ),
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -836,7 +868,7 @@ export class Lichess {
   async streamGame(params: {
     /* ~path */
   }) {
-    const path = `/api/stream/game/${id}` as const;
+    const path = `/api/stream/game/${params.id}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -845,7 +877,7 @@ export class Lichess {
       }
       case 429: {
         const schema = z.object({ error: z.string().optional() });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -871,7 +903,7 @@ export class Lichess {
           id: z.string().optional(),
           url: z.url().optional(),
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -906,8 +938,8 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/games/export/bookmarks" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* mixed */ return { status, response } as const;
@@ -946,7 +978,7 @@ export class Lichess {
           kingOfTheHill: schemas.TvGame,
           best: schemas.TvGame,
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -980,7 +1012,7 @@ export class Lichess {
   async tvChannelFeed(params: {
     /* ~path */
   }) {
-    const path = `/api/tv/${channel}/feed` as const;
+    const path = `/api/tv/${params.channel}/feed` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -997,10 +1029,14 @@ export class Lichess {
    * Get a list of ongoing games for a given TV channel. Similar to [lichess.org/games](https://lichess.org/games).
    * Available in PGN or [ndjson](#section/Introduction/Streaming-with-ND-JSON) format, depending on the request `Accept` header.
    */
-  async tvChannelGames(/* params: { ~path, ~query } */) {
-    const path = `/api/tv/${channel}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async tvChannelGames(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/tv/${params.channel}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* mixed */ return { status, response } as const;
@@ -1021,7 +1057,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournaments;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1047,13 +1083,13 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournamentFull;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1068,14 +1104,16 @@ export class Lichess {
   /**
    * Get detailed info about recently finished, current, or upcoming tournament's duels, player standings, and other info.
    */
-  async tournament(/* params: { ~path, ~query } */) {
-    const path = `/api/tournament/${id}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async tournament(params: {
+    /* ~path */
+  }) {
+    const path = `/api/tournament/${params.id}` as const;
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournamentFull;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1099,18 +1137,18 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/tournament/${id}` as const;
+    const path = `/api/tournament/${params.id}` as const;
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournamentFull;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1129,19 +1167,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/tournament/${id}/join` as const;
+    const path = `/api/tournament/${params.id}/join` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1158,19 +1196,19 @@ export class Lichess {
   async apiTournamentWithdraw(params: {
     /* ~path */
   }) {
-    const path = `/api/tournament/${id}/withdraw` as const;
+    const path = `/api/tournament/${params.id}/withdraw` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1186,19 +1224,19 @@ export class Lichess {
   async apiTournamentTerminate(params: {
     /* ~path */
   }) {
-    const path = `/api/tournament/${id}/terminate` as const;
+    const path = `/api/tournament/${params.id}/terminate` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1217,19 +1255,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/tournament/team-battle/${id}` as const;
+    const path = `/api/tournament/team-battle/${params.id}` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournamentFull;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1246,10 +1284,14 @@ export class Lichess {
    *   - Anonymous request: 20 games per second
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 games per second
    */
-  async gamesByTournament(/* params: { ~path, ~query } */) {
-    const path = `/api/tournament/${id}/games` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async gamesByTournament(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/tournament/${params.id}/games` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* mixed */ return { status, response } as const;
@@ -1267,10 +1309,14 @@ export class Lichess {
    * due to ranking changes while the players are being streamed.
    * Use on finished tournaments for guaranteed consistency.
    */
-  async resultsByTournament(/* params: { ~path, ~query } */) {
-    const path = `/api/tournament/${id}/results` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async resultsByTournament(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/tournament/${params.id}/results` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -1287,7 +1333,7 @@ export class Lichess {
   async teamsByTournament(params: {
     /* ~path */
   }) {
-    const path = `/api/tournament/${id}/teams` as const;
+    const path = `/api/tournament/${params.id}/teams` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -1308,7 +1354,7 @@ export class Lichess {
             })
           ),
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1327,10 +1373,14 @@ export class Lichess {
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 tournaments per second
    *   - Authenticated, downloading your own tournaments: 50 tournaments per second
    */
-  async apiUserNameTournamentCreated(/* params: { ~path, ~query } */) {
-    const path = `/api/user/${username}/tournament/created` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async apiUserNameTournamentCreated(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/user/${params.username}/tournament/created` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -1350,10 +1400,14 @@ export class Lichess {
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 tournaments per second
    *   - Authenticated, downloading your own tournaments: 50 tournaments per second
    */
-  async apiUserNameTournamentPlayed(/* params: { ~path, ~query } */) {
-    const path = `/api/user/${username}/tournament/played` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async apiUserNameTournamentPlayed(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/user/${params.username}/tournament/played` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -1377,19 +1431,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/swiss/new/${teamId}` as const;
+    const path = `/api/swiss/new/${params.teamId}` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.SwissTournament;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1407,12 +1461,12 @@ export class Lichess {
   async swiss(params: {
     /* ~path */
   }) {
-    const path = `/api/swiss/${id}` as const;
+    const path = `/api/swiss/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.SwissTournament;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1434,25 +1488,25 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/swiss/${id}/edit` as const;
+    const path = `/api/swiss/${params.id}/edit` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.SwissTournament;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 401: {
         const schema = schemas.SwissUnauthorisedEdit;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1472,7 +1526,7 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/swiss/${id}/schedule-next-round` as const;
+    const path = `/api/swiss/${params.id}/schedule-next-round` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
@@ -1481,13 +1535,13 @@ export class Lichess {
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 401: {
         const schema = schemas.SwissUnauthorisedEdit;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1505,19 +1559,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/swiss/${id}/join` as const;
+    const path = `/api/swiss/${params.id}/join` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1534,13 +1588,13 @@ export class Lichess {
   async apiSwissWithdraw(params: {
     /* ~path */
   }) {
-    const path = `/api/swiss/${id}/withdraw` as const;
+    const path = `/api/swiss/${params.id}/withdraw` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1556,19 +1610,19 @@ export class Lichess {
   async apiSwissTerminate(params: {
     /* ~path */
   }) {
-    const path = `/api/swiss/${id}/terminate` as const;
+    const path = `/api/swiss/${params.id}/terminate` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1586,7 +1640,7 @@ export class Lichess {
   async swissTrf(params: {
     /* ~path */
   }) {
-    const path = `/swiss/${id}.trf` as const;
+    const path = `/swiss/${params.id}.trf` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -1606,10 +1660,14 @@ export class Lichess {
    *   - Anonymous request: 20 games per second
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 games per second
    */
-  async gamesBySwiss(/* params: { ~path, ~query } */) {
-    const path = `/api/swiss/${id}/games` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async gamesBySwiss(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/swiss/${params.id}/games` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* mixed */ return { status, response } as const;
@@ -1627,10 +1685,14 @@ export class Lichess {
    * due to ranking changes while the players are being streamed.
    * Use on finished tournaments for guaranteed consistency.
    */
-  async resultsBySwiss(/* params: { ~path, ~query } */) {
-    const path = `/api/swiss/${id}/results` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async resultsBySwiss(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/swiss/${params.id}/results` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -1646,10 +1708,14 @@ export class Lichess {
    * Tournaments are sorted by reverse chronological order of start date (last starting first).
    * Tournaments are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
-  async apiTeamSwiss(/* params: { ~path, ~query } */) {
-    const path = `/api/team/${teamId}/swiss` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async apiTeamSwiss(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/team/${params.teamId}/swiss` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -1665,10 +1731,15 @@ export class Lichess {
    * If authenticated, then all public, unlisted, and private study chapters are read.
    * If not, only public (non-unlisted) study chapters are read.
    */
-  async studyChapterPgn(/* params: { ~path, ~query } */) {
-    const path = `/api/study/${studyId}/${chapterId}.pgn` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async studyChapterPgn(params: {
+    /* ~path, ~query */
+  }) {
+    const path =
+      `/api/study/${params.studyId}/${params.chapterId}.pgn` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* chess-pgn */ return { status, response } as const;
@@ -1684,10 +1755,14 @@ export class Lichess {
    * If authenticated, then all public, unlisted, and private study chapters are read.
    * If not, only public (non-unlisted) study chapters are read.
    */
-  async studyAllChaptersPgn(/* params: { ~path, ~query } */) {
-    const path = `/api/study/${studyId}.pgn` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async studyAllChaptersPgn(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/study/${params.studyId}.pgn` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* chess-pgn */ return { status, response } as const;
@@ -1704,7 +1779,7 @@ export class Lichess {
   async studyAllChaptersHead(params: {
     /* ~path */
   }) {
-    const path = `/api/study/${studyId}.pgn` as const;
+    const path = `/api/study/${params.studyId}.pgn` as const;
 
     const { response, status } = await this.requestor.head({ path });
     switch (status) {
@@ -1728,19 +1803,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/study/${studyId}/import-pgn` as const;
+    const path = `/api/study/${params.studyId}/import-pgn` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.StudyImportPgnChapters;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1764,7 +1839,8 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/study/${studyId}/${chapterId}/tags` as const;
+    const path =
+      `/api/study/${params.studyId}/${params.chapterId}/tags` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
@@ -1773,7 +1849,7 @@ export class Lichess {
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1788,10 +1864,14 @@ export class Lichess {
    * If authenticated, then all public, unlisted, and private studies are included.
    * If not, only public (non-unlisted) studies are included.
    */
-  async studyExportAllPgn(/* params: { ~path, ~query } */) {
-    const path = `/study/by/${username}/export.pgn` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async studyExportAllPgn(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/study/by/${params.username}/export.pgn` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* chess-pgn */ return { status, response } as const;
@@ -1811,7 +1891,7 @@ export class Lichess {
   async studyListMetadata(params: {
     /* ~path */
   }) {
-    const path = `/api/study/by/${username}` as const;
+    const path = `/api/study/by/${params.username}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -1832,7 +1912,7 @@ export class Lichess {
   async apiStudyStudyIdChapterIdDelete(params: {
     /* ~path */
   }) {
-    const path = `/api/study/${studyId}/${chapterId}` as const;
+    const path = `/api/study/${params.studyId}/${params.chapterId}` as const;
 
     const { response, status } = await this.requestor.delete({ path });
     switch (status) {
@@ -1854,8 +1934,8 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/broadcast" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -1873,12 +1953,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/broadcast/top" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastTop;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1894,10 +1974,14 @@ export class Lichess {
    *
    * If you are authenticated as the user whose broadcasts you are requesting, you will also see your private and unlisted broadcasts.
    */
-  async broadcastsByUser(/* params: { ~path, ~query } */) {
-    const path = `/api/broadcast/by/${username}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async broadcastsByUser(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/broadcast/by/${params.username}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -1909,7 +1993,7 @@ export class Lichess {
           nextPage: z.int().nullable(),
           nbPages: z.int(),
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1926,8 +2010,8 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/broadcast/search" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -1937,7 +2021,7 @@ export class Lichess {
           previousPage: z.int().nullable(),
           nextPage: z.int().nullable(),
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1957,13 +2041,13 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastWithRounds;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -1979,13 +2063,13 @@ export class Lichess {
   async broadcastTourGet(params: {
     /* ~path */
   }) {
-    const path = `/api/broadcast/${broadcastTournamentId}` as const;
+    const path = `/api/broadcast/${params.broadcastTournamentId}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastWithRounds;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2001,13 +2085,13 @@ export class Lichess {
   async broadcastPlayersGet(params: {
     /* ~path */
   }) {
-    const path = `/broadcast/${broadcastTournamentId}/players` as const;
+    const path = `/broadcast/${params.broadcastTournamentId}/players` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.BroadcastPlayerEntry);
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2024,19 +2108,19 @@ export class Lichess {
     /* ~path */
   }) {
     const path =
-      `/broadcast/${broadcastTournamentId}/players/${playerId}` as const;
+      `/broadcast/${params.broadcastTournamentId}/players/${params.playerId}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastPlayerEntryWithFideAndGames;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2056,19 +2140,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/broadcast/${broadcastTournamentId}/edit` as const;
+    const path = `/broadcast/${params.broadcastTournamentId}/edit` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2089,19 +2173,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/broadcast/${broadcastTournamentId}/new` as const;
+    const path = `/broadcast/${params.broadcastTournamentId}/new` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastRoundNew;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2118,13 +2202,13 @@ export class Lichess {
     /* ~path */
   }) {
     const path =
-      `/api/broadcast/${broadcastTournamentSlug}/${broadcastRoundSlug}/${broadcastRoundId}` as const;
+      `/api/broadcast/${params.broadcastTournamentSlug}/${params.broadcastRoundSlug}/${params.broadcastRoundId}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastRound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2145,19 +2229,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/broadcast/round/${broadcastRoundId}/edit` as const;
+    const path = `/broadcast/round/${params.broadcastRoundId}/edit` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastRound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2173,13 +2257,14 @@ export class Lichess {
   async broadcastRoundReset(params: {
     /* ~path */
   }) {
-    const path = `/api/broadcast/round/${broadcastRoundId}/reset` as const;
+    const path =
+      `/api/broadcast/round/${params.broadcastRoundId}/reset` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2198,19 +2283,20 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/broadcast/round/${broadcastRoundId}/push` as const;
+    const path =
+      `/api/broadcast/round/${params.broadcastRoundId}/push` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastPgnPush;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = z.object({ error: z.string().optional() });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2230,7 +2316,8 @@ export class Lichess {
   async broadcastStreamRoundPgn(params: {
     /* ~path */
   }) {
-    const path = `/api/stream/broadcast/round/${broadcastRoundId}.pgn` as const;
+    const path =
+      `/api/stream/broadcast/round/${params.broadcastRoundId}.pgn` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -2253,7 +2340,7 @@ export class Lichess {
   async broadcastRoundPgn(params: {
     /* ~path */
   }) {
-    const path = `/api/broadcast/round/${broadcastRoundId}.pgn` as const;
+    const path = `/api/broadcast/round/${params.broadcastRoundId}.pgn` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -2275,7 +2362,7 @@ export class Lichess {
   async broadcastAllRoundsPgn(params: {
     /* ~path */
   }) {
-    const path = `/api/broadcast/${broadcastTournamentId}.pgn` as const;
+    const path = `/api/broadcast/${params.broadcastTournamentId}.pgn` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -2298,8 +2385,8 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/broadcast/my-rounds" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -2316,13 +2403,13 @@ export class Lichess {
   async fidePlayerGet(params: {
     /* ~path */
   }) {
-    const path = `/api/fide/player/${playerId}` as const;
+    const path = `/api/fide/player/${params.playerId}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.FIDEPlayer;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2339,12 +2426,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/fide/player" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.FIDEPlayer);
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2371,7 +2458,7 @@ export class Lichess {
           started: z.array(schemas.Simul).optional(),
           finished: z.array(schemas.Simul).optional(),
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2387,13 +2474,13 @@ export class Lichess {
   async teamShow(params: {
     /* ~path */
   }) {
-    const path = `/api/team/${teamId}` as const;
+    const path = `/api/team/${params.teamId}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Team;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2410,12 +2497,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/team/all" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.TeamPaginatorJson;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2431,13 +2518,13 @@ export class Lichess {
   async teamOfUsername(params: {
     /* ~path */
   }) {
-    const path = `/api/team/of/${username}` as const;
+    const path = `/api/team/of/${params.username}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.Team);
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2454,12 +2541,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/team/search" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.TeamPaginatorJson;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2474,10 +2561,14 @@ export class Lichess {
    * OAuth is only required if the list of members is private.
    * Up to 5,000 users are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
-  async teamIdUsers(/* params: { ~path, ~query } */) {
-    const path = `/api/team/${teamId}/users` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async teamIdUsers(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/team/${params.teamId}/users` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -2493,10 +2584,14 @@ export class Lichess {
    * Tournaments are sorted by reverse chronological order of start date (last starting first).
    * Tournaments are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
-  async apiTeamArena(/* params: { ~path, ~query } */) {
-    const path = `/api/team/${teamId}/arena` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async apiTeamArena(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/team/${params.teamId}/arena` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -2520,13 +2615,13 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/team/${teamId}/join` as const;
+    const path = `/team/${params.teamId}/join` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2543,13 +2638,13 @@ export class Lichess {
   async teamIdQuit(params: {
     /* ~path */
   }) {
-    const path = `/team/${teamId}/quit` as const;
+    const path = `/team/${params.teamId}/quit` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2562,14 +2657,18 @@ export class Lichess {
   /**
    * Get pending join requests of your team
    */
-  async teamRequests(/* params: { ~path, ~query } */) {
-    const path = `/api/team/${teamId}/requests` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async teamRequests(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/team/${params.teamId}/requests` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.TeamRequestWithUser);
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2585,13 +2684,14 @@ export class Lichess {
   async teamRequestAccept(params: {
     /* ~path */
   }) {
-    const path = `/api/team/${teamId}/request/${userId}/accept` as const;
+    const path =
+      `/api/team/${params.teamId}/request/${params.userId}/accept` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2607,13 +2707,14 @@ export class Lichess {
   async teamRequestDecline(params: {
     /* ~path */
   }) {
-    const path = `/api/team/${teamId}/request/${userId}/decline` as const;
+    const path =
+      `/api/team/${params.teamId}/request/${params.userId}/decline` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2630,13 +2731,13 @@ export class Lichess {
   async teamIdKickUserId(params: {
     /* ~path */
   }) {
-    const path = `/api/team/${teamId}/kick/${userId}` as const;
+    const path = `/api/team/${params.teamId}/kick/${params.userId}` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2655,19 +2756,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/team/${teamId}/pm-all` as const;
+    const path = `/team/${params.teamId}/pm-all` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2711,7 +2812,7 @@ export class Lichess {
             })
           )
         );
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2725,14 +2826,18 @@ export class Lichess {
    * Get total number of games, and current score, of any two users.
    * If the `matchup` flag is provided, and the users are currently playing, also gets the current match game number and scores.
    */
-  async apiCrosstable(/* params: { ~path, ~query } */) {
-    const path = `/api/crosstable/${user1}/${user2}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async apiCrosstable(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/crosstable/${params.user1}/${params.user2}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.Crosstable;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2749,15 +2854,15 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/player/autocomplete" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = z.union([
           z.array(z.string()),
           z.object({ result: z.array(schemas.LightUserOnline).optional() }),
         ]);
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2773,13 +2878,13 @@ export class Lichess {
   async readNote(params: {
     /* ~path */
   }) {
-    const path = `/api/user/${username}/note` as const;
+    const path = `/api/user/${params.username}/note` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.UserNote);
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2797,13 +2902,13 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/user/${username}/note` as const;
+    const path = `/api/user/${params.username}/note` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2835,13 +2940,13 @@ export class Lichess {
   async followUser(params: {
     /* ~path */
   }) {
-    const path = `/api/rel/follow/${username}` as const;
+    const path = `/api/rel/follow/${params.username}` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2857,13 +2962,13 @@ export class Lichess {
   async unfollowUser(params: {
     /* ~path */
   }) {
-    const path = `/api/rel/unfollow/${username}` as const;
+    const path = `/api/rel/unfollow/${params.username}` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2879,13 +2984,13 @@ export class Lichess {
   async blockUser(params: {
     /* ~path */
   }) {
-    const path = `/api/rel/block/${username}` as const;
+    const path = `/api/rel/block/${params.username}` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2901,13 +3006,13 @@ export class Lichess {
   async unblockUser(params: {
     /* ~path */
   }) {
-    const path = `/api/rel/unblock/${username}` as const;
+    const path = `/api/rel/unblock/${params.username}` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -2977,7 +3082,7 @@ export class Lichess {
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3005,7 +3110,7 @@ export class Lichess {
   async boardGameStream(params: {
     /* ~path */
   }) {
-    const path = `/api/board/game/stream/${gameId}` as const;
+    const path = `/api/board/game/stream/${params.gameId}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -3014,7 +3119,7 @@ export class Lichess {
       }
       case 404: {
         const schema = schemas.NotFound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3028,22 +3133,25 @@ export class Lichess {
    * Make a move in a game being played with the Board API.
    * The move can also contain a draw offer/agreement.
    */
-  async boardGameMove(/* params: { ~path, ~query } */) {
-    const path = `/api/board/game/${gameId}/move/${move}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.post({
-      path /* query */,
-    });
+  async boardGameMove(params: {
+    /* ~path, ~query */
+  }) {
+    const path =
+      `/api/board/game/${params.gameId}/move/${params.move}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3061,7 +3169,7 @@ export class Lichess {
   async boardGameChatGet(params: {
     /* ~path */
   }) {
-    const path = `/api/board/game/${gameId}/chat` as const;
+    const path = `/api/board/game/${params.gameId}/chat` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
@@ -3081,18 +3189,18 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/board/game/${gameId}/chat` as const;
+    const path = `/api/board/game/${params.gameId}/chat` as const;
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3108,19 +3216,19 @@ export class Lichess {
   async boardGameAbort(params: {
     /* ~path */
   }) {
-    const path = `/api/board/game/${gameId}/abort` as const;
+    const path = `/api/board/game/${params.gameId}/abort` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3136,19 +3244,19 @@ export class Lichess {
   async boardGameResign(params: {
     /* ~path */
   }) {
-    const path = `/api/board/game/${gameId}/resign` as const;
+    const path = `/api/board/game/${params.gameId}/resign` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3166,19 +3274,20 @@ export class Lichess {
   async boardGameDraw(params: {
     /* ~path */
   }) {
-    const path = `/api/board/game/${gameId}/draw/${accept}` as const;
+    const path =
+      `/api/board/game/${params.gameId}/draw/${params.accept}` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3196,19 +3305,20 @@ export class Lichess {
   async boardGameTakeback(params: {
     /* ~path */
   }) {
-    const path = `/api/board/game/${gameId}/takeback/${accept}` as const;
+    const path =
+      `/api/board/game/${params.gameId}/takeback/${params.accept}` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3224,19 +3334,19 @@ export class Lichess {
   async boardGameClaimVictory(params: {
     /* ~path */
   }) {
-    const path = `/api/board/game/${gameId}/claim-victory` as const;
+    const path = `/api/board/game/${params.gameId}/claim-victory` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3252,19 +3362,19 @@ export class Lichess {
   async boardGameClaimDraw(params: {
     /* ~path */
   }) {
-    const path = `/api/board/game/${gameId}/claim-draw` as const;
+    const path = `/api/board/game/${params.gameId}/claim-draw` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3281,19 +3391,19 @@ export class Lichess {
   async boardGameBerserk(params: {
     /* ~path */
   }) {
-    const path = `/api/board/game/${gameId}/berserk` as const;
+    const path = `/api/board/game/${params.gameId}/berserk` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3310,8 +3420,8 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/bot/online" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -3337,13 +3447,13 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3366,7 +3476,7 @@ export class Lichess {
   async botGameStream(params: {
     /* ~path */
   }) {
-    const path = `/api/bot/game/stream/${gameId}` as const;
+    const path = `/api/bot/game/stream/${params.gameId}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -3375,7 +3485,7 @@ export class Lichess {
       }
       case 404: {
         const schema = schemas.NotFound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3389,22 +3499,24 @@ export class Lichess {
    * Make a move in a game being played with the Bot API.
    * The move can also contain a draw offer/agreement.
    */
-  async botGameMove(/* params: { ~path, ~query } */) {
-    const path = `/api/bot/game/${gameId}/move/${move}` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.post({
-      path /* query */,
-    });
+  async botGameMove(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/bot/game/${params.gameId}/move/${params.move}` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3420,7 +3532,7 @@ export class Lichess {
   async botGameChatGet(params: {
     /* ~path */
   }) {
-    const path = `/api/bot/game/${gameId}/chat` as const;
+    const path = `/api/bot/game/${params.gameId}/chat` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -3441,19 +3553,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/bot/game/${gameId}/chat` as const;
+    const path = `/api/bot/game/${params.gameId}/chat` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3469,19 +3581,19 @@ export class Lichess {
   async botGameAbort(params: {
     /* ~path */
   }) {
-    const path = `/api/bot/game/${gameId}/abort` as const;
+    const path = `/api/bot/game/${params.gameId}/abort` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3497,19 +3609,19 @@ export class Lichess {
   async botGameResign(params: {
     /* ~path */
   }) {
-    const path = `/api/bot/game/${gameId}/resign` as const;
+    const path = `/api/bot/game/${params.gameId}/resign` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3527,19 +3639,20 @@ export class Lichess {
   async botGameDraw(params: {
     /* ~path */
   }) {
-    const path = `/api/bot/game/${gameId}/draw/${accept}` as const;
+    const path =
+      `/api/bot/game/${params.gameId}/draw/${params.accept}` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3557,19 +3670,20 @@ export class Lichess {
   async botGameTakeback(params: {
     /* ~path */
   }) {
-    const path = `/api/bot/game/${gameId}/takeback/${accept}` as const;
+    const path =
+      `/api/bot/game/${params.gameId}/takeback/${params.accept}` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3585,19 +3699,19 @@ export class Lichess {
   async botGameClaimVictory(params: {
     /* ~path */
   }) {
-    const path = `/api/bot/game/${gameId}/claim-victory` as const;
+    const path = `/api/bot/game/${params.gameId}/claim-victory` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3613,19 +3727,19 @@ export class Lichess {
   async botGameClaimDraw(params: {
     /* ~path */
   }) {
-    const path = `/api/bot/game/${gameId}/claim-draw` as const;
+    const path = `/api/bot/game/${params.gameId}/claim-draw` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3647,7 +3761,7 @@ export class Lichess {
           in: z.array(schemas.ChallengeJson).optional(),
           out: z.array(schemas.ChallengeJson).optional(),
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3669,19 +3783,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/challenge/${username}` as const;
+    const path = `/api/challenge/${params.username}` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.ChallengeJson;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3697,13 +3811,13 @@ export class Lichess {
   async challengeShow(params: {
     /* ~path */
   }) {
-    const path = `/api/challenge/${challengeId}/show` as const;
+    const path = `/api/challenge/${params.challengeId}/show` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.ChallengeJson;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3717,22 +3831,24 @@ export class Lichess {
    * Accept an incoming challenge.
    * You should receive a `gameStart` event on the [incoming events stream](#operation/apiStreamEvent).
    */
-  async challengeAccept(/* params: { ~path, ~query } */) {
-    const path = `/api/challenge/${challengeId}/accept` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.post({
-      path /* query */,
-    });
+  async challengeAccept(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/challenge/${params.challengeId}/accept` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3750,19 +3866,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/challenge/${challengeId}/decline` as const;
+    const path = `/api/challenge/${params.challengeId}/decline` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3777,22 +3893,24 @@ export class Lichess {
    * Note that the ID of a game is the same as the ID of the challenge that created it.
    * Works for user challenges and open challenges alike.
    */
-  async challengeCancel(/* params: { ~path, ~query } */) {
-    const path = `/api/challenge/${challengeId}/cancel` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.post({
-      path /* query */,
-    });
+  async challengeCancel(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/challenge/${params.challengeId}/cancel` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3825,13 +3943,13 @@ export class Lichess {
           player: schemas.GameColor.optional(),
           fullId: z.string().min(12).max(12).optional(),
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3858,13 +3976,13 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.ChallengeOpenJson;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3881,16 +3999,18 @@ export class Lichess {
    *
    * For AI games with only one player, omit the `token2` parameter.
    */
-  async challengeStartClocks(/* params: { ~path, ~query } */) {
-    const path = `/api/challenge/${gameId}/start-clocks` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.post({
-      path /* query */,
-    });
+  async challengeStartClocks(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/challenge/${params.gameId}/start-clocks` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3909,7 +4029,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.array(schemas.BulkPairing);
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3948,13 +4068,13 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.BulkPairing;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -3973,19 +4093,19 @@ export class Lichess {
   async bulkPairingStartClocks(params: {
     /* ~path */
   }) {
-    const path = `/api/bulk-pairing/${id}/start-clocks` as const;
+    const path = `/api/bulk-pairing/${params.id}/start-clocks` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4001,19 +4121,19 @@ export class Lichess {
   async bulkPairingGet(params: {
     /* ~path */
   }) {
-    const path = `/api/bulk-pairing/${id}` as const;
+    const path = `/api/bulk-pairing/${params.id}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.BulkPairing;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4031,19 +4151,19 @@ export class Lichess {
   async bulkPairingDelete(params: {
     /* ~path */
   }) {
-    const path = `/api/bulk-pairing/${id}` as const;
+    const path = `/api/bulk-pairing/${params.id}` as const;
 
     const { response, status } = await this.requestor.delete({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4056,10 +4176,14 @@ export class Lichess {
   /**
    * Download games of a bulk in PGN or [ndjson](#section/Introduction/Streaming-with-ND-JSON) format, depending on the request `Accept` header.
    */
-  async bulkPairingIdGamesGet(/* params: { ~path, ~query } */) {
-    const path = `/api/bulk-pairing/${id}/games` as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+  async bulkPairingIdGamesGet(params: {
+    /* ~path, ~query */
+  }) {
+    const path = `/api/bulk-pairing/${params.id}/games` as const;
+    const query = {
+      /* ~query~ */
+    } as const;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* mixed */ return { status, response } as const;
@@ -4076,13 +4200,14 @@ export class Lichess {
   async roundAddTime(params: {
     /* ~path */
   }) {
-    const path = `/api/round/${gameId}/add-time/${seconds}` as const;
+    const path =
+      `/api/round/${params.gameId}/add-time/${params.seconds}` as const;
 
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4103,13 +4228,13 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.record(z.string(), z.string());
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4127,19 +4252,19 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/inbox/${username}` as const;
+    const path = `/inbox/${params.username}` as const;
 
     const { response, status } = await this.requestor.post({ path /* body */ });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.Error;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4160,18 +4285,18 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/api/cloud-eval" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.CloudEval;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 404: {
         const schema = z.object({ error: z.string().optional() });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4191,7 +4316,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.array(schemas.ExternalEngine);
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4212,7 +4337,7 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.ExternalEngine;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4230,12 +4355,12 @@ export class Lichess {
   async apiExternalEngineGet(params: {
     /* ~path */
   }) {
-    const path = `/api/external-engine/${id}` as const;
+    const path = `/api/external-engine/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
         const schema = schemas.ExternalEngine;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4251,12 +4376,12 @@ export class Lichess {
   async apiExternalEngineDelete(params: {
     /* ~path */
   }) {
-    const path = `/api/external-engine/${id}` as const;
+    const path = `/api/external-engine/${params.id}` as const;
     const { response, status } = await this.requestor.delete({ path });
     switch (status) {
       case 200: {
         const schema = schemas.Ok;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4274,12 +4399,12 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/external-engine/${id}` as const;
+    const path = `/api/external-engine/${params.id}` as const;
     const { response, status } = await this.requestor.put({ path });
     switch (status) {
       case 200: {
         const schema = schemas.ExternalEngine;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4305,7 +4430,7 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/external-engine/${id}/analyse` as const;
+    const path = `/api/external-engine/${params.id}/analyse` as const;
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -4337,7 +4462,7 @@ export class Lichess {
           work: schemas.ExternalEngineWork,
           engine: schemas.ExternalEngine,
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4373,7 +4498,7 @@ export class Lichess {
       /* ~path */
     } /* body */
   ) {
-    const path = `/api/external-engine/work/${id}` as const;
+    const path = `/api/external-engine/work/${params.id}` as const;
     const { response, status } = await this.requestor.post({ path });
     switch (status) {
       case 200: {
@@ -4425,8 +4550,8 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/oauth" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         return { status, response } as const;
@@ -4450,13 +4575,13 @@ export class Lichess {
           access_token: z.string(),
           expires_in: z.int(),
         });
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
       case 400: {
         const schema = schemas.OAuthError;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4504,7 +4629,7 @@ export class Lichess {
             z.null(),
           ])
         );
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4525,12 +4650,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/masters" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.OpeningExplorerMasters;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4553,12 +4678,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/lichess" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.OpeningExplorerLichess;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4589,8 +4714,8 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/player" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         /* ndjson */ return { status, response } as const;
@@ -4611,7 +4736,7 @@ export class Lichess {
   async openingExplorerMasterGame(params: {
     /* ~path */
   }) {
-    const path = `/master/pgn/${gameId}` as const;
+    const path = `/master/pgn/${params.gameId}` as const;
 
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -4635,12 +4760,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/standard" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.TablebaseJson;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4659,12 +4784,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/atomic" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.TablebaseJson;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }
@@ -4683,12 +4808,12 @@ export class Lichess {
     /* ~query */
   }) {
     const path = "/antichess" as const;
-    /* const query = { ... } as const */
-    const { response, status } = await this.requestor.get({ path /* query */ });
+    const query = params;
+    const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
         const schema = schemas.TablebaseJson;
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
       }

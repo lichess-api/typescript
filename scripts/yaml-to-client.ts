@@ -101,7 +101,7 @@ const ResponseContentBaseContent = z.object({
 
 const ResponseContextPlainTextContent = ResponseContentBaseContent.extend({})
   .strict()
-  .transform((x) => ({ ...x, __content: "text" }) as const);
+  .transform((x) => ({ ...x, __content: "text" as const }));
 
 const ResponseContentJsonContent = ResponseContentBaseContent.extend({})
   .strict()
@@ -153,7 +153,7 @@ const ResponseContentMixed = z
 
 const ResponseContentNoContent = z
   .undefined()
-  .transform(() => ({ __content_type: "nocontent" }) as const);
+  .transform(() => ({ __content_type: "nocontent" as const }));
 
 const ResponseContent = z.union([
   ResponseContentJson,
@@ -362,7 +362,7 @@ function processResponseCaseContent(content: ResponseCaseContent) {
       console.log(content.schema);
       const { zodSchema } = convertToZod(content.schema, "schemas.");
       const caseBody = `const schema = ${zodSchema};
-        const json = await response.clone().json();
+        const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;` as const;
       return { caseBody } as const;
@@ -456,7 +456,7 @@ function processMethod({
 }
 
 function processRawPath(rawApiPath: string) {
-  const processedPath = rawApiPath.replaceAll("{", "${");
+  const processedPath = rawApiPath.replaceAll("/{", "/${params.");
   const hasPathParams = rawApiPath.includes("{");
   return { processedPath, hasPathParams } as const;
 }
@@ -467,6 +467,9 @@ function processParams(params: OperationParameters) {
       hasAnyParams: false,
       hasQueryParams: false,
       hasPathParams: false,
+      hasQueryAndPathParams: false,
+      hasOnlyQueryParams: false,
+      hasOnlyPathParams: false,
     } as const;
   }
 
@@ -474,6 +477,9 @@ function processParams(params: OperationParameters) {
   const pathParams = params.filter((param) => param.in === "path");
   const hasQueryParams = queryParams.length > 0;
   const hasPathParams = pathParams.length > 0;
+  const hasQueryAndPathParams = hasQueryParams && hasPathParams;
+  const hasOnlyQueryParams = hasQueryParams && !hasPathParams;
+  const hasOnlyPathParams = hasPathParams && !hasQueryParams;
 
   return {
     hasAnyParams: true,
@@ -481,6 +487,9 @@ function processParams(params: OperationParameters) {
     hasQueryParams,
     queryParams,
     pathParams,
+    hasQueryAndPathParams,
+    hasOnlyQueryParams,
+    hasOnlyPathParams,
   } as const;
 }
 
@@ -519,10 +528,15 @@ function processOperation(operation: Operation, rawApiPath: string) {
 
   const { responseCases, requestBodySchema } = processMethod({
     method: operation,
-  })!;
+  });
 
   // Parameters
-  const { hasAnyParams, hasQueryParams } = processParams(operation.parameters);
+  const {
+    hasAnyParams,
+    hasQueryParams,
+    hasQueryAndPathParams,
+    hasOnlyQueryParams,
+  } = processParams(operation.parameters);
 
   const pathAssignment = `const path = ${stringifiedProcessedPath} as const;`;
 
@@ -533,23 +547,26 @@ function processOperation(operation: Operation, rawApiPath: string) {
       return `const { response, status } = await this.requestor.${operation.__method}({ path });` as const;
     }
 
-    const queryComment = hasQueryParams
-      ? "/* const query = { ... } as const */"
-      : "";
-    const pathArg = hasQueryParams ? "/* query */" : "";
+    const queryComment =
+      hasOnlyQueryParams && !requestBodySchema
+        ? "const query = params;"
+        : hasQueryParams
+          ? "const query = { /* ~query~ */ } as const;"
+          : "";
+
+    const queryArg = hasQueryParams ? ", query" : "";
 
     return `${queryComment}
-    const { response, status } = await this.requestor.${operation.__method}({ path ${pathArg} ${bodyComment} });` as const;
+    const { response, status } = await this.requestor.${operation.__method}({ path ${queryArg} ${bodyComment} });` as const;
   })();
 
-  const paramsComment =
-    hasPathParams && hasQueryParams
-      ? ("/* params: { ~path, ~query } */" as const)
-      : hasPathParams
-        ? ("params: { /* ~path */ }" as const)
-        : hasQueryParams
-          ? ("params: { /* ~query */ }" as const)
-          : ("" as const);
+  const paramsComment = hasQueryAndPathParams
+    ? ("params: { /* ~path, ~query */ }" as const)
+    : hasPathParams
+      ? ("params: { /* ~path */ }" as const)
+      : hasQueryParams
+        ? ("params: { /* ~query */ }" as const)
+        : ("" as const);
 
   const switchCode = `switch (status) {
       ${responseCases}
