@@ -335,11 +335,11 @@ const TagSchemaSchema = z
           ]),
         }),
       ])
-      .transform((s) => ({ ...s, __id: "__servers" as const }))
+      .transform((s) => ({ url: s[0].url, __id: "__servers" as const }))
       .optional(),
     parameters: z
       .array(OperationPathParameter)
-      .transform((s) => ({ ...s, __id: "__parameters" as const }))
+      .transform((s) => ({ parameters: s, __id: "__parameters" as const }))
       .optional(),
     get: TagSchemaSchemaGet.optional(),
     post: TagSchemaSchemaPost.optional(),
@@ -514,7 +514,7 @@ function processOperation(operation: Operation, rawApiPath: string): string {
   }
 
   if (operation.__id === "__servers") {
-    const baseUrl = operation[0].url;
+    const baseUrl = operation.url;
     return `/* Base URL for methods below: ${baseUrl} */` as const;
   }
 
