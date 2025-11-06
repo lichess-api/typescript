@@ -8,6 +8,7 @@ import {
   SchemaSchemaPrimitive,
   SchemaSchemaBoolean,
   assertNever,
+  type Schema,
 } from "./shared";
 
 const Semver = z.string().brand("Semver");
@@ -232,11 +233,13 @@ const QueryParamSchemaSchema = z.union([
 
 type QueryParamSchema = z.infer<typeof QueryParamSchemaSchema>;
 
-const OperationQueryParameter = OperationParameterBase.extend({
+const OperationQueryParameterSchema = OperationParameterBase.extend({
   in: z.literal("query"),
   required: z.boolean().optional(),
   schema: QueryParamSchemaSchema,
 }).strict();
+
+type OperationQueryParameter = z.infer<typeof OperationQueryParameterSchema>;
 
 const PathParamSchemaSchema = z.union([
   SchemaSchemaPrimitive,
@@ -246,15 +249,17 @@ const PathParamSchemaSchema = z.union([
 
 type PathParamSchema = z.infer<typeof PathParamSchemaSchema>;
 
-const OperationPathParameter = OperationParameterBase.extend({
+const OperationPathParameterSchema = OperationParameterBase.extend({
   in: z.literal("path"),
   required: z.literal(true),
   schema: PathParamSchemaSchema,
 }).strict();
 
+type OperationPathParameter = z.infer<typeof OperationPathParameterSchema>;
+
 const OperationParameter = z.union([
-  OperationQueryParameter,
-  OperationPathParameter,
+  OperationQueryParameterSchema,
+  OperationPathParameterSchema,
 ]);
 const OperationParameters = z.array(OperationParameter).optional();
 type OperationParameters = z.infer<typeof OperationParameters>;
@@ -307,29 +312,29 @@ const RequestBodySchema = z
 
 const TagSchemaSchemaGet = BaseTagSchemaOperation.extend({})
   .strict()
-  .transform((s) => ({ ...s, __id: "method:get", __method: "get" }) as const);
+  .transform((s) => ({ ...s, __id: "method:get", __method: "get" } as const));
 
 const TagSchemaSchemaPost = BaseTagSchemaOperation.extend({
   requestBody: RequestBodySchema.optional(),
 })
   .strict()
-  .transform((s) => ({ ...s, __id: "method:post", __method: "post" }) as const);
+  .transform((s) => ({ ...s, __id: "method:post", __method: "post" } as const));
 
 const TagSchemaSchemaHead = BaseTagSchemaOperation.extend({})
   .strict()
-  .transform((s) => ({ ...s, __id: "method:head", __method: "head" }) as const);
+  .transform((s) => ({ ...s, __id: "method:head", __method: "head" } as const));
 
 const TagSchemaSchemaDelete = BaseTagSchemaOperation.extend({})
   .strict()
   .transform(
-    (s) => ({ ...s, __id: "method:delete", __method: "delete" }) as const
+    (s) => ({ ...s, __id: "method:delete", __method: "delete" } as const)
   );
 
 const TagSchemaSchemaPut = BaseTagSchemaOperation.extend({
   requestBody: RequestBodySchema.optional(),
 })
   .strict()
-  .transform((s) => ({ ...s, __id: "method:put", __method: "put" }) as const);
+  .transform((s) => ({ ...s, __id: "method:put", __method: "put" } as const));
 
 const TagSchemaSchema = z
   .object({
@@ -346,7 +351,7 @@ const TagSchemaSchema = z
       .transform((s) => ({ url: s[0].url, __id: "__servers" as const }))
       .optional(),
     parameters: z
-      .array(OperationPathParameter)
+      .array(OperationPathParameterSchema)
       .transform((s) => ({ parameters: s, __id: "__parameters" as const }))
       .optional(),
     get: TagSchemaSchemaGet.optional(),
@@ -501,7 +506,15 @@ function processParams(params: OperationParameters) {
   } as const;
 }
 
-function extractParams() {}
+function extractQueryParams(queryParams: OperationQueryParameter[]) {
+  return "{ /* ~query~ */ }" as const;
+}
+function extractPathParams(pathParams: OperationPathParameter[]) {
+  return "{ /* ~path~ */ }" as const;
+}
+function extractBodyTypes(bodySchema: Schema) {
+  return "{ /* ~body~ */ }" as const;
+}
 
 function descriptionToJsdoc(description: string) {
   const descriptionLines = (() => {
@@ -518,20 +531,25 @@ function descriptionToJsdoc(description: string) {
   return jsdoc;
 }
 
-function processOperation(operation: Operation, rawApiPath: string): string {
+function processOperation(
+  operation: Operation,
+  rawApiPath: string,
+  options?: { sharedPathParams?: OperationPathParameter[]; baseUrl?: string }
+): string {
   if (operation.__id === "__parameters") {
-    return "/* Shared params for methods below */" as const;
+    return "/* Shared path params for methods below */" as const;
   }
 
   if (operation.__id === "__servers") {
     const baseUrl = operation.url;
     return `/* Base URL for methods below: ${baseUrl} */` as const;
   }
-
-  const { processedPath, hasPathParams } = processRawPath(rawApiPath);
-  const stringifiedProcessedPath = hasPathParams
-    ? (`\`${processedPath}\`` as const)
-    : (`"${processedPath}"` as const);
+  const stringifiedProcessedPath = (() => {
+    const { processedPath, hasPathParams } = processRawPath(rawApiPath);
+    return hasPathParams
+      ? (`\`${processedPath}\`` as const)
+      : (`"${processedPath}"` as const);
+  })();
 
   // JSDoc
   const jsdoc = descriptionToJsdoc(operation.description);
@@ -546,7 +564,9 @@ function processOperation(operation: Operation, rawApiPath: string): string {
     hasQueryAndPathParams,
     hasOnlyQueryParams,
     hasAnyParams,
+    hasPathParams,
     queryParams,
+    pathParams,
   } = processParams(operation.parameters);
 
   const pathAssignment =
@@ -559,8 +579,8 @@ function processOperation(operation: Operation, rawApiPath: string): string {
       requestBodySchema && !hasAnyParams
         ? ("const body = params;\n" as const)
         : requestBodySchema
-          ? ("const body = { /* ~body~ */ } as const;\n" as const)
-          : ("" as const);
+        ? ("const body = { /* ~body~ */ } as const;\n" as const)
+        : ("" as const);
 
     if (!hasQueryParams) {
       return `${bodyComment}const { response, status } = await this.requestor.${operation.__method}({ path${bodyArg} });` as const;
@@ -570,27 +590,41 @@ function processOperation(operation: Operation, rawApiPath: string): string {
       hasOnlyQueryParams && !requestBodySchema
         ? ("const query = params;\n" as const)
         : hasQueryParams
-          ? ("const query = { /* ~query~ */ } as const;\n" as const)
-          : ("" as const);
+        ? ("const query = { /* ~query~ */ } as const;\n" as const)
+        : ("" as const);
 
     const queryArg = hasQueryParams ? ", query" : "";
 
     return `${queryComment}${bodyComment}const { response, status } = await this.requestor.${operation.__method}({ path${queryArg}${bodyArg} });` as const;
   })();
 
-  const bodyParamsComment = requestBodySchema
-    ? ("/* ~body~ */" as const)
-    : ("" as const);
+  const paramsComment = (() => {
+    const bodyParamsComment = requestBodySchema
+      ? (` & ${extractBodyTypes(requestBodySchema)}` as const)
+      : ("" as const);
 
-  const paramsComment = hasQueryAndPathParams
-    ? (`params: { /* ~path~, ~query~ */ ${bodyParamsComment}}` as const)
-    : hasPathParams
-      ? (`params: { /* ~path~ */ ${bodyParamsComment}}` as const)
-      : hasQueryParams
-        ? (`params: { /* ~query~ */ ${bodyParamsComment}}` as const)
-        : requestBodySchema
-          ? (`params: {${bodyParamsComment}}` as const)
-          : ("" as const);
+    if (hasQueryAndPathParams) {
+      const pathParamsTypes = extractPathParams(pathParams);
+      const queryParamsTypes = extractQueryParams(queryParams);
+      return `params: ${pathParamsTypes} & ${queryParamsTypes}${bodyParamsComment}` as const;
+    }
+
+    if (hasPathParams) {
+      const pathParamsTypes = extractPathParams(pathParams);
+      return `params: ${pathParamsTypes}${bodyParamsComment}` as const;
+    }
+
+    if (hasQueryParams) {
+      const queryParamsTypes = extractQueryParams(queryParams);
+      return `params: ${queryParamsTypes}${bodyParamsComment}` as const;
+    }
+
+    if (requestBodySchema) {
+      return `params: ${extractBodyTypes(requestBodySchema)}` as const;
+    }
+
+    return "" as const;
+  })();
 
   const switchCode = `switch (status) {
       ${responseCases}
@@ -613,6 +647,8 @@ function processOperation(operation: Operation, rawApiPath: string): string {
 
 function processTag(tagSchema: TagSchema, rawApiPath: string) {
   const methodsCode: string[] = [];
+  let sharedPathParams = undefined;
+  let baseUrl = undefined;
 
   for (const operation of Object.values(tagSchema)) {
     const methodCode = processOperation(operation, rawApiPath);

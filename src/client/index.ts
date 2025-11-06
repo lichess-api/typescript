@@ -97,9 +97,13 @@ export class Lichess {
   /**
    * Read public data of a user.
    */
-  async apiUser(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async apiUser(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/user/${params.username}` as const;
     const query = {
       /* ~query~ */
@@ -259,9 +263,13 @@ export class Lichess {
    *
    * **DO NOT** use this endpoint to enumerate puzzles for mass download. Instead, download the [full public puzzle database](https://database.lichess.org/#puzzles).
    */
-  async apiPuzzleBatchSelect(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async apiPuzzleBatchSelect(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
     const query = {
       /* ~query~ */
@@ -283,10 +291,15 @@ export class Lichess {
   /**
    * Set puzzles as solved and update ratings.
    */
-  async apiPuzzleBatchSolve(params: {
-    /* ~path~, ~query~ */
-    /* ~body~ */
-  }) {
+  async apiPuzzleBatchSolve(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
     const query = {
       /* ~query~ */
@@ -389,9 +402,13 @@ export class Lichess {
    * Contains the aggregated highscores, and the history of storm runs aggregated by days.
    * Use `?days=0` if you only care about the highscores.
    */
-  async apiStormDashboard(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async apiStormDashboard(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/storm/dashboard/${params.username}` as const;
     const query = {
       /* ~query~ */
@@ -621,9 +638,13 @@ export class Lichess {
    * Download one game in either PGN or JSON format.
    * Ongoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.
    */
-  async gamePgn(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async gamePgn(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/game/export/${params.gameId}` as const;
     const query = {
       /* ~query~ */
@@ -645,9 +666,13 @@ export class Lichess {
    * Available in either PGN or JSON format.
    * Ongoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.
    */
-  async apiUserCurrentGame(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async apiUserCurrentGame(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/user/${params.username}/current-game` as const;
     const query = {
       /* ~query~ */
@@ -674,9 +699,13 @@ export class Lichess {
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 games per second
    *   - Authenticated, downloading your own games: 60 games per second
    */
-  async apiGamesUser(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async apiGamesUser(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/games/user/${params.username}` as const;
     const query = {
       /* ~query~ */
@@ -700,10 +729,13 @@ export class Lichess {
    * 300 IDs can be submitted.
    * Ongoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.
    */
-  async gamesExportIds(params: {
-    /* ~query~ */
-    /* ~body~ */
-  }) {
+  async gamesExportIds(
+    params: {
+      /* ~query~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = "/api/games/export/_ids" as const;
     const query = {
       /* ~query~ */
@@ -736,10 +768,13 @@ export class Lichess {
    * Maximum number of users: 300.
    * The method is `POST` so a longer list of IDs can be sent in the request body.
    */
-  async gamesByUsers(params: {
-    /* ~query~ */
-    /* ~body~ */
-  }) {
+  async gamesByUsers(
+    params: {
+      /* ~query~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = "/api/stream/games-by-users" as const;
     const query = {
       /* ~query~ */
@@ -770,10 +805,13 @@ export class Lichess {
    * Maximum number of games: 500 for anonymous requests, or 1000 for [OAuth2 authenticated](#section/Introduction/Authentication) requests.
    * While the stream is open, it is possible to [add new game IDs to watch](#operation/gamesByIdsAdd).
    */
-  async gamesByIds(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async gamesByIds(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/stream/games/${params.streamId}` as const;
     const body = {
       /* ~body~ */
@@ -794,10 +832,13 @@ export class Lichess {
    * Add new game IDs for [an existing stream](#operation/gamesByIds) to watch.
    * The stream will immediately outputs the games that already exists, then emit an event each time a game is started or finished.
    */
-  async gamesByIdsAdd(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async gamesByIdsAdd(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/stream/games/${params.streamId}/add` as const;
     const body = {
       /* ~body~ */
@@ -1048,9 +1089,13 @@ export class Lichess {
    * Get a list of ongoing games for a given TV channel. Similar to [lichess.org/games](https://lichess.org/games).
    * Available in PGN or [ndjson](#section/Introduction/Streaming-with-ND-JSON) format, depending on the request `Accept` header.
    */
-  async tvChannelGames(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async tvChannelGames(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/tv/${params.channel}` as const;
     const query = {
       /* ~query~ */
@@ -1122,13 +1167,13 @@ export class Lichess {
     }
   }
 
-  /* Shared params for methods below */
+  /* Shared path params for methods below */
 
   /**
    * Get detailed info about recently finished, current, or upcoming tournament's duels, player standings, and other info.
    */
   async tournament(params: {
-    /* ~path~ */
+    /* ~query~ */
   }) {
     const path = `/api/tournament/${params.id}` as const;
     const query = params;
@@ -1156,7 +1201,6 @@ export class Lichess {
    *   - Clock time in comparison to tournament length must be reasonable: 3 <= (minutes * 60) / (96 * clockTime + 48 * clockIncrement + 15) <= 150
    */
   async apiTournamentUpdate(params: {
-    /* ~path~ */
     /* ~body~ */
   }) {
     const path = `/api/tournament/${params.id}` as const;
@@ -1185,10 +1229,13 @@ export class Lichess {
    * Join an Arena tournament, possibly with a password and/or a team.
    * Also unpauses if you had previously [paused](#operation/apiTournamentWithdraw) the tournament.
    */
-  async apiTournamentJoin(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async apiTournamentJoin(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/tournament/${params.id}/join` as const;
     const body = {
       /* ~body~ */
@@ -1272,10 +1319,13 @@ export class Lichess {
    * Set the teams and number of leaders of a team battle.
    * To update the other attributes of a team battle, use the [tournament update endpoint](#operation/apiTournamentUpdate).
    */
-  async apiTournamentTeamBattlePost(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async apiTournamentTeamBattlePost(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/tournament/team-battle/${params.id}` as const;
     const body = {
       /* ~body~ */
@@ -1307,9 +1357,13 @@ export class Lichess {
    *   - Anonymous request: 20 games per second
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 games per second
    */
-  async gamesByTournament(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async gamesByTournament(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/tournament/${params.id}/games` as const;
     const query = {
       /* ~query~ */
@@ -1333,9 +1387,13 @@ export class Lichess {
    * due to ranking changes while the players are being streamed.
    * Use on finished tournaments for guaranteed consistency.
    */
-  async resultsByTournament(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async resultsByTournament(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/tournament/${params.id}/results` as const;
     const query = {
       /* ~query~ */
@@ -1397,9 +1455,13 @@ export class Lichess {
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 tournaments per second
    *   - Authenticated, downloading your own tournaments: 50 tournaments per second
    */
-  async apiUserNameTournamentCreated(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async apiUserNameTournamentCreated(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/user/${params.username}/tournament/created` as const;
     const query = {
       /* ~query~ */
@@ -1425,9 +1487,13 @@ export class Lichess {
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 tournaments per second
    *   - Authenticated, downloading your own tournaments: 50 tournaments per second
    */
-  async apiUserNameTournamentPlayed(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async apiUserNameTournamentPlayed(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/user/${params.username}/tournament/played` as const;
     const query = {
       /* ~query~ */
@@ -1452,10 +1518,13 @@ export class Lichess {
    *   - clock.limit + clock.increment > 0
    *   - 15s and 0+1 variant tournaments cannot be rated
    */
-  async apiSwissNew(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async apiSwissNew(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/swiss/new/${params.teamId}` as const;
     const body = {
       /* ~body~ */
@@ -1480,14 +1549,12 @@ export class Lichess {
     }
   }
 
-  /* Shared params for methods below */
+  /* Shared path params for methods below */
 
   /**
    * Get detailed info about a Swiss tournament.
    */
-  async swiss(params: {
-    /* ~path~ */
-  }) {
+  async swiss() {
     const path = `/api/swiss/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -1510,10 +1577,13 @@ export class Lichess {
    *   - clock.limit + clock.increment > 0
    *   - 15s and 0+1 variant tournaments cannot be rated
    */
-  async apiSwissUpdate(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async apiSwissUpdate(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/swiss/${params.id}/edit` as const;
     const body = {
       /* ~body~ */
@@ -1549,10 +1619,13 @@ export class Lichess {
    * This sets the `roundInterval` field to `99999999`, i.e. manual scheduling.
    * All further rounds will need to be manually scheduled, unless the `roundInterval` field is changed back to automatic scheduling.
    */
-  async apiSwissScheduleNextRound(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async apiSwissScheduleNextRound(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/swiss/${params.id}/schedule-next-round` as const;
     const body = {
       /* ~body~ */
@@ -1583,10 +1656,13 @@ export class Lichess {
   /**
    * Join a Swiss tournament, possibly with a password.
    */
-  async apiSwissJoin(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async apiSwissJoin(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/swiss/${params.id}/join` as const;
     const body = {
       /* ~body~ */
@@ -1688,9 +1764,13 @@ export class Lichess {
    *   - Anonymous request: 20 games per second
    *   - [OAuth2 authenticated](#section/Introduction/Authentication) request: 30 games per second
    */
-  async gamesBySwiss(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async gamesBySwiss(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/swiss/${params.id}/games` as const;
     const query = {
       /* ~query~ */
@@ -1714,9 +1794,13 @@ export class Lichess {
    * due to ranking changes while the players are being streamed.
    * Use on finished tournaments for guaranteed consistency.
    */
-  async resultsBySwiss(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async resultsBySwiss(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/swiss/${params.id}/results` as const;
     const query = {
       /* ~query~ */
@@ -1738,9 +1822,13 @@ export class Lichess {
    * Tournaments are sorted by reverse chronological order of start date (last starting first).
    * Tournaments are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
-  async apiTeamSwiss(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async apiTeamSwiss(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/team/${params.teamId}/swiss` as const;
     const query = {
       /* ~query~ */
@@ -1762,9 +1850,13 @@ export class Lichess {
    * If authenticated, then all public, unlisted, and private study chapters are read.
    * If not, only public (non-unlisted) study chapters are read.
    */
-  async studyChapterPgn(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async studyChapterPgn(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}.pgn` as const;
     const query = {
@@ -1787,9 +1879,13 @@ export class Lichess {
    * If authenticated, then all public, unlisted, and private study chapters are read.
    * If not, only public (non-unlisted) study chapters are read.
    */
-  async studyAllChaptersPgn(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async studyAllChaptersPgn(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/study/${params.studyId}.pgn` as const;
     const query = {
       /* ~query~ */
@@ -1830,10 +1926,13 @@ export class Lichess {
    * then multiple chapters will be created within the study.
    * Note that a study can contain at most 64 chapters.
    */
-  async apiStudyImportPGN(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async apiStudyImportPGN(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/study/${params.studyId}/import-pgn` as const;
     const body = {
       /* ~body~ */
@@ -1867,10 +1966,13 @@ export class Lichess {
    *
    * The chapter keeps the tags that you don't provide.
    */
-  async apiStudyChapterTags(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async apiStudyChapterTags(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}/tags` as const;
     const body = {
@@ -1898,9 +2000,13 @@ export class Lichess {
    * If authenticated, then all public, unlisted, and private studies are included.
    * If not, only public (non-unlisted) studies are included.
    */
-  async studyExportAllPgn(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async studyExportAllPgn(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/study/by/${params.username}/export.pgn` as const;
     const query = {
       /* ~query~ */
@@ -2009,9 +2115,13 @@ export class Lichess {
    *
    * If you are authenticated as the user whose broadcasts you are requesting, you will also see your private and unlisted broadcasts.
    */
-  async broadcastsByUser(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async broadcastsByUser(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/broadcast/by/${params.username}` as const;
     const query = {
       /* ~query~ */
@@ -2170,10 +2280,13 @@ export class Lichess {
    * This endpoint accepts the same form data as the web form.
    * All fields must be populated with data. Missing fields will override the broadcast with empty data.
    */
-  async broadcastTourUpdate(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async broadcastTourUpdate(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/broadcast/${params.broadcastTournamentId}/edit` as const;
     const body = {
       /* ~body~ */
@@ -2204,10 +2317,13 @@ export class Lichess {
    *
    * Choose one between `syncUrl`, `syncUrls`, `syncIds` and `syncUsers`, if it is missing, the broadcast needs to be fed by [pushing PGN to it](#operation/broadcastPush)
    */
-  async broadcastRoundCreate(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async broadcastRoundCreate(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/broadcast/${params.broadcastTournamentId}/new` as const;
     const body = {
       /* ~body~ */
@@ -2260,10 +2376,13 @@ export class Lichess {
    * All fields must be populated with data. Missing fields will override the broadcast with empty data.
    * For instance, if you omit `startDate`, then any pre-existing start date will be removed.
    */
-  async broadcastRoundUpdate(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async broadcastRoundUpdate(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/broadcast/round/${params.broadcastRoundId}/edit` as const;
     const body = {
       /* ~body~ */
@@ -2314,10 +2433,13 @@ export class Lichess {
    * Update a broadcast with new PGN.
    * Only for broadcasts without a source URL.
    */
-  async broadcastPush(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async broadcastPush(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path =
       `/api/broadcast/round/${params.broadcastRoundId}/push` as const;
     const body = {
@@ -2596,9 +2718,13 @@ export class Lichess {
    * OAuth is only required if the list of members is private.
    * Up to 5,000 users are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
-  async teamIdUsers(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async teamIdUsers(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/team/${params.teamId}/users` as const;
     const query = {
       /* ~query~ */
@@ -2620,9 +2746,13 @@ export class Lichess {
    * Tournaments are sorted by reverse chronological order of start date (last starting first).
    * Tournaments are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
-  async apiTeamArena(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async apiTeamArena(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/team/${params.teamId}/arena` as const;
     const query = {
       /* ~query~ */
@@ -2647,10 +2777,13 @@ export class Lichess {
    * `message` parameter is not given, then the call fails with
    * `403 Forbidden`.
    */
-  async teamIdJoin(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async teamIdJoin(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/team/${params.teamId}/join` as const;
     const body = {
       /* ~body~ */
@@ -2694,9 +2827,13 @@ export class Lichess {
   /**
    * Get pending join requests of your team
    */
-  async teamRequests(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async teamRequests(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/team/${params.teamId}/requests` as const;
     const query = {
       /* ~query~ */
@@ -2785,10 +2922,13 @@ export class Lichess {
    * Send a private message to all members of a team.
    * You must be a team leader with the "Messages" permission.
    */
-  async teamIdPmAll(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async teamIdPmAll(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/team/${params.teamId}/pm-all` as const;
     const body = {
       /* ~body~ */
@@ -2861,9 +3001,13 @@ export class Lichess {
    * Get total number of games, and current score, of any two users.
    * If the `matchup` flag is provided, and the users are currently playing, also gets the current match game number and scores.
    */
-  async apiCrosstable(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async apiCrosstable(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/crosstable/${params.user1}/${params.user2}` as const;
     const query = {
       /* ~query~ */
@@ -2931,10 +3075,13 @@ export class Lichess {
   /**
    * Add a private note available only to you about this account.
    */
-  async writeNote(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async writeNote(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/user/${params.username}/note` as const;
     const body = {
       /* ~body~ */
@@ -3170,9 +3317,13 @@ export class Lichess {
    * Make a move in a game being played with the Board API.
    * The move can also contain a draw offer/agreement.
    */
-  async boardGameMove(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async boardGameMove(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path =
       `/api/board/game/${params.gameId}/move/${params.move}` as const;
     const query = {
@@ -3198,14 +3349,12 @@ export class Lichess {
     }
   }
 
-  /* Shared params for methods below */
+  /* Shared path params for methods below */
 
   /**
    * Get the messages posted in the game chat
    */
-  async boardGameChatGet(params: {
-    /* ~path~ */
-  }) {
+  async boardGameChatGet() {
     const path = `/api/board/game/${params.gameId}/chat` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -3223,7 +3372,6 @@ export class Lichess {
    * Post a message to the player or spectator chat, in a game being played with the Board API.
    */
   async boardGameChatPost(params: {
-    /* ~path~ */
     /* ~body~ */
   }) {
     const path = `/api/board/game/${params.gameId}/chat` as const;
@@ -3531,9 +3679,13 @@ export class Lichess {
    * Make a move in a game being played with the Bot API.
    * The move can also contain a draw offer/agreement.
    */
-  async botGameMove(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async botGameMove(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/bot/game/${params.gameId}/move/${params.move}` as const;
     const query = {
       /* ~query~ */
@@ -3580,10 +3732,13 @@ export class Lichess {
   /**
    * Post a message to the player or spectator chat, in a game being played with the Bot API.
    */
-  async botGameChat(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async botGameChat(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/bot/game/${params.gameId}/chat` as const;
     const body = {
       /* ~body~ */
@@ -3805,10 +3960,13 @@ export class Lichess {
    * Challenges for realtime games (not correspondence) expire after 20s if not accepted.
    * To prevent that, use the `keepAliveStream` flag described below.
    */
-  async challengeCreate(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async challengeCreate(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/challenge/${params.username}` as const;
     const body = {
       /* ~body~ */
@@ -3858,9 +4016,13 @@ export class Lichess {
    * Accept an incoming challenge.
    * You should receive a `gameStart` event on the [incoming events stream](#operation/apiStreamEvent).
    */
-  async challengeAccept(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async challengeAccept(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/challenge/${params.challengeId}/accept` as const;
     const query = {
       /* ~query~ */
@@ -3888,10 +4050,13 @@ export class Lichess {
   /**
    * Decline an incoming challenge.
    */
-  async challengeDecline(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async challengeDecline(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/api/challenge/${params.challengeId}/decline` as const;
     const body = {
       /* ~body~ */
@@ -3921,9 +4086,13 @@ export class Lichess {
    * Note that the ID of a game is the same as the ID of the challenge that created it.
    * Works for user challenges and open challenges alike.
    */
-  async challengeCancel(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async challengeCancel(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/challenge/${params.challengeId}/cancel` as const;
     const query = {
       /* ~query~ */
@@ -4033,9 +4202,13 @@ export class Lichess {
    *
    * For AI games with only one player, omit the `token2` parameter.
    */
-  async challengeStartClocks(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async challengeStartClocks(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/challenge/${params.gameId}/start-clocks` as const;
     const query = {
       /* ~query~ */
@@ -4210,9 +4383,13 @@ export class Lichess {
   /**
    * Download games of a bulk in PGN or [ndjson](#section/Introduction/Streaming-with-ND-JSON) format, depending on the request `Accept` header.
    */
-  async bulkPairingIdGamesGet(params: {
-    /* ~path~, ~query~ */
-  }) {
+  async bulkPairingIdGamesGet(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~query~ */
+    }
+  ) {
     const path = `/api/bulk-pairing/${params.id}/games` as const;
     const query = {
       /* ~query~ */
@@ -4284,10 +4461,13 @@ export class Lichess {
   /**
    * Send a private message to another player.
    */
-  async inboxUsername(params: {
-    /* ~path~ */
-    /* ~body~ */
-  }) {
+  async inboxUsername(
+    params: {
+      /* ~path~ */
+    } & {
+      /* ~body~ */
+    }
+  ) {
     const path = `/inbox/${params.username}` as const;
     const body = {
       /* ~body~ */
@@ -4388,14 +4568,12 @@ export class Lichess {
     }
   }
 
-  /* Shared params for methods below */
+  /* Shared path params for methods below */
 
   /**
    * Get properties and credentials of an external engine.
    */
-  async apiExternalEngineGet(params: {
-    /* ~path~ */
-  }) {
+  async apiExternalEngineGet() {
     const path = `/api/external-engine/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -4414,9 +4592,7 @@ export class Lichess {
   /**
    * Unregisters an external engine.
    */
-  async apiExternalEngineDelete(params: {
-    /* ~path~ */
-  }) {
+  async apiExternalEngineDelete() {
     const path = `/api/external-engine/${params.id}` as const;
     const { response, status } = await this.requestor.delete({ path });
     switch (status) {
@@ -4436,7 +4612,6 @@ export class Lichess {
    * Updates the properties of an external engine.
    */
   async apiExternalEnginePut(params: {
-    /* ~path~ */
     /* ~body~ */
   }) {
     const path = `/api/external-engine/${params.id}` as const;
@@ -4456,7 +4631,7 @@ export class Lichess {
   }
 
   /* Base URL for methods below: https://engine.lichess.ovh */
-  /* Shared params for methods below */
+  /* Shared path params for methods below */
 
   /**
    * **Endpoint: `https://engine.lichess.ovh/api/external-engine/{id}/analyse`**
@@ -4467,7 +4642,6 @@ export class Lichess {
    * is reached, or the provider goes away.
    */
   async apiExternalEngineAnalyse(params: {
-    /* ~path~ */
     /* ~body~ */
   }) {
     const path = `/api/external-engine/${params.id}/analyse` as const;
@@ -4521,7 +4695,7 @@ export class Lichess {
   }
 
   /* Base URL for methods below: https://engine.lichess.ovh */
-  /* Shared params for methods below */
+  /* Shared path params for methods below */
 
   /**
    * **Endpoint: `https://engine.lichess.ovh/api/external-engine/work/{id}`**
@@ -4539,7 +4713,6 @@ export class Lichess {
    * the requester has gone away and analysis should be stopped.
    */
   async apiExternalEngineSubmit(params: {
-    /* ~path~ */
     /* ~body~ */
   }) {
     const path = `/api/external-engine/work/${params.id}` as const;
