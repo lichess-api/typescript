@@ -312,29 +312,29 @@ const RequestBodySchema = z
 
 const TagSchemaSchemaGet = BaseTagSchemaOperation.extend({})
   .strict()
-  .transform((s) => ({ ...s, __id: "method:get", __method: "get" } as const));
+  .transform((s) => ({ ...s, __id: "method:get", __method: "get" }) as const);
 
 const TagSchemaSchemaPost = BaseTagSchemaOperation.extend({
   requestBody: RequestBodySchema.optional(),
 })
   .strict()
-  .transform((s) => ({ ...s, __id: "method:post", __method: "post" } as const));
+  .transform((s) => ({ ...s, __id: "method:post", __method: "post" }) as const);
 
 const TagSchemaSchemaHead = BaseTagSchemaOperation.extend({})
   .strict()
-  .transform((s) => ({ ...s, __id: "method:head", __method: "head" } as const));
+  .transform((s) => ({ ...s, __id: "method:head", __method: "head" }) as const);
 
 const TagSchemaSchemaDelete = BaseTagSchemaOperation.extend({})
   .strict()
   .transform(
-    (s) => ({ ...s, __id: "method:delete", __method: "delete" } as const)
+    (s) => ({ ...s, __id: "method:delete", __method: "delete" }) as const
   );
 
 const TagSchemaSchemaPut = BaseTagSchemaOperation.extend({
   requestBody: RequestBodySchema.optional(),
 })
   .strict()
-  .transform((s) => ({ ...s, __id: "method:put", __method: "put" } as const));
+  .transform((s) => ({ ...s, __id: "method:put", __method: "put" }) as const);
 
 const TagSchemaSchema = z
   .object({
@@ -579,8 +579,8 @@ function processOperation(
       requestBodySchema && !hasAnyParams
         ? ("const body = params;\n" as const)
         : requestBodySchema
-        ? ("const body = { /* ~body~ */ } as const;\n" as const)
-        : ("" as const);
+          ? ("const body = { /* ~body~ */ } as const;\n" as const)
+          : ("" as const);
 
     if (!hasQueryParams) {
       return `${bodyComment}const { response, status } = await this.requestor.${operation.__method}({ path${bodyArg} });` as const;
@@ -590,8 +590,8 @@ function processOperation(
       hasOnlyQueryParams && !requestBodySchema
         ? ("const query = params;\n" as const)
         : hasQueryParams
-        ? ("const query = { /* ~query~ */ } as const;\n" as const)
-        : ("" as const);
+          ? ("const query = { /* ~query~ */ } as const;\n" as const)
+          : ("" as const);
 
     const queryArg = hasQueryParams ? ", query" : "";
 
