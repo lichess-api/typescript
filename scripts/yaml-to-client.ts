@@ -535,14 +535,20 @@ function processOperation(
   operation: Operation,
   rawApiPath: string,
   options?: { sharedPathParams?: OperationPathParameter[]; baseUrl?: string }
-): string {
+) {
   if (operation.__id === "__parameters") {
-    return "/* Shared path params for methods below */" as const;
+    return {
+      methodCode: "/* Shared path params for methods below */",
+      __type: "__parameters",
+    } as const;
   }
 
   if (operation.__id === "__servers") {
     const baseUrl = operation.url;
-    return `/* Base URL for methods below: ${baseUrl} */` as const;
+    return {
+      methodCode: `/* Base URL for methods below: ${baseUrl} */`,
+      __type: "__servers",
+    } as const;
   }
   const stringifiedProcessedPath = (() => {
     const { processedPath, hasPathParams } = processRawPath(rawApiPath);
@@ -642,7 +648,7 @@ function processOperation(
   }
 ` as const;
 
-  return fullContent;
+  return { methodCode: fullContent, __type: "__methodCode" } as const;
 }
 
 function processTag(tagSchema: TagSchema, rawApiPath: string) {
@@ -651,7 +657,7 @@ function processTag(tagSchema: TagSchema, rawApiPath: string) {
   let baseUrl = undefined;
 
   for (const operation of Object.values(tagSchema)) {
-    const methodCode = processOperation(operation, rawApiPath);
+    const { methodCode } = processOperation(operation, rawApiPath);
     console.log(methodCode);
     methodsCode.push(methodCode);
   }
