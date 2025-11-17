@@ -506,14 +506,52 @@ function processParams(params: OperationParameters) {
   } as const;
 }
 
+function schemaToTypescriptTypes(schema: Schema) {
+  switch (schema.__schema) {
+    case "object": {
+      const props = schema.properties || {};
+      const required = new Set(schema.required || []);
+      const objectRecord: Record<string, string> = {};
+      for (const [k, v] of Object.entries(props)) {
+        const typescriptSchema = schemaToTypescriptTypes(SchemaSchema.parse(v));
+        const propStr = required.has(k)
+          ? (`: ${typescriptSchema}` as const)
+          : (`?: ${typescriptSchema}` as const);
+        objectRecord[k] = propStr;
+      }
+      const entries = Object.entries(objectRecord);
+      const inner =
+        entries.length === 1
+          ? `{ "${entries[0]![0]}" ${entries[0]![1]} }`
+          : "{\n" +
+            entries.map(([k, v]) => `  "${k}" ${v},`).join("\n") +
+            "\n}";
+      return inner;
+      const typescriptSchema = JSON.stringify(schema);
+      return `{ /* typescriptSchema: ${typescriptSchema} */ }` as const;
+    }
+  }
+
+  const typescriptSchema = JSON.stringify(schema);
+  return `{ /* (not_object) typescriptSchema: ${typescriptSchema} */ }` as const;
+}
+
 function extractQueryParams(queryParams: OperationQueryParameter[]) {
+  const schemas = queryParams.map((param) => param.schema);
   return "{ /* ~query~ */ }" as const;
 }
+
 function extractPathParams(pathParams: OperationPathParameter[]) {
+  const schemas = pathParams.map((param) => param.schema);
   return "{ /* ~path~ */ }" as const;
 }
+
 function extractBodyTypes(bodySchema: Schema) {
-  return "{ /* ~body~ */ }" as const;
+  if (bodySchema.__schema === "string") {
+    return "{ body: string }" as const;
+  }
+  const typescriptSchema = schemaToTypescriptTypes(bodySchema);
+  return `{ body: ${typescriptSchema}} ` as const;
 }
 
 function descriptionToJsdoc(description: string) {
@@ -569,7 +607,6 @@ function processOperation(
     hasQueryParams,
     hasQueryAndPathParams,
     hasOnlyQueryParams,
-    hasAnyParams,
     hasPathParams,
     queryParams,
     pathParams,
@@ -581,12 +618,9 @@ function processOperation(
   const requestCode = (() => {
     const bodyArg = requestBodySchema ? (", body" as const) : ("" as const);
 
-    const bodyComment =
-      requestBodySchema && !hasAnyParams
-        ? ("const body = params;\n" as const)
-        : requestBodySchema
-          ? ("const body = { /* ~body~ */ } as const;\n" as const)
-          : ("" as const);
+    const bodyComment = requestBodySchema
+      ? ("const body = params.body;\n" as const)
+      : ("" as const);
 
     if (!hasQueryParams) {
       return `${bodyComment}const { response, status } = await this.requestor.${operation.__method}({ path${bodyArg} });` as const;

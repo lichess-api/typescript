@@ -57,6 +57,7 @@ const SchemaSchemaStringNullable = BaseSchema.extend({
 const SchemaSchemaIntegerEnum = BaseSchema.extend({
   type: z.literal(["integer", "number"]),
   enum: z.array(z.int()),
+  example: z.int().optional(),
 })
   .strict()
   .transform((s) => ({ ...s, __schema: "integer:enum" as const }));
@@ -91,6 +92,14 @@ const SchemaSchemaNumber = BaseSchema.extend({
   .strict()
   .transform((s) => ({ ...s, __schema: "number" as const }));
 
+const SchemaSchemaNumberEnum = BaseSchema.extend({
+  type: z.literal(["number"]),
+  enum: z.array(z.number()),
+  example: z.number().optional(),
+})
+  .strict()
+  .transform((s) => ({ ...s, __schema: "number:enum" as const }));
+
 export const SchemaSchemaBoolean = BaseSchema.extend({
   type: z.literal("boolean"),
   const: z.boolean().optional(),
@@ -104,6 +113,7 @@ export const SchemaSchemaPrimitive = z.union([
   SchemaSchemaInteger,
   SchemaSchemaIntegerEnum,
   SchemaSchemaNumber,
+  SchemaSchemaNumberEnum,
   SchemaSchemaBoolean,
 ]);
 
@@ -253,7 +263,8 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
     case "string:nullable": {
       return { zodSchema: "z.string().nullable()", refs: [] } as const;
     }
-    case "integer:enum": {
+    case "integer:enum":
+    case "number:enum": {
       const literals = schema.enum.map((v) => JSON.stringify(v)).join(", ");
       return { zodSchema: `z.literal([${literals}])`, refs: [] } as const;
     }

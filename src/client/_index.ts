@@ -80,7 +80,7 @@ export class Lichess {
    * - <https://github.com/ornicar/lila/blob/master/modules/pref/src/main/Pref.scala>
    */
   async account() {
-    const path = "/api/account/kid" as const;
+    const path = "/api/account/preferences" as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {

@@ -297,16 +297,16 @@ export class Lichess {
     } & {
       /* ~query~ */
     } & {
-      /* ~body~ */
+      body: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/PuzzleBatchSolveRequest.yaml","__schema":"$ref"} */
+      };
     }
   ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
     const query = {
       /* ~query~ */
     } as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({
       path,
       query,
@@ -488,11 +488,9 @@ export class Lichess {
    * An API is not a way to fully export a website. We do not provide a full download of the Lichess users.
    * This endpoint is limited to 8,000 users every 10 minutes, and 120,000 every day.
    */
-  async apiUsers(params: {
-    /* ~body~ */
-  }) {
+  async apiUsers(params: { body: string }) {
     const path = "/api/users" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -732,17 +730,13 @@ export class Lichess {
   async gamesExportIds(
     params: {
       /* ~query~ */
-    } & {
-      /* ~body~ */
-    }
+    } & { body: string }
   ) {
     const path = "/api/games/export/_ids" as const;
     const query = {
       /* ~query~ */
     } as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({
       path,
       query,
@@ -771,17 +765,13 @@ export class Lichess {
   async gamesByUsers(
     params: {
       /* ~query~ */
-    } & {
-      /* ~body~ */
-    }
+    } & { body: string }
   ) {
     const path = "/api/stream/games-by-users" as const;
     const query = {
       /* ~query~ */
     } as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({
       path,
       query,
@@ -808,14 +798,10 @@ export class Lichess {
   async gamesByIds(
     params: {
       /* ~path~ */
-    } & {
-      /* ~body~ */
-    }
+    } & { body: string }
   ) {
     const path = `/api/stream/games/${params.streamId}` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -835,14 +821,10 @@ export class Lichess {
   async gamesByIdsAdd(
     params: {
       /* ~path~ */
-    } & {
-      /* ~body~ */
-    }
+    } & { body: string }
   ) {
     const path = `/api/stream/games/${params.streamId}/add` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -949,10 +931,14 @@ export class Lichess {
    * [https://lichess.org/analysis/pgn/e4_e5_Nf3_Nc6_Bc4_Bc5_Bxf7+](https://lichess.org/analysis/pgn/e4_e5_Nf3_Nc6_Bc4_Bc5_Bxf7+)
    */
   async gameImport(params: {
-    /* ~body~ */
+    body: {
+      pgn?: {
+        /* (not_object) typescriptSchema: {"description":"The PGN. It can contain only one game. Most standard tags are supported.","type":"string","__schema":"string"} */
+      };
+    };
   }) {
     const path = "/api/import" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -1143,10 +1129,77 @@ export class Lichess {
    *   - Clock time in comparison to tournament length must be reasonable: 3 <= (minutes * 60) / (96 * clockTime + 48 * clockIncrement + 15) <= 150
    */
   async apiTournamentPost(params: {
-    /* ~body~ */
+    body: {
+      name?: {
+        /* (not_object) typescriptSchema: {"description":"The tournament name. Leave empty to get a random Grandmaster name","type":"string","minLength":2,"maxLength":30,"__schema":"string"} */
+      };
+      clockTime: {
+        /* (not_object) typescriptSchema: {"description":"Clock initial time in minutes","type":"number","enum":[0,0.25,0.5,0.75,1,1.5,2,3,4,5,6,7,8,10,15,20,25,30,40,50,60],"example":2,"__schema":"number:enum"} */
+      };
+      clockIncrement: {
+        /* (not_object) typescriptSchema: {"description":"Clock increment in seconds","type":"integer","enum":[0,1,2,3,4,5,6,7,10,15,20,25,30,40,50,60],"example":1,"__schema":"integer:enum"} */
+      };
+      minutes: {
+        /* (not_object) typescriptSchema: {"description":"How long the tournament lasts, in minutes","type":"integer","enum":[20,25,30,35,40,45,50,55,60,70,80,90,100,110,120,150,180,210,240,270,300,330,360,420,480,540,600,720],"example":60,"__schema":"integer:enum"} */
+      };
+      waitMinutes?: {
+        /* (not_object) typescriptSchema: {"default":5,"description":"How long to wait before starting the tournament, from now, in minutes","type":"integer","enum":[1,2,3,5,10,15,20,30,45,60],"__schema":"integer:enum"} */
+      };
+      startDate?: {
+        /* (not_object) typescriptSchema: {"description":"Timestamp (in milliseconds) to start the tournament at a given date and time. Overrides the `waitMinutes` setting","type":"integer","format":"int64","__schema":"integer"} */
+      };
+      variant?: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
+      };
+      rated?: {
+        /* (not_object) typescriptSchema: {"default":true,"description":"Games are rated and impact players ratings","type":"boolean","__schema":"boolean"} */
+      };
+      position?: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/FromPositionFEN.yaml","__schema":"$ref"} */
+      };
+      berserkable?: {
+        /* (not_object) typescriptSchema: {"default":true,"description":"Whether the players can use berserk. Only allowed if clockIncrement <= clockTime * 2","type":"boolean","__schema":"boolean"} */
+      };
+      streakable?: {
+        /* (not_object) typescriptSchema: {"default":true,"description":"After 2 wins, consecutive wins grant 4 points instead of 2.","type":"boolean","__schema":"boolean"} */
+      };
+      hasChat?: {
+        /* (not_object) typescriptSchema: {"default":true,"description":"Whether the players can discuss in a chat","type":"boolean","__schema":"boolean"} */
+      };
+      description?: {
+        /* (not_object) typescriptSchema: {"description":"Anything you want to tell players about the tournament","type":"string","__schema":"string"} */
+      };
+      password?: {
+        /* (not_object) typescriptSchema: {"description":"Make the tournament private, and restrict access with a password.\nYou can also [generate user-specific entry codes](https://github.com/lichess-org/api/tree/master/example/tournament-entry-code)\nbased on this password.\n","type":"string","__schema":"string"} */
+      };
+      teamBattleByTeam?: {
+        /* (not_object) typescriptSchema: {"description":"Set the ID of a team you lead to create a team battle.\nThe other teams can be added using the [team battle edit endpoint](#operation/apiTournamentTeamBattlePost).\n","type":"string","__schema":"string"} */
+      };
+      "conditions.teamMember.teamId"?: {
+        /* (not_object) typescriptSchema: {"description":"Restrict entry to members of a team.\nThe teamId is the last part of a team URL, e.g. `https://lichess.org/team/coders` has teamId = `coders`.\nLeave empty to let everyone join the tournament.\nDo not use this to create team battles, use `teamBattleByTeam` instead.\n","type":"string","__schema":"string"} */
+      };
+      "conditions.minRating.rating"?: {
+        /* (not_object) typescriptSchema: {"description":"Minimum rating to join. Leave empty to let everyone join the tournament.","type":"integer","enum":[1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600],"__schema":"integer:enum"} */
+      };
+      "conditions.maxRating.rating"?: {
+        /* (not_object) typescriptSchema: {"description":"Maximum rating to join. Based on best rating reached in the last 7 days. Leave empty to let everyone join the tournament.","type":"integer","enum":[2200,2100,2000,1900,1800,1700,1600,1500,1400,1300,1200,1100,1000,900,800],"__schema":"integer:enum"} */
+      };
+      "conditions.nbRatedGame.nb"?: {
+        /* (not_object) typescriptSchema: {"description":"Minimum number of rated games required to join.","type":"integer","enum":[0,5,10,15,20,30,40,50,75,100,150,200],"__schema":"integer:enum"} */
+      };
+      "conditions.allowList"?: {
+        /* (not_object) typescriptSchema: {"description":"Predefined list of usernames that are allowed to join, separated by commas.\nIf this list is non-empty, then usernames absent from this list will be forbidden to join.\nAdding `%titled` to the list additionally allows any titled player to join.\nExample: `thibault,german11,%titled`\n","type":"string","__schema":"string"} */
+      };
+      "conditions.bots"?: {
+        /* (not_object) typescriptSchema: {"default":false,"description":"Whether bots are allowed to join the tournament.","type":"boolean","__schema":"boolean"} */
+      };
+      "conditions.accountAge"?: {
+        /* (not_object) typescriptSchema: {"description":"Minium account age in days required to join.","type":"integer","enum":[1,3,7,14,30,60,90,180,365,730,1095],"__schema":"integer:enum"} */
+      };
+    };
   }) {
     const path = "/api/tournament" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -1201,10 +1254,71 @@ export class Lichess {
    *   - Clock time in comparison to tournament length must be reasonable: 3 <= (minutes * 60) / (96 * clockTime + 48 * clockIncrement + 15) <= 150
    */
   async apiTournamentUpdate(params: {
-    /* ~body~ */
+    body: {
+      name?: {
+        /* (not_object) typescriptSchema: {"description":"The tournament name. Leave empty to get a random Grandmaster name","type":"string","minLength":2,"maxLength":30,"__schema":"string"} */
+      };
+      clockTime: {
+        /* (not_object) typescriptSchema: {"description":"Clock initial time in minutes","type":"number","enum":[0,0.25,0.5,0.75,1,1.5,2,3,4,5,6,7,8,10,15,20,25,30,40,50,60],"example":2,"__schema":"number:enum"} */
+      };
+      clockIncrement: {
+        /* (not_object) typescriptSchema: {"description":"Clock increment in seconds","type":"integer","enum":[0,1,2,3,4,5,6,7,10,15,20,25,30,40,50,60],"example":1,"__schema":"integer:enum"} */
+      };
+      minutes: {
+        /* (not_object) typescriptSchema: {"description":"How long the tournament lasts, in minutes","type":"integer","enum":[20,25,30,35,40,45,50,55,60,70,80,90,100,110,120,150,180,210,240,270,300,330,360,420,480,540,600,720],"example":60,"__schema":"integer:enum"} */
+      };
+      waitMinutes?: {
+        /* (not_object) typescriptSchema: {"default":5,"description":"How long to wait before starting the tournament, from now, in minutes","type":"integer","enum":[1,2,3,5,10,15,20,30,45,60],"__schema":"integer:enum"} */
+      };
+      startDate?: {
+        /* (not_object) typescriptSchema: {"description":"Timestamp (in milliseconds) to start the tournament at a given date and time. Overrides the `waitMinutes` setting","type":"integer","format":"int64","__schema":"integer"} */
+      };
+      variant?: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
+      };
+      rated?: {
+        /* (not_object) typescriptSchema: {"default":true,"description":"Games are rated and impact players ratings","type":"boolean","__schema":"boolean"} */
+      };
+      position?: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/FromPositionFEN.yaml","__schema":"$ref"} */
+      };
+      berserkable?: {
+        /* (not_object) typescriptSchema: {"default":true,"description":"Whether the players can use berserk. Only allowed if clockIncrement <= clockTime * 2","type":"boolean","__schema":"boolean"} */
+      };
+      streakable?: {
+        /* (not_object) typescriptSchema: {"default":true,"description":"After 2 wins, consecutive wins grant 4 points instead of 2.","type":"boolean","__schema":"boolean"} */
+      };
+      hasChat?: {
+        /* (not_object) typescriptSchema: {"default":true,"description":"Whether the players can discuss in a chat","type":"boolean","__schema":"boolean"} */
+      };
+      description?: {
+        /* (not_object) typescriptSchema: {"description":"Anything you want to tell players about the tournament","type":"string","__schema":"string"} */
+      };
+      password?: {
+        /* (not_object) typescriptSchema: {"description":"Make the tournament private, and restrict access with a password","type":"string","__schema":"string"} */
+      };
+      "conditions.minRating.rating"?: {
+        /* (not_object) typescriptSchema: {"description":"Minimum rating to join. Leave empty to let everyone join the tournament.","type":"integer","enum":[1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600],"__schema":"integer:enum"} */
+      };
+      "conditions.maxRating.rating"?: {
+        /* (not_object) typescriptSchema: {"description":"Maximum rating to join. Based on best rating reached in the last 7 days. Leave empty to let everyone join the tournament.","type":"integer","enum":[2200,2100,2000,1900,1800,1700,1600,1500,1400,1300,1200,1100,1000,900,800],"__schema":"integer:enum"} */
+      };
+      "conditions.nbRatedGame.nb"?: {
+        /* (not_object) typescriptSchema: {"description":"Minimum number of rated games required to join.","type":"integer","enum":[0,5,10,15,20,30,40,50,75,100,150,200],"__schema":"integer:enum"} */
+      };
+      "conditions.allowList"?: {
+        /* (not_object) typescriptSchema: {"description":"Predefined list of usernames that are allowed to join, separated by commas.\nIf this list is non-empty, then usernames absent from this list will be forbidden to join.\nAdding `%titled` to the list additionally allows any titled player to join.\nExample: `thibault,german11,%titled`\n","type":"string","__schema":"string"} */
+      };
+      "conditions.bots"?: {
+        /* (not_object) typescriptSchema: {"default":false,"description":"Whether bots are allowed to join the tournament.","type":"boolean","__schema":"boolean"} */
+      };
+      "conditions.accountAge"?: {
+        /* (not_object) typescriptSchema: {"description":"Minium account age in days required to join.","type":"integer","enum":[1,3,7,14,30,60,90,180,365,730,1095],"__schema":"integer:enum"} */
+      };
+    };
   }) {
     const path = `/api/tournament/${params.id}` as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -1233,13 +1347,21 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        password?: {
+          /* (not_object) typescriptSchema: {"description":"The tournament password, if one is required.\nCan also be a [user-specific entry code](https://github.com/lichess-org/api/tree/master/example/tournament-entry-code)\ngenerated and shared by the organizer.\n","type":"string","__schema":"string"} */
+        };
+        team?: {
+          /* (not_object) typescriptSchema: {"description":"The team to join the tournament with, for team battle tournaments","type":"string","__schema":"string"} */
+        };
+        pairMeAsap?: {
+          /* (not_object) typescriptSchema: {"default":false,"description":"If the tournament is started, attempt to pair the user,\neven if they are not connected to the tournament page.\nThis expires after one minute, to avoid pairing a user who is long gone.\nYou may call \"join\" again to extend the waiting.\n","type":"boolean","__schema":"boolean"} */
+        };
+      };
     }
   ) {
     const path = `/api/tournament/${params.id}/join` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -1323,13 +1445,18 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        teams: {
+          /* (not_object) typescriptSchema: {"description":"All team IDs of the team battle, separated by commas.\nMake sure to always send the full list.\nTeams that are not in the list will be removed from the team battle.\nExample: `coders,zhigalko_sergei-fan-club,hhSwTKZv`\n","type":"string","__schema":"string"} */
+        };
+        nbLeaders: {
+          /* (not_object) typescriptSchema: {"description":"Number team leaders per team.","type":"integer","__schema":"integer"} */
+        };
+      };
     }
   ) {
     const path = `/api/tournament/team-battle/${params.id}` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -1522,13 +1649,69 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        name?: {
+          /* (not_object) typescriptSchema: {"description":"The tournament name. Leave empty to get a random Grandmaster name","type":"string","minLength":2,"maxLength":30,"__schema":"string"} */
+        };
+        "clock.limit": {
+          /* (not_object) typescriptSchema: {"description":"Clock initial time in seconds","type":"integer","enum":[0,15,30,45,60,90,120,180,240,300,360,420,480,600,900,1200,1500,1800,2400,3000,3600,4200,4800,5400,6000,6600,7200,7800,8400,9000,9600,10200,10800],"example":300,"__schema":"integer:enum"} */
+        };
+        "clock.increment": {
+          /* (not_object) typescriptSchema: {"description":"Clock increment in seconds","type":"integer","example":1,"minimum":0,"maximum":120,"__schema":"integer"} */
+        };
+        nbRounds: {
+          /* (not_object) typescriptSchema: {"description":"Maximum number of rounds to play","type":"integer","minimum":3,"maximum":100,"__schema":"integer"} */
+        };
+        startsAt?: {
+          /* (not_object) typescriptSchema: {"description":"Timestamp in milliseconds to start the tournament at a given date and time. By default, it starts 10 minutes after creation.","type":"integer","format":"int64","__schema":"integer"} */
+        };
+        roundInterval?: {
+          /* (not_object) typescriptSchema: {"description":"How long to wait between each round, in seconds.\nSet to 99999999 to manually schedule each round from the tournament UI.\nIf empty or -1, a sensible value is picked automatically.\n","type":"integer","enum":[-1,5,10,20,30,45,60,120,180,300,600,900,1200,1800,2700,3600,86400,172800,604800,99999999],"__schema":"integer:enum"} */
+        };
+        variant?: {
+          /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
+        };
+        position?: {
+          /* (not_object) typescriptSchema: {"$ref":"../../schemas/SwissFromPositionFEN.yaml","__schema":"$ref"} */
+        };
+        description?: {
+          /* (not_object) typescriptSchema: {"description":"Anything you want to tell players about the tournament","type":"string","__schema":"string"} */
+        };
+        rated?: {
+          /* (not_object) typescriptSchema: {"default":true,"description":"Games are rated and impact players ratings","type":"boolean","__schema":"boolean"} */
+        };
+        password?: {
+          /* (not_object) typescriptSchema: {"description":"Make the tournament private and restrict access with a password.","type":"string","__schema":"string"} */
+        };
+        forbiddenPairings?: {
+          /* (not_object) typescriptSchema: {"description":"Usernames of players that must not play together.\nTwo usernames per line, separated by a space.\n","type":"string","__schema":"string"} */
+        };
+        manualPairings?: {
+          /* (not_object) typescriptSchema: {"description":"Manual pairings for the next round.\nTwo usernames per line, separated by a space. Example:\n```\nPlayerA PlayerB\nPlayerC PlayerD\n```\nTo give a bye (1 point) to a player instead of a pairing, add a line like so:\n```\nPlayerE 1\n```\nMissing players will be considered absent and get zero points.\n","type":"string","__schema":"string"} */
+        };
+        chatFor?: {
+          /* (not_object) typescriptSchema: {"default":20,"description":"Who can read and write in the chat.\n- 0  = No-one\n- 10 = Only team leaders\n- 20 = Only team members\n- 30 = All Lichess players\n","type":"integer","enum":[0,10,20,30],"__schema":"integer:enum"} */
+        };
+        "conditions.minRating.rating"?: {
+          /* (not_object) typescriptSchema: {"description":"Minimum rating to join. Leave empty to let everyone join the tournament.","type":"integer","enum":[1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600],"__schema":"integer:enum"} */
+        };
+        "conditions.maxRating.rating"?: {
+          /* (not_object) typescriptSchema: {"description":"Maximum rating to join. Based on best rating reached in the last 7 days. Leave empty to let everyone join the tournament.","type":"integer","enum":[2200,2100,2000,1900,1800,1700,1600,1500,1400,1300,1200,1100,1000,900,800],"__schema":"integer:enum"} */
+        };
+        "conditions.nbRatedGame.nb"?: {
+          /* (not_object) typescriptSchema: {"description":"Minimum number of rated games required to join.","type":"integer","minimum":0,"maximum":200,"__schema":"integer"} */
+        };
+        "conditions.playYourGames"?: {
+          /* (not_object) typescriptSchema: {"default":false,"description":"Only let players join if they have played their last swiss game.\nIf they failed to show up in a recent swiss event, they won't be able to enter yours.\nThis results in a better swiss experience for the players who actually show up.\n","type":"boolean","__schema":"boolean"} */
+        };
+        "conditions.allowList"?: {
+          /* (not_object) typescriptSchema: {"description":"Predefined list of usernames that are allowed to join, separated by commas.\nIf this list is non-empty, then usernames absent from this list will be forbidden to join.\nAdding `%titled` to the list additionally allows any titled player to join.\nExample: `thibault,german11,%titled`\n","type":"string","__schema":"string"} */
+        };
+      };
     }
   ) {
     const path = `/api/swiss/new/${params.teamId}` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -1581,13 +1764,69 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        name?: {
+          /* (not_object) typescriptSchema: {"description":"The tournament name. Leave empty to get a random Grandmaster name","type":"string","minLength":2,"maxLength":30,"__schema":"string"} */
+        };
+        "clock.limit": {
+          /* (not_object) typescriptSchema: {"description":"Clock initial time in seconds","type":"integer","enum":[0,15,30,45,60,90,120,180,240,300,360,420,480,600,900,1200,1500,1800,2400,3000,3600,4200,4800,5400,6000,6600,7200,7800,8400,9000,9600,10200,10800],"example":300,"__schema":"integer:enum"} */
+        };
+        "clock.increment": {
+          /* (not_object) typescriptSchema: {"description":"Clock increment in seconds","type":"integer","example":1,"minimum":0,"maximum":120,"__schema":"integer"} */
+        };
+        nbRounds: {
+          /* (not_object) typescriptSchema: {"description":"Maximum number of rounds to play","type":"integer","minimum":3,"maximum":100,"__schema":"integer"} */
+        };
+        startsAt?: {
+          /* (not_object) typescriptSchema: {"description":"Timestamp in milliseconds to start the tournament at a given date and time. By default, it starts 10 minutes after creation.","type":"integer","format":"int64","__schema":"integer"} */
+        };
+        roundInterval?: {
+          /* (not_object) typescriptSchema: {"description":"How long to wait between each round, in seconds.\nSet to 99999999 to manually schedule each round from the tournament UI, or [with the API](#tag/Swiss-tournaments/operation/apiSwissScheduleNextRound).\nIf empty or -1, a sensible value is picked automatically.\n","type":"integer","enum":[-1,5,10,20,30,45,60,120,180,300,600,900,1200,1800,2700,3600,86400,172800,604800,99999999],"__schema":"integer:enum"} */
+        };
+        variant?: {
+          /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
+        };
+        position?: {
+          /* (not_object) typescriptSchema: {"$ref":"../../schemas/SwissFromPositionFEN.yaml","__schema":"$ref"} */
+        };
+        description?: {
+          /* (not_object) typescriptSchema: {"description":"Anything you want to tell players about the tournament","type":"string","__schema":"string"} */
+        };
+        rated?: {
+          /* (not_object) typescriptSchema: {"default":true,"description":"Games are rated and impact players ratings","type":"boolean","__schema":"boolean"} */
+        };
+        password?: {
+          /* (not_object) typescriptSchema: {"description":"Make the tournament private and restrict access with a password.","type":"string","__schema":"string"} */
+        };
+        forbiddenPairings?: {
+          /* (not_object) typescriptSchema: {"description":"Usernames of players that must not play together.\nTwo usernames per line, separated by a space.\n","type":"string","__schema":"string"} */
+        };
+        manualPairings?: {
+          /* (not_object) typescriptSchema: {"description":"Manual pairings for the next round.\nTwo usernames per line, separated by a space.\nPresent players without a valid pairing will be given a bye, which is worth 1 point.\nForfeited players will get 0 points.\n","type":"string","__schema":"string"} */
+        };
+        chatFor?: {
+          /* (not_object) typescriptSchema: {"default":20,"description":"Who can read and write in the chat.\n- 0  = No-one\n- 10 = Only team leaders\n- 20 = Only team members\n- 30 = All Lichess players\n","type":"integer","enum":[0,10,20,30],"__schema":"integer:enum"} */
+        };
+        "conditions.minRating.rating"?: {
+          /* (not_object) typescriptSchema: {"description":"Minimum rating to join. Leave empty to let everyone join the tournament.","type":"integer","enum":[1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600],"__schema":"integer:enum"} */
+        };
+        "conditions.maxRating.rating"?: {
+          /* (not_object) typescriptSchema: {"description":"Maximum rating to join. Based on best rating reached in the last 7 days. Leave empty to let everyone join the tournament.","type":"integer","enum":[2200,2100,2000,1900,1800,1700,1600,1500,1400,1300,1200,1100,1000,900,800],"__schema":"integer:enum"} */
+        };
+        "conditions.nbRatedGame.nb"?: {
+          /* (not_object) typescriptSchema: {"description":"Minimum number of rated games required to join.","type":"integer","minimum":0,"maximum":200,"__schema":"integer"} */
+        };
+        "conditions.playYourGames"?: {
+          /* (not_object) typescriptSchema: {"default":false,"description":"Only let players join if they have played their last swiss game.\nIf they failed to show up in a recent swiss event, they won't be able to enter yours.\nThis results in a better swiss experience for the players who actually show up.\n","type":"boolean","__schema":"boolean"} */
+        };
+        "conditions.allowList"?: {
+          /* (not_object) typescriptSchema: {"description":"Predefined list of usernames that are allowed to join, separated by commas.\nIf this list is non-empty, then usernames absent from this list will be forbidden to join.\nAdding `%titled` to the list additionally allows any titled player to join.\nExample: `thibault,german11,%titled`\n","type":"string","__schema":"string"} */
+        };
+      };
     }
   ) {
     const path = `/api/swiss/${params.id}/edit` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -1623,13 +1862,15 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        date?: {
+          /* (not_object) typescriptSchema: {"description":"Timestamp in milliseconds to start the next round at a given date and time.","type":"integer","format":"int64","__schema":"integer"} */
+        };
+      };
     }
   ) {
     const path = `/api/swiss/${params.id}/schedule-next-round` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 204: {
@@ -1660,13 +1901,15 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        password?: {
+          /* (not_object) typescriptSchema: {"description":"The tournament password, if one is required","type":"string","__schema":"string"} */
+        };
+      };
     }
   ) {
     const path = `/api/swiss/${params.id}/join` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -1930,13 +2173,24 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        pgn: {
+          /* (not_object) typescriptSchema: {"description":"PGN to import. Can contain multiple games separated by 2 or more newlines.\n","type":"string","__schema":"string"} */
+        };
+        name?: {
+          /* (not_object) typescriptSchema: {"description":"Name of the new chapter.\nIf not specified, or if multiple chapters are created, the names will be inferred from the PGN tags.\n","type":"string","minLength":1,"maxLength":100,"__schema":"string"} */
+        };
+        orientation?: {
+          /* (not_object) typescriptSchema: {"default":"white","description":"Default board orientation.","type":"string","enum":["white","black"],"__schema":"string"} */
+        };
+        variant?: {
+          /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
+        };
+      };
     }
   ) {
     const path = `/api/study/${params.studyId}/import-pgn` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -1970,14 +2224,16 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        pgn: {
+          /* (not_object) typescriptSchema: {"description":"PGN text containing the tags. Only the tags are used. Moves are just ignored.\n","type":"string","__schema":"string"} */
+        };
+      };
     }
   ) {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}/tags` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 204: {
@@ -2181,10 +2437,12 @@ export class Lichess {
    * This endpoint accepts the same form data as the [web form](https://lichess.org/broadcast/new).
    */
   async broadcastTourCreate(params: {
-    /* ~body~ */
+    body: {
+      /* (not_object) typescriptSchema: {"$ref":"../../schemas/BroadcastForm.yaml","__schema":"$ref"} */
+    };
   }) {
     const path = "/broadcast/new" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -2284,13 +2542,13 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/BroadcastForm.yaml","__schema":"$ref"} */
+      };
     }
   ) {
     const path = `/broadcast/${params.broadcastTournamentId}/edit` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -2321,13 +2579,13 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/BroadcastRoundForm.yaml","__schema":"$ref"} */
+      };
     }
   ) {
     const path = `/broadcast/${params.broadcastTournamentId}/new` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -2380,13 +2638,13 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/BroadcastRoundForm.yaml","__schema":"$ref"} */
+      };
     }
   ) {
     const path = `/broadcast/round/${params.broadcastRoundId}/edit` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -2436,15 +2694,11 @@ export class Lichess {
   async broadcastPush(
     params: {
       /* ~path~ */
-    } & {
-      /* ~body~ */
-    }
+    } & { body: string }
   ) {
     const path =
       `/api/broadcast/round/${params.broadcastRoundId}/push` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -2781,13 +3035,18 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        message?: {
+          /* (not_object) typescriptSchema: {"description":"Required if team manually reviews admission requests.","type":"string","minLength":30,"maxLength":2000,"__schema":"string"} */
+        };
+        password?: {
+          /* (not_object) typescriptSchema: {"description":"Optional password, if the team requires one.","type":"string","__schema":"string"} */
+        };
+      };
     }
   ) {
     const path = `/team/${params.teamId}/join` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -2926,13 +3185,15 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        message?: {
+          /* (not_object) typescriptSchema: {"description":"The message to send to all your team members.","type":"string","__schema":"string"} */
+        };
+      };
     }
   ) {
     const path = `/team/${params.teamId}/pm-all` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -3079,13 +3340,15 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        text: {
+          /* (not_object) typescriptSchema: {"description":"The contents of the note","type":"string","__schema":"string"} */
+        };
+      };
     }
   ) {
     const path = `/api/user/${params.username}/note` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -3254,10 +3517,12 @@ export class Lichess {
    * The response is not streamed, it immediately completes with the seek ID. The seek remains active on the server until it is joined by someone.
    */
   async apiBoardSeek(params: {
-    /* ~body~ */
+    body: {
+      /* (not_object) typescriptSchema: {"allOf":[{"type":"object","properties":{"rated":{"type":"boolean","description":"Whether the game is rated and impacts players ratings.","example":true,"default":false},"variant":{"$ref":"../../schemas/VariantKey.yaml"},"ratingRange":{"type":"string","description":"The rating range of potential opponents. Better left empty.\nExample: 1500-1800\n"}}},{"oneOf":[{"type":"object","title":"real-time","required":["time","increment"],"properties":{"time":{"type":"number","description":"Clock initial time in minutes. Required for real-time seeks.","example":15,"minimum":0,"maximum":180},"increment":{"type":"integer","description":"Clock increment in seconds. Required for real-time seeks.","example":15,"minimum":0,"maximum":180},"color":{"description":"The color to play. Better left empty to automatically get 50% white.","$ref":"../../schemas/ChallengeColor.yaml"}}},{"type":"object","title":"correspondence","required":["days"],"properties":{"days":{"type":"integer","description":"Days per turn. Required for correspondence seeks.","enum":[1,2,3,5,7,10,14]}}}]}],"__schema":"allOf"} */
+    };
   }) {
     const path = "/api/board/seek" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -3372,10 +3637,17 @@ export class Lichess {
    * Post a message to the player or spectator chat, in a game being played with the Board API.
    */
   async boardGameChatPost(params: {
-    /* ~body~ */
+    body: {
+      room: {
+        /* (not_object) typescriptSchema: {"type":"string","enum":["player","spectator"],"__schema":"string"} */
+      };
+      text: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"Thank you for the game!","__schema":"string"} */
+      };
+    };
   }) {
     const path = `/api/board/game/${params.gameId}/chat` as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -3736,13 +4008,18 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        room: {
+          /* (not_object) typescriptSchema: {"type":"string","enum":["player","spectator"],"__schema":"string"} */
+        };
+        text: {
+          /* (not_object) typescriptSchema: {"type":"string","example":"Thank you for the game!","__schema":"string"} */
+        };
+      };
     }
   ) {
     const path = `/api/bot/game/${params.gameId}/chat` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -3964,13 +4241,13 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        /* (not_object) typescriptSchema: {"allOf":[{"oneOf":[{"type":"object","title":"real-time","required":["clock.limit","clock.increment"],"properties":{"clock.limit":{"type":"integer","description":"Clock initial time in seconds. If empty, a correspondence game is created. Valid values are 0, 15, 30, 45, 60, 90, and any multiple of 60 up to 10800 (3 hours).","example":300,"minimum":0,"maximum":10800},"clock.increment":{"type":"integer","description":"Clock increment in seconds. If empty, a correspondence game is created.","example":1,"minimum":0,"maximum":60}}},{"type":"object","title":"correspondence","required":["days"],"properties":{"days":{"type":"integer","description":"Days per move, for correspondence games. Clock settings must be omitted.","enum":[1,2,3,5,7,10,14]}}},{"type":"object","title":"unlimited","properties":{}}]},{"type":"object","properties":{"rated":{"type":"boolean","description":"Game is rated and impacts players ratings","default":false},"color":{"$ref":"../../schemas/ChallengeColor.yaml","description":"Which color you get to play","default":"random"},"variant":{"$ref":"../../schemas/VariantKey.yaml"},"fen":{"$ref":"../../schemas/FromPositionFEN.yaml"},"keepAliveStream":{"type":"boolean","description":"If set, the response is streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).\nThe challenge is kept alive until the connection is closed by the client.\nWhen the challenge is accepted, declined or canceled, a message of the form `{\"done\":\"accepted\"}` is sent,\nthen the connection is closed by the server.\nIf not set, the response is not streamed, and the challenge expires after 20s if not accepted.\n"},"rules":{"type":"string","enum":["noAbort","noRematch","noGiveTime","noClaimWin","noEarlyDraw"],"description":"Extra game rules separated by commas.\nExample: `noAbort,noRematch`\n"}}}],"__schema":"allOf"} */
+      };
     }
   ) {
     const path = `/api/challenge/${params.username}` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4054,13 +4331,15 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        reason?: {
+          /* (not_object) typescriptSchema: {"description":"Reason challenge was declined. It will be translated to the player's language. See [the full list in the translation file](https://github.com/ornicar/lila/blob/master/translation/source/challenge.xml#L14).","type":"string","enum":["generic","later","tooFast","tooSlow","timeControl","rated","casual","standard","variant","noBot","onlyBot"],"__schema":"string"} */
+        };
+      };
     }
   ) {
     const path = `/api/challenge/${params.challengeId}/decline` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4122,10 +4401,32 @@ export class Lichess {
    * You will be notified on the [event stream](#operation/apiStreamEvent) that a new game has started.
    */
   async challengeAi(params: {
-    /* ~body~ */
+    body: {
+      level: {
+        /* (not_object) typescriptSchema: {"description":"AI strength","type":"integer","minimum":1,"maximum":8,"__schema":"integer"} */
+      };
+      "clock.limit"?: {
+        /* (not_object) typescriptSchema: {"description":"Clock initial time in seconds. If empty, a correspondence game is created.","type":"integer","example":300,"minimum":0,"maximum":10800,"__schema":"integer"} */
+      };
+      "clock.increment"?: {
+        /* (not_object) typescriptSchema: {"description":"Clock increment in seconds. If empty, a correspondence game is created.","type":"integer","example":1,"minimum":0,"maximum":60,"__schema":"integer"} */
+      };
+      days?: {
+        /* (not_object) typescriptSchema: {"description":"Days per move, for correspondence games. Clock settings must be omitted.","type":"integer","enum":[1,2,3,5,7,10,14],"__schema":"integer:enum"} */
+      };
+      color?: {
+        /* (not_object) typescriptSchema: {"default":"random","description":"Which color you get to play","$ref":"../../schemas/ChallengeColor.yaml","__schema":"$ref"} */
+      };
+      variant?: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
+      };
+      fen?: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/FromPositionFEN.yaml","__schema":"$ref"} */
+      };
+    };
   }) {
     const path = "/api/challenge/ai" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 201: {
@@ -4171,10 +4472,41 @@ export class Lichess {
    * To directly pair 2 known players, use [this endpoint](#operation/bulkPairingList) instead.
    */
   async challengeOpen(params: {
-    /* ~body~ */
+    body: {
+      rated?: {
+        /* (not_object) typescriptSchema: {"default":false,"description":"Game is rated and impacts players ratings","type":"boolean","__schema":"boolean"} */
+      };
+      "clock.limit"?: {
+        /* (not_object) typescriptSchema: {"description":"Clock initial time in seconds. If empty, a correspondence game is created.","type":"integer","example":300,"minimum":0,"maximum":10800,"__schema":"integer"} */
+      };
+      "clock.increment"?: {
+        /* (not_object) typescriptSchema: {"description":"Clock increment in seconds. If empty, a correspondence game is created.","type":"integer","example":1,"minimum":0,"maximum":60,"__schema":"integer"} */
+      };
+      days?: {
+        /* (not_object) typescriptSchema: {"description":"Days per turn. For correspondence challenges.","type":"integer","enum":[1,2,3,5,7,10,14],"__schema":"integer:enum"} */
+      };
+      variant?: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
+      };
+      fen?: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/FromPositionFEN.yaml","__schema":"$ref"} */
+      };
+      name?: {
+        /* (not_object) typescriptSchema: {"description":"Optional name for the challenge, that players will see on the challenge page.","type":"string","__schema":"string"} */
+      };
+      rules?: {
+        /* (not_object) typescriptSchema: {"description":"Extra game rules separated by commas.\nExample: `noRematch,noGiveTime`\nThe `noAbort` rule is available for Lichess admins only\n","type":"string","enum":["noRematch","noGiveTime","noClaimWin","noEarlyDraw","noAbort"],"__schema":"string"} */
+      };
+      users?: {
+        /* (not_object) typescriptSchema: {"description":"Optional pair of usernames, separated by a comma.\nIf set, only these users will be allowed to join the game.\nThe first username gets the white pieces.\nExample: `Username1,Username2`\n","type":"string","__schema":"string"} */
+      };
+      expiresAt?: {
+        /* (not_object) typescriptSchema: {"description":"Timestamp in milliseconds to expire the challenge. Defaults to 24h after creation. Can't be more than 2 weeks after creation.","type":"integer","format":"int64","__schema":"integer"} */
+      };
+    };
   }) {
     const path = "/api/challenge/open" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4270,10 +4602,44 @@ export class Lichess {
    * A successful bulk creation returns a JSON bulk document. Its ID can be used for further operations.
    */
   async bulkPairingCreate(params: {
-    /* ~body~ */
+    body: {
+      players?: {
+        /* (not_object) typescriptSchema: {"description":"OAuth tokens of all the players to pair, with the syntax `tokenOfWhitePlayerInGame1:tokenOfBlackPlayerInGame1,tokenOfWhitePlayerInGame2:tokenOfBlackPlayerInGame2,...`.\nThe 2 tokens of the players of a game are separated with `:`. The first token gets the white pieces. Games are separated with `,`.\nUp to 1000 tokens can be sent, for a max of 500 games.\nEach token must be included at most once.\nExample: `token1:token2,token3:token4,token5:token6`\n","type":"string","__schema":"string"} */
+      };
+      "clock.limit"?: {
+        /* (not_object) typescriptSchema: {"description":"Clock initial time in seconds. Example: `600`\n","type":"integer","minimum":0,"maximum":10800,"__schema":"integer"} */
+      };
+      "clock.increment"?: {
+        /* (not_object) typescriptSchema: {"description":"Clock increment in seconds. Example: `2`\n","type":"integer","minimum":0,"maximum":60,"__schema":"integer"} */
+      };
+      days?: {
+        /* (not_object) typescriptSchema: {"description":"Days per turn. For correspondence games only.","type":"integer","enum":[1,2,3,5,7,10,14],"__schema":"integer:enum"} */
+      };
+      pairAt?: {
+        /* (not_object) typescriptSchema: {"description":"Date at which the games will be created as a Unix timestamp in milliseconds.\nUp to 7 days in the future.\nOmit, or set to current date and time, to start the games immediately.\nExample: `1612289869919`\n","type":"integer","format":"int64","__schema":"integer"} */
+      };
+      startClocksAt?: {
+        /* (not_object) typescriptSchema: {"description":"Date at which the clocks will be automatically started as a Unix timestamp in milliseconds.\nUp to 7 days in the future.\nNote that the clocks can start earlier than specified, if players start making moves in the game.\nIf omitted, the clocks will not start automatically.\nExample: `1612289869919`\n","type":"integer","format":"int64","__schema":"integer"} */
+      };
+      rated?: {
+        /* (not_object) typescriptSchema: {"default":false,"description":"Game is rated and impacts players ratings","type":"boolean","__schema":"boolean"} */
+      };
+      variant?: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
+      };
+      fen?: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/FromPositionFEN.yaml","__schema":"$ref"} */
+      };
+      message?: {
+        /* (not_object) typescriptSchema: {"default":"Your game with {opponent} is ready: {game}.","description":"Message that will be sent to each player, when the game is created.  It is sent from your user account.\n`{opponent}` and `{game}` are placeholders that will be replaced with the opponent and the game URLs.\nYou can omit this field to send the default message,\nbut if you set your own message, it must at least contain the `{game}` placeholder.\n","type":"string","__schema":"string"} */
+      };
+      rules?: {
+        /* (not_object) typescriptSchema: {"description":"Extra game rules separated by commas.\nExample: `noAbort,noRematch`\n","type":"string","enum":["noAbort","noRematch","noGiveTime","noClaimWin","noEarlyDraw"],"__schema":"string"} */
+      };
+    };
   }) {
     const path = "/api/bulk-pairing" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4434,10 +4800,17 @@ export class Lichess {
    * If a similar token already exists for a user, it is reused. This endpoint is idempotent.
    */
   async adminChallengeTokens(params: {
-    /* ~body~ */
+    body: {
+      users: {
+        /* (not_object) typescriptSchema: {"description":"Usernames separated with commas","type":"string","example":"thibault,neio,lizen2,lizen3","__schema":"string"} */
+      };
+      description: {
+        /* (not_object) typescriptSchema: {"description":"User visible description of the token","type":"string","example":"FIDE tournament XYZ","__schema":"string"} */
+      };
+    };
   }) {
     const path = "/api/token/admin-challenge" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4465,13 +4838,15 @@ export class Lichess {
     params: {
       /* ~path~ */
     } & {
-      /* ~body~ */
+      body: {
+        text: {
+          /* (not_object) typescriptSchema: {"type":"string","example":"Thank you for the game!","__schema":"string"} */
+        };
+      };
     }
   ) {
     const path = `/inbox/${params.username}` as const;
-    const body = {
-      /* ~body~ */
-    } as const;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4550,10 +4925,12 @@ export class Lichess {
    * After registering, the provider should start waiting for analyis requests.
    */
   async apiExternalEngineCreate(params: {
-    /* ~body~ */
+    body: {
+      /* (not_object) typescriptSchema: {"$ref":"../../schemas/ExternalEngineRegistration.yaml","__schema":"$ref"} */
+    };
   }) {
     const path = "/api/external-engine" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4612,10 +4989,12 @@ export class Lichess {
    * Updates the properties of an external engine.
    */
   async apiExternalEnginePut(params: {
-    /* ~body~ */
+    body: {
+      /* (not_object) typescriptSchema: {"$ref":"../../schemas/ExternalEngineRegistration.yaml","__schema":"$ref"} */
+    };
   }) {
     const path = `/api/external-engine/${params.id}` as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.put({ path, body });
     switch (status) {
       case 200: {
@@ -4642,10 +5021,17 @@ export class Lichess {
    * is reached, or the provider goes away.
    */
   async apiExternalEngineAnalyse(params: {
-    /* ~body~ */
+    body: {
+      clientSecret: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"ees_mdF2hK0hlKGSPeC6","__schema":"string"} */
+      };
+      work: {
+        /* (not_object) typescriptSchema: {"$ref":"../../schemas/ExternalEngineWork.yaml","__schema":"$ref"} */
+      };
+    };
   }) {
     const path = `/api/external-engine/${params.id}/analyse` as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4669,10 +5055,14 @@ export class Lichess {
    * [start streaming the results](#tag/External-engine/operation/apiExternalEngineSubmit).
    */
   async apiExternalEngineAcquire(params: {
-    /* ~body~ */
+    body: {
+      providerSecret: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"Dee3uwieZei9ahpaici9bee2yahsai0K","__schema":"string"} */
+      };
+    };
   }) {
     const path = "/api/external-engine/work" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4712,11 +5102,9 @@ export class Lichess {
    * The server may close the connection at any time, indicating that
    * the requester has gone away and analysis should be stopped.
    */
-  async apiExternalEngineSubmit(params: {
-    /* ~body~ */
-  }) {
+  async apiExternalEngineSubmit(params: { body: string }) {
     const path = `/api/external-engine/work/${params.id}` as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4784,10 +5172,26 @@ export class Lichess {
    * OAuth2 token endpoint. Exchanges an authorization code for an access token.
    */
   async apiToken(params: {
-    /* ~body~ */
+    body: {
+      grant_type?: {
+        /* (not_object) typescriptSchema: {"const":"authorization_code","type":"string","example":"authorization_code","__schema":"string"} */
+      };
+      code?: {
+        /* (not_object) typescriptSchema: {"description":"The authorization code that was sent in the `code` parameter to your `redirect_uri`.","type":"string","example":"liu_iS1uOZg99Htmo58ex2jKgYziUfzsnAl0","__schema":"string"} */
+      };
+      code_verifier?: {
+        /* (not_object) typescriptSchema: {"description":"A `code_challenge` was used to request the authorization code. This must be the `code_verifier` it was derived from.","type":"string","example":"Ry1rbGdOMTQtUjhOc0lmTnFKak1LTHV0NjlRMll2aXYtTThkQnlJRkRpaGwyQjh0ZDNFdzFPSG9KUlY4M1NrRzJ5ZHhUdjVZR08zLTZOT3dCN2xLfjZOXzU2WHk4SENP","__schema":"string"} */
+      };
+      redirect_uri?: {
+        /* (not_object) typescriptSchema: {"description":"Must match the `redirect_uri` used to request the authorization code.","type":"string","example":"http://example.com/","__schema":"string"} */
+      };
+      client_id?: {
+        /* (not_object) typescriptSchema: {"description":"Must match the `client_id` used to request the authorization code.","type":"string","example":"example.com","__schema":"string"} */
+      };
+    };
   }) {
     const path = "/api/token" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
@@ -4834,11 +5238,9 @@ export class Lichess {
    * or `null` if the token is invalid.
    * The method is `POST` so a longer list of tokens can be sent in the request body.
    */
-  async tokenTest(params: {
-    /* ~body~ */
-  }) {
+  async tokenTest(params: { body: string }) {
     const path = "/api/token/test" as const;
-    const body = params;
+    const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
