@@ -11,7 +11,7 @@
     "test": "bun test",
     "test:types": "bunx tsc --noEmit",
     "format": "bunx biome format --write",
-    "build": "bunx tsdown",
+    "build": "bunx --bun tsdown",
     "npm:publish": "bun publish --access public"
   },
   "files": [
