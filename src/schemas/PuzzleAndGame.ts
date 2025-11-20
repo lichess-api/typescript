@@ -2,6 +2,7 @@ import * as z from "zod";
 
 import Flair from "./Flair";
 import GameColor from "./GameColor";
+import Patron from "./Patron";
 import PatronColor from "./PatronColor";
 import PerfType from "./PerfType";
 import Title from "./Title";
@@ -21,7 +22,7 @@ const PuzzleAndGame = z.object({
         flair: Flair.optional(),
         id: z.string(),
         name: z.string(),
-        patron: z.boolean().optional(),
+        patron: Patron.optional(),
         patronColor: PatronColor.optional(),
         rating: z.int(),
         title: Title.optional(),
@@ -31,7 +32,7 @@ const PuzzleAndGame = z.object({
         flair: Flair.optional(),
         id: z.string(),
         name: z.string(),
-        patron: z.boolean().optional(),
+        patron: Patron.optional(),
         patronColor: PatronColor.optional(),
         rating: z.int(),
         title: Title.optional(),

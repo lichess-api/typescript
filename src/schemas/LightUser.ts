@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 import Flair from "./Flair";
+import Patron from "./Patron";
 import PatronColor from "./PatronColor";
 import Title from "./Title";
 
@@ -9,7 +10,7 @@ const LightUser = z.object({
   name: z.string(),
   flair: Flair.optional(),
   title: Title.optional(),
-  patron: z.boolean().optional(),
+  patron: Patron.optional(),
   patronColor: PatronColor.optional(),
 });
 

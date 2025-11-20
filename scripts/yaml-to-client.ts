@@ -40,7 +40,12 @@ const OpenApiSchemaComponents = z.object();
 const OpenApiSchemaSchema = z.object({
   openapi: z.literal("3.1.0"),
   info: OpenApiSchemaInfo,
-  servers: z.tuple([z.object({ url: z.literal("https://lichess.org") })]),
+  servers: z.tuple([
+    z.object({ url: z.literal("https://lichess.org") }),
+    z.object({ url: z.literal("https://lichess.dev") }),
+    z.object({ url: z.literal("http://localhost:{port}") }),
+    z.object({ url: z.literal("http://l.org") }),
+  ]),
   tags: z.array(z.object({ name: z.string(), description: z.string() })),
   paths: OpenApiSchemaPaths,
   components: OpenApiSchemaComponents,
@@ -220,18 +225,34 @@ const SchemaSchemaBooleanLike = z
       SchemaSchemaBoolean,
       z.object({ type: z.literal("string"), const: z.literal(true) }),
     ]),
+    example: z.literal("yes"),
   })
+  .strict()
+  .transform((s) => ({ ...s, __schema: "boolean-like" as const }))
   .brand("SchemaSchemaBooleanLike");
+
+type SchemaBooleanLike = z.infer<typeof SchemaSchemaBooleanLike>;
+
+const SchemaSchemaArrayOfPrimitive = z
+  .object({ type: z.literal("array"), items: SchemaSchemaPrimitive })
+  .strict()
+  .transform((s) => ({ ...s, __schema: "array:primitive" as const }));
+
+const SchemaSchemaArrayOfRefToPrimitive = z
+  .object({ type: z.literal("array"), items: SchemaSchemaRefToPrimitive })
+  .strict()
+  .transform((s) => ({
+    ...s,
+    __schema: "array:notverified:reftoprimitive" as const,
+  }));
 
 const QueryParamSchemaSchema = z.union([
   SchemaSchemaPrimitive,
-  z.object({ type: z.literal("array"), items: SchemaSchemaPrimitive }),
+  SchemaSchemaArrayOfPrimitive,
   SchemaSchemaRefToPrimitive,
-  z.object({ type: z.literal("array"), items: SchemaSchemaRefToPrimitive }),
+  SchemaSchemaArrayOfRefToPrimitive,
   SchemaSchemaNullableRefToPrimitive,
 ]);
-
-type QueryParamSchema = z.infer<typeof QueryParamSchemaSchema>;
 
 const OperationQueryParameterSchema = OperationParameterBase.extend({
   in: z.literal("query"),
@@ -246,8 +267,6 @@ const PathParamSchemaSchema = z.union([
   SchemaSchemaRefToPrimitive,
   SchemaSchemaBooleanLike,
 ]);
-
-type PathParamSchema = z.infer<typeof PathParamSchemaSchema>;
 
 const OperationPathParameterSchema = OperationParameterBase.extend({
   in: z.literal("path"),
@@ -506,8 +525,14 @@ function processParams(params: OperationParameters) {
   } as const;
 }
 
-function schemaToTypescriptTypes(schema: Schema) {
+function schemaToTypescriptTypes(schema: Schema | SchemaBooleanLike) {
   switch (schema.__schema) {
+    case "$ref": {
+      const ref = schema.$ref;
+      const name = ref.split("/").pop()!.replace(".yaml", "");
+      const typescriptSchema = `schemas.${name}` as const;
+      return typescriptSchema;
+    }
     case "object": {
       const props = schema.properties || {};
       const required = new Set(schema.required || []);
@@ -522,13 +547,11 @@ function schemaToTypescriptTypes(schema: Schema) {
       const entries = Object.entries(objectRecord);
       const inner =
         entries.length === 1
-          ? `{ "${entries[0]![0]}" ${entries[0]![1]} }`
+          ? (`{ "${entries[0]![0]}" ${entries[0]![1]} }` as const)
           : "{\n" +
             entries.map(([k, v]) => `  "${k}" ${v},`).join("\n") +
             "\n}";
       return inner;
-      const typescriptSchema = JSON.stringify(schema);
-      return `{ /* typescriptSchema: ${typescriptSchema} */ }` as const;
     }
   }
 
@@ -539,11 +562,37 @@ function schemaToTypescriptTypes(schema: Schema) {
 function extractQueryParams(queryParams: OperationQueryParameter[]) {
   const schemas = queryParams.map((param) => param.schema);
   return "{ /* ~query~ */ }" as const;
+  // const params: Record<string, string> = {};
+  // for (const param of queryParams) {
+  //   const typescriptSchema = schemaToTypescriptTypes(param.schema);
+  //   params[param.name] = param.required
+  //     ? `: ${typescriptSchema}`
+  //     : `?: ${typescriptSchema}`;
+  // }
+  // const entries = Object.entries(params);
+  // if (entries.length === 1) {
+  //   return `{ ${entries[0]![0]}${entries[0]![1]} }`;
+  // }
+  // return (
+  //   "{\n" + entries.map(([k, v]) => `      ${k}${v},`).join("\n") + "\n    }"
+  // );
 }
 
 function extractPathParams(pathParams: OperationPathParameter[]) {
-  const schemas = pathParams.map((param) => param.schema);
-  return "{ /* ~path~ */ }" as const;
+  const params: Record<string, string> = {};
+  for (const param of pathParams) {
+    const typescriptSchema = schemaToTypescriptTypes(param.schema);
+    params[param.name] = `: ${typescriptSchema}`;
+  }
+  const entries = Object.entries(params);
+  if (entries.length === 1) {
+    return `{/* path */  ${entries[0]![0]}${entries[0]![1]} }`;
+  }
+  return (
+    "{/* path */ \n" +
+    entries.map(([k, v]) => `      ${k}${v},`).join("\n") +
+    "\n    }"
+  );
 }
 
 function extractBodyTypes(bodySchema: Schema) {

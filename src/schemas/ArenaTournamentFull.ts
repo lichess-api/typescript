@@ -4,6 +4,7 @@ import ArenaRatingObj from "./ArenaRatingObj";
 import ArenaSheet from "./ArenaSheet";
 import Clock from "./Clock";
 import Flair from "./Flair";
+import Patron from "./Patron";
 import PatronColor from "./PatronColor";
 import Title from "./Title";
 import Verdicts from "./Verdicts";
@@ -90,7 +91,7 @@ const ArenaTournamentFull = z.object({
           z.object({
             name: z.string().optional(),
             title: Title.optional(),
-            patron: z.boolean().optional(),
+            patron: Patron.optional(),
             patronColor: PatronColor.optional(),
             flair: Flair.optional(),
             rank: z.int().optional(),
@@ -138,7 +139,7 @@ const ArenaTournamentFull = z.object({
       z.object({
         name: z.string().optional(),
         title: Title.optional(),
-        patron: z.boolean().optional(),
+        patron: Patron.optional(),
         patronColor: PatronColor.optional(),
         flair: Flair.optional(),
         rank: z.int().optional(),

@@ -24,8 +24,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.6",
-    "@lichess-org/types": "^2.0.97",
-    "tsdown": "^0.16.5",
+    "@lichess-org/types": "^2.0.99",
+    "tsdown": "^0.16.6",
     "typescript": "^5.9.3"
   },
   "main": "./dist/index.mjs",

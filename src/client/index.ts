@@ -37,7 +37,7 @@ export class Lichess {
             online: z.boolean().optional(),
             playing: z.boolean().optional(),
             streaming: z.boolean().optional(),
-            patron: z.boolean().optional(),
+            patron: schemas.Patron.optional(),
             patronColor: schemas.PatronColor.optional(),
           })
         );
@@ -77,7 +77,13 @@ export class Lichess {
    * See <https://lichess.org/player/top/200/bullet>.
    */
   async playerTopNbPerfType(params: {
-    /* ~path~ */
+    /* path */
+    nb: {
+      /* (not_object) typescriptSchema: {"type":"integer","example":100,"minimum":1,"maximum":200,"__schema":"integer"} */
+    };
+    perfType: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"bullet","enum":["ultraBullet","bullet","blitz","rapid","classical","chess960","crazyhouse","antichess","atomic","horde","kingOfTheHill","racingKings","threeCheck"],"__schema":"string"} */
+    };
   }) {
     const path = `/api/player/top/${params.nb}/${params.perfType}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -99,7 +105,9 @@ export class Lichess {
    */
   async apiUser(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -129,7 +137,9 @@ export class Lichess {
    * `month` starts at zero (January).
    */
   async apiUserRatingHistory(params: {
-    /* ~path~ */
+    /* path */ username: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/api/user/${params.username}/rating-history` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -151,7 +161,11 @@ export class Lichess {
    * Similar to the [performance pages on the website](https://lichess.org/@/thibault/perf/bullet).
    */
   async apiUserPerf(params: {
-    /* ~path~ */
+    /* path */
+    username: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
+    perf: schemas.PerfType;
   }) {
     const path = `/api/user/${params.username}/perf/${params.perf}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -172,7 +186,9 @@ export class Lichess {
    * Read data to generate the activity feed of a user.
    */
   async apiUserActivity(params: {
-    /* ~path~ */
+    /* path */ username: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/api/user/${params.username}/activity` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -213,7 +229,9 @@ export class Lichess {
    * Get a single Lichess puzzle in JSON format.
    */
   async apiPuzzleId(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/api/puzzle/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -265,7 +283,9 @@ export class Lichess {
    */
   async apiPuzzleBatchSelect(
     params: {
-      /* ~path~ */
+      /* path */ angle: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"mix","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -293,14 +313,12 @@ export class Lichess {
    */
   async apiPuzzleBatchSolve(
     params: {
-      /* ~path~ */
+      /* path */ angle: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"mix","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
-    } & {
-      body: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/PuzzleBatchSolveRequest.yaml","__schema":"$ref"} */
-      };
-    }
+    } & { body: schemas.PuzzleBatchSolveRequest }
   ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
     const query = {
@@ -351,7 +369,13 @@ export class Lichess {
    * Gets the puzzle IDs of remaining puzzles to re-attempt in JSON format.
    */
   async apiPuzzleReplay(params: {
-    /* ~path~ */
+    /* path */
+    days: {
+      /* (not_object) typescriptSchema: {"type":"integer","__schema":"integer"} */
+    };
+    theme: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/api/puzzle/replay/${params.days}/${params.theme}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -380,7 +404,9 @@ export class Lichess {
    * Allows re-creating the [improvement/strengths](https://lichess.org/training/dashboard/30/improvementAreas) interfaces.
    */
   async apiPuzzleDashboard(params: {
-    /* ~path~ */
+    /* path */ days: {
+      /* (not_object) typescriptSchema: {"type":"integer","minimum":1,"__schema":"integer"} */
+    };
   }) {
     const path = `/api/puzzle/dashboard/${params.days}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -404,7 +430,9 @@ export class Lichess {
    */
   async apiStormDashboard(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -458,7 +486,9 @@ export class Lichess {
    * for 30 minutes. After that delay, they are permanently deleted.
    */
   async racerGet(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/api/racer/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -638,7 +668,9 @@ export class Lichess {
    */
   async gamePgn(
     params: {
-      /* ~path~ */
+      /* path */ gameId: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -666,7 +698,9 @@ export class Lichess {
    */
   async apiUserCurrentGame(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -699,7 +733,9 @@ export class Lichess {
    */
   async apiGamesUser(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -797,7 +833,9 @@ export class Lichess {
    */
   async gamesByIds(
     params: {
-      /* ~path~ */
+      /* path */ streamId: {
+        /* (not_object) typescriptSchema: {"description":"Arbitrary stream ID that you can later use to add game IDs to the stream.","type":"string","example":"myAppName-someRandomId","__schema":"string"} */
+      };
     } & { body: string }
   ) {
     const path = `/api/stream/games/${params.streamId}` as const;
@@ -820,7 +858,9 @@ export class Lichess {
    */
   async gamesByIdsAdd(
     params: {
-      /* ~path~ */
+      /* path */ streamId: {
+        /* (not_object) typescriptSchema: {"description":"The stream ID you used to [create the stream](#operation/gamesByIds).","type":"string","example":"myAppName-someRandomId","__schema":"string"} */
+      };
     } & { body: string }
   ) {
     const path = `/api/stream/games/${params.streamId}/add` as const;
@@ -902,7 +942,9 @@ export class Lichess {
    * No more than 8 game streams can be opened at the same time from the same IP address.
    */
   async streamGame(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"LuGQwhBb","__schema":"string"} */
+    };
   }) {
     const path = `/api/stream/game/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -1056,7 +1098,9 @@ export class Lichess {
    * Try it with `curl https://lichess.org/api/tv/rapid/feed`.
    */
   async tvChannelFeed(params: {
-    /* ~path~ */
+    /* path */ channel: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/api/tv/${params.channel}/feed` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -1077,7 +1121,9 @@ export class Lichess {
    */
   async tvChannelGames(
     params: {
-      /* ~path~ */
+      /* path */ channel: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -1148,15 +1194,11 @@ export class Lichess {
       startDate?: {
         /* (not_object) typescriptSchema: {"description":"Timestamp (in milliseconds) to start the tournament at a given date and time. Overrides the `waitMinutes` setting","type":"integer","format":"int64","__schema":"integer"} */
       };
-      variant?: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
-      };
+      variant?: schemas.VariantKey;
       rated?: {
         /* (not_object) typescriptSchema: {"default":true,"description":"Games are rated and impact players ratings","type":"boolean","__schema":"boolean"} */
       };
-      position?: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/FromPositionFEN.yaml","__schema":"$ref"} */
-      };
+      position?: schemas.FromPositionFEN;
       berserkable?: {
         /* (not_object) typescriptSchema: {"default":true,"description":"Whether the players can use berserk. Only allowed if clockIncrement <= clockTime * 2","type":"boolean","__schema":"boolean"} */
       };
@@ -1273,15 +1315,11 @@ export class Lichess {
       startDate?: {
         /* (not_object) typescriptSchema: {"description":"Timestamp (in milliseconds) to start the tournament at a given date and time. Overrides the `waitMinutes` setting","type":"integer","format":"int64","__schema":"integer"} */
       };
-      variant?: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
-      };
+      variant?: schemas.VariantKey;
       rated?: {
         /* (not_object) typescriptSchema: {"default":true,"description":"Games are rated and impact players ratings","type":"boolean","__schema":"boolean"} */
       };
-      position?: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/FromPositionFEN.yaml","__schema":"$ref"} */
-      };
+      position?: schemas.FromPositionFEN;
       berserkable?: {
         /* (not_object) typescriptSchema: {"default":true,"description":"Whether the players can use berserk. Only allowed if clockIncrement <= clockTime * 2","type":"boolean","__schema":"boolean"} */
       };
@@ -1345,7 +1383,9 @@ export class Lichess {
    */
   async apiTournamentJoin(
     params: {
-      /* ~path~ */
+      /* path */ id: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"hL7vMrFQ","__schema":"string"} */
+      };
     } & {
       body: {
         password?: {
@@ -1387,7 +1427,9 @@ export class Lichess {
    * It's possible to join again later. Points and streaks are preserved.
    */
   async apiTournamentWithdraw(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"hL7vMrFQ","__schema":"string"} */
+    };
   }) {
     const path = `/api/tournament/${params.id}/withdraw` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -1414,7 +1456,9 @@ export class Lichess {
    * Terminate an Arena tournament
    */
   async apiTournamentTerminate(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"hL7vMrFQ","__schema":"string"} */
+    };
   }) {
     const path = `/api/tournament/${params.id}/terminate` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -1443,7 +1487,9 @@ export class Lichess {
    */
   async apiTournamentTeamBattlePost(
     params: {
-      /* ~path~ */
+      /* path */ id: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+      };
     } & {
       body: {
         teams: {
@@ -1486,7 +1532,9 @@ export class Lichess {
    */
   async gamesByTournament(
     params: {
-      /* ~path~ */
+      /* path */ id: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -1516,7 +1564,9 @@ export class Lichess {
    */
   async resultsByTournament(
     params: {
-      /* ~path~ */
+      /* path */ id: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -1541,7 +1591,9 @@ export class Lichess {
    * Teams of a team battle tournament, with top players, sorted by rank (best first).
    */
   async teamsByTournament(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/api/tournament/${params.id}/teams` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -1584,7 +1636,9 @@ export class Lichess {
    */
   async apiUserNameTournamentCreated(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -1616,7 +1670,9 @@ export class Lichess {
    */
   async apiUserNameTournamentPlayed(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -1647,7 +1703,9 @@ export class Lichess {
    */
   async apiSwissNew(
     params: {
-      /* ~path~ */
+      /* path */ teamId: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       body: {
         name?: {
@@ -1668,12 +1726,8 @@ export class Lichess {
         roundInterval?: {
           /* (not_object) typescriptSchema: {"description":"How long to wait between each round, in seconds.\nSet to 99999999 to manually schedule each round from the tournament UI.\nIf empty or -1, a sensible value is picked automatically.\n","type":"integer","enum":[-1,5,10,20,30,45,60,120,180,300,600,900,1200,1800,2700,3600,86400,172800,604800,99999999],"__schema":"integer:enum"} */
         };
-        variant?: {
-          /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
-        };
-        position?: {
-          /* (not_object) typescriptSchema: {"$ref":"../../schemas/SwissFromPositionFEN.yaml","__schema":"$ref"} */
-        };
+        variant?: schemas.VariantKey;
+        position?: schemas.SwissFromPositionFEN;
         description?: {
           /* (not_object) typescriptSchema: {"description":"Anything you want to tell players about the tournament","type":"string","__schema":"string"} */
         };
@@ -1762,7 +1816,9 @@ export class Lichess {
    */
   async apiSwissUpdate(
     params: {
-      /* ~path~ */
+      /* path */ id: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"hL7vMrFQ","__schema":"string"} */
+      };
     } & {
       body: {
         name?: {
@@ -1783,12 +1839,8 @@ export class Lichess {
         roundInterval?: {
           /* (not_object) typescriptSchema: {"description":"How long to wait between each round, in seconds.\nSet to 99999999 to manually schedule each round from the tournament UI, or [with the API](#tag/Swiss-tournaments/operation/apiSwissScheduleNextRound).\nIf empty or -1, a sensible value is picked automatically.\n","type":"integer","enum":[-1,5,10,20,30,45,60,120,180,300,600,900,1200,1800,2700,3600,86400,172800,604800,99999999],"__schema":"integer:enum"} */
         };
-        variant?: {
-          /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
-        };
-        position?: {
-          /* (not_object) typescriptSchema: {"$ref":"../../schemas/SwissFromPositionFEN.yaml","__schema":"$ref"} */
-        };
+        variant?: schemas.VariantKey;
+        position?: schemas.SwissFromPositionFEN;
         description?: {
           /* (not_object) typescriptSchema: {"description":"Anything you want to tell players about the tournament","type":"string","__schema":"string"} */
         };
@@ -1860,7 +1912,9 @@ export class Lichess {
    */
   async apiSwissScheduleNextRound(
     params: {
-      /* ~path~ */
+      /* path */ id: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"hL7vMrFQ","__schema":"string"} */
+      };
     } & {
       body: {
         date?: {
@@ -1899,7 +1953,9 @@ export class Lichess {
    */
   async apiSwissJoin(
     params: {
-      /* ~path~ */
+      /* path */ id: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"hL7vMrFQ","__schema":"string"} */
+      };
     } & {
       body: {
         password?: {
@@ -1935,7 +1991,9 @@ export class Lichess {
    * It's possible to join again later. Points are preserved.
    */
   async apiSwissWithdraw(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"hL7vMrFQ","__schema":"string"} */
+    };
   }) {
     const path = `/api/swiss/${params.id}/withdraw` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -1956,7 +2014,9 @@ export class Lichess {
    * Terminate a Swiss tournament
    */
   async apiSwissTerminate(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"W5FrxusN","__schema":"string"} */
+    };
   }) {
     const path = `/api/swiss/${params.id}/terminate` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -1985,7 +2045,9 @@ export class Lichess {
    * Example: <https://lichess.org/swiss/j8rtJ5GL.trf>
    */
   async swissTrf(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/swiss/${params.id}.trf` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -2009,7 +2071,9 @@ export class Lichess {
    */
   async gamesBySwiss(
     params: {
-      /* ~path~ */
+      /* path */ id: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -2039,7 +2103,9 @@ export class Lichess {
    */
   async resultsBySwiss(
     params: {
-      /* ~path~ */
+      /* path */ id: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -2067,7 +2133,9 @@ export class Lichess {
    */
   async apiTeamSwiss(
     params: {
-      /* ~path~ */
+      /* path */ teamId: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -2095,7 +2163,13 @@ export class Lichess {
    */
   async studyChapterPgn(
     params: {
-      /* ~path~ */
+      /* path */
+      studyId: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+      };
+      chapterId: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -2124,7 +2198,9 @@ export class Lichess {
    */
   async studyAllChaptersPgn(
     params: {
-      /* ~path~ */
+      /* path */ studyId: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -2149,7 +2225,9 @@ export class Lichess {
    * Only get the study headers, including `Last-Modified`.
    */
   async studyAllChaptersHead(params: {
-    /* ~path~ */
+    /* path */ studyId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
   }) {
     const path = `/api/study/${params.studyId}.pgn` as const;
     const { response, status } = await this.requestor.head({ path });
@@ -2171,7 +2249,9 @@ export class Lichess {
    */
   async apiStudyImportPGN(
     params: {
-      /* ~path~ */
+      /* path */ studyId: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       body: {
         pgn: {
@@ -2183,9 +2263,7 @@ export class Lichess {
         orientation?: {
           /* (not_object) typescriptSchema: {"default":"white","description":"Default board orientation.","type":"string","enum":["white","black"],"__schema":"string"} */
         };
-        variant?: {
-          /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
-        };
+        variant?: schemas.VariantKey;
       };
     }
   ) {
@@ -2222,7 +2300,13 @@ export class Lichess {
    */
   async apiStudyChapterTags(
     params: {
-      /* ~path~ */
+      /* path */
+      studyId: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+      };
+      chapterId: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+      };
     } & {
       body: {
         pgn: {
@@ -2258,7 +2342,9 @@ export class Lichess {
    */
   async studyExportAllPgn(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -2286,7 +2372,9 @@ export class Lichess {
    * Studies are streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
    */
   async studyListMetadata(params: {
-    /* ~path~ */
+    /* path */ username: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/api/study/by/${params.username}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -2307,7 +2395,13 @@ export class Lichess {
    * an empty one will be automatically created to replace it.
    */
   async apiStudyStudyIdChapterIdDelete(params: {
-    /* ~path~ */
+    /* path */
+    studyId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
+    chapterId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
   }) {
     const path = `/api/study/${params.studyId}/${params.chapterId}` as const;
     const { response, status } = await this.requestor.delete({ path });
@@ -2373,7 +2467,9 @@ export class Lichess {
    */
   async broadcastsByUser(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -2436,11 +2532,7 @@ export class Lichess {
    * Create a new broadcast tournament to relay external games.
    * This endpoint accepts the same form data as the [web form](https://lichess.org/broadcast/new).
    */
-  async broadcastTourCreate(params: {
-    body: {
-      /* (not_object) typescriptSchema: {"$ref":"../../schemas/BroadcastForm.yaml","__schema":"$ref"} */
-    };
-  }) {
+  async broadcastTourCreate(params: { body: schemas.BroadcastForm }) {
     const path = "/broadcast/new" as const;
     const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
@@ -2467,7 +2559,9 @@ export class Lichess {
    * Get information about a broadcast tournament.
    */
   async broadcastTourGet(params: {
-    /* ~path~ */
+    /* path */ broadcastTournamentId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
   }) {
     const path = `/api/broadcast/${params.broadcastTournamentId}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -2488,7 +2582,9 @@ export class Lichess {
    * Get the list of players of a broadcast tournament, if available.
    */
   async broadcastPlayersGet(params: {
-    /* ~path~ */
+    /* path */ broadcastTournamentId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
   }) {
     const path = `/broadcast/${params.broadcastTournamentId}/players` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -2509,7 +2605,13 @@ export class Lichess {
    * Get the details of a specific player and their games from a broadcast tournament.
    */
   async broadcastPlayerGet(params: {
-    /* ~path~ */
+    /* path */
+    broadcastTournamentId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
+    playerId: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path =
       `/broadcast/${params.broadcastTournamentId}/players/${params.playerId}` as const;
@@ -2540,12 +2642,10 @@ export class Lichess {
    */
   async broadcastTourUpdate(
     params: {
-      /* ~path~ */
-    } & {
-      body: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/BroadcastForm.yaml","__schema":"$ref"} */
+      /* path */ broadcastTournamentId: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
       };
-    }
+    } & { body: schemas.BroadcastForm }
   ) {
     const path = `/broadcast/${params.broadcastTournamentId}/edit` as const;
     const body = params.body;
@@ -2577,12 +2677,10 @@ export class Lichess {
    */
   async broadcastRoundCreate(
     params: {
-      /* ~path~ */
-    } & {
-      body: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/BroadcastRoundForm.yaml","__schema":"$ref"} */
+      /* path */ broadcastTournamentId: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
       };
-    }
+    } & { body: schemas.BroadcastRoundForm }
   ) {
     const path = `/broadcast/${params.broadcastTournamentId}/new` as const;
     const body = params.body;
@@ -2610,7 +2708,16 @@ export class Lichess {
    * Get information about a broadcast round.
    */
   async broadcastRoundGet(params: {
-    /* ~path~ */
+    /* path */
+    broadcastTournamentSlug: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
+    broadcastRoundSlug: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
+    broadcastRoundId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
   }) {
     const path =
       `/api/broadcast/${params.broadcastTournamentSlug}/${params.broadcastRoundSlug}/${params.broadcastRoundId}` as const;
@@ -2636,12 +2743,10 @@ export class Lichess {
    */
   async broadcastRoundUpdate(
     params: {
-      /* ~path~ */
-    } & {
-      body: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/BroadcastRoundForm.yaml","__schema":"$ref"} */
+      /* path */ broadcastRoundId: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
       };
-    }
+    } & { body: schemas.BroadcastRoundForm }
   ) {
     const path = `/broadcast/round/${params.broadcastRoundId}/edit` as const;
     const body = params.body;
@@ -2669,7 +2774,9 @@ export class Lichess {
    * Remove any games from the broadcast round and reset it to its initial state.
    */
   async broadcastRoundReset(params: {
-    /* ~path~ */
+    /* path */ broadcastRoundId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
   }) {
     const path =
       `/api/broadcast/round/${params.broadcastRoundId}/reset` as const;
@@ -2693,7 +2800,9 @@ export class Lichess {
    */
   async broadcastPush(
     params: {
-      /* ~path~ */
+      /* path */ broadcastRoundId: {
+        /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+      };
     } & { body: string }
   ) {
     const path =
@@ -2727,7 +2836,9 @@ export class Lichess {
    * and no pollings means no latency, and minimum impact on the server.
    */
   async broadcastStreamRoundPgn(params: {
-    /* ~path~ */
+    /* path */ broadcastRoundId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
   }) {
     const path =
       `/api/stream/broadcast/round/${params.broadcastRoundId}.pgn` as const;
@@ -2751,7 +2862,9 @@ export class Lichess {
    * a new PGN every time a game is updated, in real-time.
    */
   async broadcastRoundPgn(params: {
-    /* ~path~ */
+    /* path */ broadcastRoundId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
   }) {
     const path = `/api/broadcast/round/${params.broadcastRoundId}.pgn` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -2773,7 +2886,9 @@ export class Lichess {
    * You may want to [download only the games of a single round](#operation/broadcastRoundPgn) instead.
    */
   async broadcastAllRoundsPgn(params: {
-    /* ~path~ */
+    /* path */ broadcastTournamentId: {
+      /* (not_object) typescriptSchema: {"type":"string","minLength":8,"maxLength":8,"__schema":"string"} */
+    };
   }) {
     const path = `/api/broadcast/${params.broadcastTournamentId}.pgn` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -2815,7 +2930,9 @@ export class Lichess {
    * Get information about a FIDE player.
    */
   async fidePlayerGet(params: {
-    /* ~path~ */
+    /* path */ playerId: {
+      /* (not_object) typescriptSchema: {"type":"integer","__schema":"integer"} */
+    };
   }) {
     const path = `/api/fide/player/${params.playerId}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -2885,7 +3002,9 @@ export class Lichess {
    * Public info about a team. Includes the list of publicly visible leaders.
    */
   async teamShow(params: {
-    /* ~path~ */
+    /* path */ teamId: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/api/team/${params.teamId}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -2928,7 +3047,9 @@ export class Lichess {
    * All the teams a player is a member of.
    */
   async teamOfUsername(params: {
-    /* ~path~ */
+    /* path */ username: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"thibault","__schema":"string"} */
+    };
   }) {
     const path = `/api/team/of/${params.username}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -2974,7 +3095,9 @@ export class Lichess {
    */
   async teamIdUsers(
     params: {
-      /* ~path~ */
+      /* path */ teamId: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"coders","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -3002,7 +3125,9 @@ export class Lichess {
    */
   async apiTeamArena(
     params: {
-      /* ~path~ */
+      /* path */ teamId: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -3033,7 +3158,9 @@ export class Lichess {
    */
   async teamIdJoin(
     params: {
-      /* ~path~ */
+      /* path */ teamId: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"coders","__schema":"string"} */
+      };
     } & {
       body: {
         message?: {
@@ -3066,7 +3193,9 @@ export class Lichess {
    * - <https://lichess.org/team>
    */
   async teamIdQuit(params: {
-    /* ~path~ */
+    /* path */ teamId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"coders","__schema":"string"} */
+    };
   }) {
     const path = `/team/${params.teamId}/quit` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3088,7 +3217,9 @@ export class Lichess {
    */
   async teamRequests(
     params: {
-      /* ~path~ */
+      /* path */ teamId: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -3115,7 +3246,13 @@ export class Lichess {
    * Accept someone's request to join your team
    */
   async teamRequestAccept(params: {
-    /* ~path~ */
+    /* path */
+    teamId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"coders","__schema":"string"} */
+    };
+    userId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"neio","__schema":"string"} */
+    };
   }) {
     const path =
       `/api/team/${params.teamId}/request/${params.userId}/accept` as const;
@@ -3137,7 +3274,13 @@ export class Lichess {
    * Decline someone's request to join your team
    */
   async teamRequestDecline(params: {
-    /* ~path~ */
+    /* path */
+    teamId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"coders","__schema":"string"} */
+    };
+    userId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"neio","__schema":"string"} */
+    };
   }) {
     const path =
       `/api/team/${params.teamId}/request/${params.userId}/decline` as const;
@@ -3160,7 +3303,13 @@ export class Lichess {
    * - <https://lichess.org/team>
    */
   async teamIdKickUserId(params: {
-    /* ~path~ */
+    /* path */
+    teamId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"coders","__schema":"string"} */
+    };
+    userId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"neio","__schema":"string"} */
+    };
   }) {
     const path = `/api/team/${params.teamId}/kick/${params.userId}` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3183,7 +3332,9 @@ export class Lichess {
    */
   async teamIdPmAll(
     params: {
-      /* ~path~ */
+      /* path */ teamId: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"coders","__schema":"string"} */
+      };
     } & {
       body: {
         message?: {
@@ -3264,7 +3415,13 @@ export class Lichess {
    */
   async apiCrosstable(
     params: {
-      /* ~path~ */
+      /* path */
+      user1: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
+      user2: {
+        /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -3316,7 +3473,9 @@ export class Lichess {
    * Get the private notes that you have added for a user.
    */
   async readNote(params: {
-    /* ~path~ */
+    /* path */ username: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"thibault","__schema":"string"} */
+    };
   }) {
     const path = `/api/user/${params.username}/note` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -3338,7 +3497,9 @@ export class Lichess {
    */
   async writeNote(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"thibault","__schema":"string"} */
+      };
     } & {
       body: {
         text: {
@@ -3384,7 +3545,9 @@ export class Lichess {
    * Follow a player, adding them to your list of Lichess friends.
    */
   async followUser(params: {
-    /* ~path~ */
+    /* path */ username: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"thibault","__schema":"string"} */
+    };
   }) {
     const path = `/api/rel/follow/${params.username}` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3405,7 +3568,9 @@ export class Lichess {
    * Unfollow a player, removing them from your list of Lichess friends.
    */
   async unfollowUser(params: {
-    /* ~path~ */
+    /* path */ username: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"thibault","__schema":"string"} */
+    };
   }) {
     const path = `/api/rel/unfollow/${params.username}` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3426,7 +3591,9 @@ export class Lichess {
    * Block a player, adding them to your list of blocked Lichess users.
    */
   async blockUser(params: {
-    /* ~path~ */
+    /* path */ username: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"thibault","__schema":"string"} */
+    };
   }) {
     const path = `/api/rel/block/${params.username}` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3447,7 +3614,9 @@ export class Lichess {
    * Unblock a player, removing them from your list of blocked Lichess users.
    */
   async unblockUser(params: {
-    /* ~path~ */
+    /* path */ username: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"thibault","__schema":"string"} */
+    };
   }) {
     const path = `/api/rel/unblock/${params.username}` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3557,7 +3726,9 @@ export class Lichess {
    * The server closes the stream when the game ends, or if the game has already ended.
    */
   async boardGameStream(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/board/game/stream/${params.gameId}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -3584,7 +3755,13 @@ export class Lichess {
    */
   async boardGameMove(
     params: {
-      /* ~path~ */
+      /* path */
+      gameId: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+      };
+      move: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"e2e4","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -3672,7 +3849,9 @@ export class Lichess {
    * Abort a game being played with the Board API.
    */
   async boardGameAbort(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/board/game/${params.gameId}/abort` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3699,7 +3878,9 @@ export class Lichess {
    * Resign a game being played with the Board API.
    */
   async boardGameResign(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/board/game/${params.gameId}/resign` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3728,7 +3909,13 @@ export class Lichess {
    * - `no`: Decline a draw offer from the opponent.
    */
   async boardGameDraw(params: {
-    /* ~path~ */
+    /* path */
+    gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
+    accept: {
+      /* (not_object) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
+    };
   }) {
     const path =
       `/api/board/game/${params.gameId}/draw/${params.accept}` as const;
@@ -3758,7 +3945,13 @@ export class Lichess {
    * - `no`: Decline a takeback offer from the opponent.
    */
   async boardGameTakeback(params: {
-    /* ~path~ */
+    /* path */
+    gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
+    accept: {
+      /* (not_object) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
+    };
   }) {
     const path =
       `/api/board/game/${params.gameId}/takeback/${params.accept}` as const;
@@ -3786,7 +3979,9 @@ export class Lichess {
    * Claim victory when the opponent has left the game for a while.
    */
   async boardGameClaimVictory(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/board/game/${params.gameId}/claim-victory` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3813,7 +4008,9 @@ export class Lichess {
    * Claim draw when the opponent has left the game for a while.
    */
   async boardGameClaimDraw(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/board/game/${params.gameId}/claim-draw` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3841,7 +4038,9 @@ export class Lichess {
    * Only available in arena tournaments that allow berserk, and before each player has made a move.
    */
   async boardGameBerserk(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/board/game/${params.gameId}/berserk` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -3926,7 +4125,9 @@ export class Lichess {
    * The first line is always of type `gameFull`.
    */
   async botGameStream(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/bot/game/stream/${params.gameId}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -3953,7 +4154,13 @@ export class Lichess {
    */
   async botGameMove(
     params: {
-      /* ~path~ */
+      /* path */
+      gameId: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+      };
+      move: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"e2e4","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -3986,7 +4193,9 @@ export class Lichess {
    * Get the messages posted in the game chat
    */
   async botGameChatGet(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/bot/game/${params.gameId}/chat` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -4006,7 +4215,9 @@ export class Lichess {
    */
   async botGameChat(
     params: {
-      /* ~path~ */
+      /* path */ gameId: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+      };
     } & {
       body: {
         room: {
@@ -4044,7 +4255,9 @@ export class Lichess {
    * Abort a game being played with the Bot API.
    */
   async botGameAbort(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/bot/game/${params.gameId}/abort` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -4071,7 +4284,9 @@ export class Lichess {
    * Resign a game being played with the Bot API.
    */
   async botGameResign(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/bot/game/${params.gameId}/resign` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -4100,7 +4315,13 @@ export class Lichess {
    * - `no`: Decline a draw offer from the opponent.
    */
   async botGameDraw(params: {
-    /* ~path~ */
+    /* path */
+    gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
+    accept: {
+      /* (not_object) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
+    };
   }) {
     const path =
       `/api/bot/game/${params.gameId}/draw/${params.accept}` as const;
@@ -4130,7 +4351,13 @@ export class Lichess {
    * - `no`: Decline a takeback offer from the opponent.
    */
   async botGameTakeback(params: {
-    /* ~path~ */
+    /* path */
+    gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
+    accept: {
+      /* (not_object) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
+    };
   }) {
     const path =
       `/api/bot/game/${params.gameId}/takeback/${params.accept}` as const;
@@ -4158,7 +4385,9 @@ export class Lichess {
    * Claim victory when the opponent has left the game for a while.
    */
   async botGameClaimVictory(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/bot/game/${params.gameId}/claim-victory` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -4185,7 +4414,9 @@ export class Lichess {
    * Claim draw when the opponent has left the game for a while.
    */
   async botGameClaimDraw(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/bot/game/${params.gameId}/claim-draw` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -4239,7 +4470,9 @@ export class Lichess {
    */
   async challengeCreate(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"LeelaChess","__schema":"string"} */
+      };
     } & {
       body: {
         /* (not_object) typescriptSchema: {"allOf":[{"oneOf":[{"type":"object","title":"real-time","required":["clock.limit","clock.increment"],"properties":{"clock.limit":{"type":"integer","description":"Clock initial time in seconds. If empty, a correspondence game is created. Valid values are 0, 15, 30, 45, 60, 90, and any multiple of 60 up to 10800 (3 hours).","example":300,"minimum":0,"maximum":10800},"clock.increment":{"type":"integer","description":"Clock increment in seconds. If empty, a correspondence game is created.","example":1,"minimum":0,"maximum":60}}},{"type":"object","title":"correspondence","required":["days"],"properties":{"days":{"type":"integer","description":"Days per move, for correspondence games. Clock settings must be omitted.","enum":[1,2,3,5,7,10,14]}}},{"type":"object","title":"unlimited","properties":{}}]},{"type":"object","properties":{"rated":{"type":"boolean","description":"Game is rated and impacts players ratings","default":false},"color":{"$ref":"../../schemas/ChallengeColor.yaml","description":"Which color you get to play","default":"random"},"variant":{"$ref":"../../schemas/VariantKey.yaml"},"fen":{"$ref":"../../schemas/FromPositionFEN.yaml"},"keepAliveStream":{"type":"boolean","description":"If set, the response is streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).\nThe challenge is kept alive until the connection is closed by the client.\nWhen the challenge is accepted, declined or canceled, a message of the form `{\"done\":\"accepted\"}` is sent,\nthen the connection is closed by the server.\nIf not set, the response is not streamed, and the challenge expires after 20s if not accepted.\n"},"rules":{"type":"string","enum":["noAbort","noRematch","noGiveTime","noClaimWin","noEarlyDraw"],"description":"Extra game rules separated by commas.\nExample: `noAbort,noRematch`\n"}}}],"__schema":"allOf"} */
@@ -4272,7 +4505,9 @@ export class Lichess {
    * Get details about a challenge, even if it has been recently accepted, canceled or declined.
    */
   async challengeShow(params: {
-    /* ~path~ */
+    /* path */ challengeId: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/api/challenge/${params.challengeId}/show` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -4295,7 +4530,9 @@ export class Lichess {
    */
   async challengeAccept(
     params: {
-      /* ~path~ */
+      /* path */ challengeId: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -4329,7 +4566,9 @@ export class Lichess {
    */
   async challengeDecline(
     params: {
-      /* ~path~ */
+      /* path */ challengeId: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+      };
     } & {
       body: {
         reason?: {
@@ -4367,7 +4606,9 @@ export class Lichess {
    */
   async challengeCancel(
     params: {
-      /* ~path~ */
+      /* path */ challengeId: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"5IrD6Gzz","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -4414,15 +4655,9 @@ export class Lichess {
       days?: {
         /* (not_object) typescriptSchema: {"description":"Days per move, for correspondence games. Clock settings must be omitted.","type":"integer","enum":[1,2,3,5,7,10,14],"__schema":"integer:enum"} */
       };
-      color?: {
-        /* (not_object) typescriptSchema: {"default":"random","description":"Which color you get to play","$ref":"../../schemas/ChallengeColor.yaml","__schema":"$ref"} */
-      };
-      variant?: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
-      };
-      fen?: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/FromPositionFEN.yaml","__schema":"$ref"} */
-      };
+      color?: schemas.ChallengeColor;
+      variant?: schemas.VariantKey;
+      fen?: schemas.FromPositionFEN;
     };
   }) {
     const path = "/api/challenge/ai" as const;
@@ -4485,12 +4720,8 @@ export class Lichess {
       days?: {
         /* (not_object) typescriptSchema: {"description":"Days per turn. For correspondence challenges.","type":"integer","enum":[1,2,3,5,7,10,14],"__schema":"integer:enum"} */
       };
-      variant?: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
-      };
-      fen?: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/FromPositionFEN.yaml","__schema":"$ref"} */
-      };
+      variant?: schemas.VariantKey;
+      fen?: schemas.FromPositionFEN;
       name?: {
         /* (not_object) typescriptSchema: {"description":"Optional name for the challenge, that players will see on the challenge page.","type":"string","__schema":"string"} */
       };
@@ -4536,7 +4767,9 @@ export class Lichess {
    */
   async challengeStartClocks(
     params: {
-      /* ~path~ */
+      /* path */ gameId: {
+        /* (not_object) typescriptSchema: {"description":"ID of the game","type":"string","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -4624,12 +4857,8 @@ export class Lichess {
       rated?: {
         /* (not_object) typescriptSchema: {"default":false,"description":"Game is rated and impacts players ratings","type":"boolean","__schema":"boolean"} */
       };
-      variant?: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"$ref"} */
-      };
-      fen?: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/FromPositionFEN.yaml","__schema":"$ref"} */
-      };
+      variant?: schemas.VariantKey;
+      fen?: schemas.FromPositionFEN;
       message?: {
         /* (not_object) typescriptSchema: {"default":"Your game with {opponent} is ready: {game}.","description":"Message that will be sent to each player, when the game is created.  It is sent from your user account.\n`{opponent}` and `{game}` are placeholders that will be replaced with the opponent and the game URLs.\nYou can omit this field to send the default message,\nbut if you set your own message, it must at least contain the `{game}` placeholder.\n","type":"string","__schema":"string"} */
       };
@@ -4667,7 +4896,9 @@ export class Lichess {
    * If the clocks have already started (`bulk.startClocksAt` is in the past), then this does nothing.
    */
   async bulkPairingStartClocks(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"description":"The ID of the bulk pairing","type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/bulk-pairing/${params.id}/start-clocks` as const;
     const { response, status } = await this.requestor.post({ path });
@@ -4694,7 +4925,9 @@ export class Lichess {
    * Get a single bulk pairing by its ID.
    */
   async bulkPairingGet(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"description":"The ID of the bulk pairing","type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/bulk-pairing/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
@@ -4723,7 +4956,9 @@ export class Lichess {
    * Canceling a bulk pairing does not refund the rate limit cost of that bulk pairing.
    */
   async bulkPairingDelete(params: {
-    /* ~path~ */
+    /* path */ id: {
+      /* (not_object) typescriptSchema: {"description":"The ID of the bulk pairing","type":"string","example":"5IrD6Gzz","__schema":"string"} */
+    };
   }) {
     const path = `/api/bulk-pairing/${params.id}` as const;
     const { response, status } = await this.requestor.delete({ path });
@@ -4751,7 +4986,9 @@ export class Lichess {
    */
   async bulkPairingIdGamesGet(
     params: {
-      /* ~path~ */
+      /* path */ id: {
+        /* (not_object) typescriptSchema: {"description":"The ID of the bulk pairing","type":"string","example":"5IrD6Gzz","__schema":"string"} */
+      };
     } & {
       /* ~query~ */
     }
@@ -4776,7 +5013,13 @@ export class Lichess {
    * Add seconds to the opponent's clock. Can be used to create games with time odds.
    */
   async roundAddTime(params: {
-    /* ~path~ */
+    /* path */
+    gameId: {
+      /* (not_object) typescriptSchema: {"description":"ID of the game","type":"string","__schema":"string"} */
+    };
+    seconds: {
+      /* (not_object) typescriptSchema: {"type":"integer","minimum":5,"maximum":60,"__schema":"integer"} */
+    };
   }) {
     const path =
       `/api/round/${params.gameId}/add-time/${params.seconds}` as const;
@@ -4836,7 +5079,9 @@ export class Lichess {
    */
   async inboxUsername(
     params: {
-      /* ~path~ */
+      /* path */ username: {
+        /* (not_object) typescriptSchema: {"type":"string","example":"someplayer","__schema":"string"} */
+      };
     } & {
       body: {
         text: {
@@ -4925,9 +5170,7 @@ export class Lichess {
    * After registering, the provider should start waiting for analyis requests.
    */
   async apiExternalEngineCreate(params: {
-    body: {
-      /* (not_object) typescriptSchema: {"$ref":"../../schemas/ExternalEngineRegistration.yaml","__schema":"$ref"} */
-    };
+    body: schemas.ExternalEngineRegistration;
   }) {
     const path = "/api/external-engine" as const;
     const body = params.body;
@@ -4989,9 +5232,7 @@ export class Lichess {
    * Updates the properties of an external engine.
    */
   async apiExternalEnginePut(params: {
-    body: {
-      /* (not_object) typescriptSchema: {"$ref":"../../schemas/ExternalEngineRegistration.yaml","__schema":"$ref"} */
-    };
+    body: schemas.ExternalEngineRegistration;
   }) {
     const path = `/api/external-engine/${params.id}` as const;
     const body = params.body;
@@ -5025,9 +5266,7 @@ export class Lichess {
       clientSecret: {
         /* (not_object) typescriptSchema: {"type":"string","example":"ees_mdF2hK0hlKGSPeC6","__schema":"string"} */
       };
-      work: {
-        /* (not_object) typescriptSchema: {"$ref":"../../schemas/ExternalEngineWork.yaml","__schema":"$ref"} */
-      };
+      work: schemas.ExternalEngineWork;
     };
   }) {
     const path = `/api/external-engine/${params.id}/analyse` as const;
@@ -5361,7 +5600,9 @@ export class Lichess {
    * Example: `curl https://explorer.lichess.ovh/masters/pgn/aAbqI4ey`
    */
   async openingExplorerMasterGame(params: {
-    /* ~path~ */
+    /* path */ gameId: {
+      /* (not_object) typescriptSchema: {"type":"string","__schema":"string"} */
+    };
   }) {
     const path = `/master/pgn/${params.gameId}` as const;
     const { response, status } = await this.requestor.get({ path });

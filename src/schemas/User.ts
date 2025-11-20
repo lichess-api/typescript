@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 import Flair from "./Flair";
+import Patron from "./Patron";
 import PatronColor from "./PatronColor";
 import Perfs from "./Perfs";
 import PlayTime from "./PlayTime";
@@ -19,7 +20,7 @@ const User = z.object({
   profile: Profile.optional(),
   seenAt: z.int().optional(),
   playTime: PlayTime.optional(),
-  patron: z.boolean().optional(),
+  patron: Patron.optional(),
   patronColor: PatronColor.optional(),
   verified: z.boolean().optional(),
 });

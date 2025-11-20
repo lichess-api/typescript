@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 import Flair from "./Flair";
+import Patron from "./Patron";
 import PatronColor from "./PatronColor";
 import TimelineEntryBlogPost from "./TimelineEntryBlogPost";
 import TimelineEntryFollow from "./TimelineEntryFollow";
@@ -45,7 +46,7 @@ const Timeline = z.object({
       name: z.string(),
       title: Title.optional(),
       flair: Flair.optional(),
-      patron: z.boolean().optional(),
+      patron: Patron.optional(),
       patronColor: PatronColor.optional(),
     })
   ),

@@ -99,6 +99,7 @@ import OpeningExplorerOpening from "./OpeningExplorerOpening";
 import OpeningExplorerPlayer from "./OpeningExplorerPlayer";
 import OpeningExplorerPlayerGame from "./OpeningExplorerPlayerGame";
 import OpponentGoneEvent from "./OpponentGoneEvent";
+import Patron from "./Patron";
 import PatronColor from "./PatronColor";
 import Perf from "./Perf";
 import Perfs from "./Perfs";
@@ -113,6 +114,7 @@ import PuzzleBatchSelect from "./PuzzleBatchSelect";
 import PuzzleBatchSolveRequest from "./PuzzleBatchSolveRequest";
 import PuzzleBatchSolveResponse from "./PuzzleBatchSolveResponse";
 import PuzzleDashboard from "./PuzzleDashboard";
+import PuzzleGlicko from "./PuzzleGlicko";
 import PuzzleModePerf from "./PuzzleModePerf";
 import PuzzlePerformance from "./PuzzlePerformance";
 import PuzzleRacer from "./PuzzleRacer";
@@ -276,6 +278,7 @@ export {
   OpeningExplorerPlayer,
   OpeningExplorerPlayerGame,
   OpponentGoneEvent,
+  Patron,
   PatronColor,
   Perf,
   Perfs,
@@ -290,6 +293,7 @@ export {
   PuzzleBatchSolveRequest,
   PuzzleBatchSolveResponse,
   PuzzleDashboard,
+  PuzzleGlicko,
   PuzzleModePerf,
   PuzzlePerformance,
   PuzzleRacer,
