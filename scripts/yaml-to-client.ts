@@ -654,6 +654,7 @@ function processOperation(
     const baseUrl = operation.url;
     return {
       methodCode: `/* --- Base URL for methods below: ${baseUrl} --- */`,
+      baseUrl,
       __type: "__servers",
     } as const;
   }
@@ -760,12 +761,12 @@ function processTag(tagSchema: TagSchema, rawApiPath: string) {
   let baseUrl = undefined;
 
   for (const operation of Object.values(tagSchema)) {
-    const { methodCode, __type } = processOperation(operation, rawApiPath, {
+    const processedOperation = processOperation(operation, rawApiPath, {
       sharedPathParams,
       baseUrl,
     });
-    console.log(methodCode);
-    methodsCode.push(methodCode);
+    console.log(processedOperation.methodCode);
+    methodsCode.push(processedOperation.methodCode);
   }
   return methodsCode;
 }
