@@ -213,11 +213,16 @@ const SchemaSchemaNullableRefToPrimitive = z
   .object({
     allOf: z.tuple([SchemaSchemaRef, z.object({ default: z.null() })]),
   })
+  .strict()
+  .transform((s) => ({
+    ...s,
+    __schema: "notverified:reftoprimitive:nullable" as const,
+  }))
   .brand("notverified:SchemaSchemaNullableRefToPrimitive");
 
 const SchemaSchemaRefToPrimitive = SchemaSchemaRef.brand(
   "notverified:SchemaSchemaRefToPrimitive"
-);
+).transform((s) => ({ ...s, __schema: "notverified:reftoprimitive" as const }));
 
 const SchemaSchemaBooleanLike = z
   .object({
@@ -230,8 +235,6 @@ const SchemaSchemaBooleanLike = z
   .strict()
   .transform((s) => ({ ...s, __schema: "boolean-like" as const }))
   .brand("SchemaSchemaBooleanLike");
-
-type SchemaBooleanLike = z.infer<typeof SchemaSchemaBooleanLike>;
 
 const SchemaSchemaArrayOfPrimitive = z
   .object({ type: z.literal("array"), items: SchemaSchemaPrimitive })
@@ -254,6 +257,8 @@ const QueryParamSchemaSchema = z.union([
   SchemaSchemaNullableRefToPrimitive,
 ]);
 
+type QueryParamSchema = z.infer<typeof QueryParamSchemaSchema>;
+
 const OperationQueryParameterSchema = OperationParameterBase.extend({
   in: z.literal("query"),
   required: z.boolean().optional(),
@@ -267,6 +272,8 @@ const PathParamSchemaSchema = z.union([
   SchemaSchemaRefToPrimitive,
   SchemaSchemaBooleanLike,
 ]);
+
+type PathParamSchema = z.infer<typeof PathParamSchemaSchema>;
 
 const OperationPathParameterSchema = OperationParameterBase.extend({
   in: z.literal("path"),
@@ -525,7 +532,9 @@ function processParams(params: OperationParameters) {
   } as const;
 }
 
-function schemaToTypescriptTypes(schema: Schema | SchemaBooleanLike) {
+function schemaToTypescriptTypes(
+  schema: Schema | PathParamSchema | QueryParamSchema
+) {
   switch (schema.__schema) {
     case "$ref": {
       const ref = schema.$ref;
@@ -536,7 +545,7 @@ function schemaToTypescriptTypes(schema: Schema | SchemaBooleanLike) {
     case "object": {
       const props = schema.properties || {};
       const required = new Set(schema.required || []);
-      const objectRecord: Record<string, string> = {};
+      const objectRecord: Record<string, `: ${string}` | `?: ${string}`> = {};
       for (const [k, v] of Object.entries(props)) {
         const typescriptSchema = schemaToTypescriptTypes(SchemaSchema.parse(v));
         const propStr = required.has(k)
@@ -545,53 +554,64 @@ function schemaToTypescriptTypes(schema: Schema | SchemaBooleanLike) {
         objectRecord[k] = propStr;
       }
       const entries = Object.entries(objectRecord);
-      const inner =
-        entries.length === 1
-          ? (`{ "${entries[0]![0]}" ${entries[0]![1]} }` as const)
-          : "{\n" +
-            entries.map(([k, v]) => `  "${k}" ${v},`).join("\n") +
-            "\n}";
-      return inner;
+      if (entries.length === 1) {
+        return `{ "${entries[0]![0]}" ${entries[0]![1]} }` as const;
+      }
+      return (
+        "{\n" +
+        entries.map(([k, v]) => `  "${k}" ${v},` as const).join("\n") +
+        "\n}"
+      );
+    }
+    case "boolean": {
+      return "boolean" as const;
+    }
+    case "string": {
+      return "string" as const;
+    }
+    case "number":
+    case "integer": {
+      return "number" as const;
     }
   }
 
   const typescriptSchema = JSON.stringify(schema);
-  return `{ /* (not_object) typescriptSchema: ${typescriptSchema} */ }` as const;
+  return `{ /* (unsupported_schema) typescriptSchema: ${typescriptSchema} */ }` as const;
 }
 
 function extractQueryParams(queryParams: OperationQueryParameter[]) {
-  const schemas = queryParams.map((param) => param.schema);
-  return "{ /* ~query~ */ }" as const;
-  // const params: Record<string, string> = {};
-  // for (const param of queryParams) {
-  //   const typescriptSchema = schemaToTypescriptTypes(param.schema);
-  //   params[param.name] = param.required
-  //     ? `: ${typescriptSchema}`
-  //     : `?: ${typescriptSchema}`;
-  // }
-  // const entries = Object.entries(params);
-  // if (entries.length === 1) {
-  //   return `{ ${entries[0]![0]}${entries[0]![1]} }`;
-  // }
-  // return (
-  //   "{\n" + entries.map(([k, v]) => `      ${k}${v},`).join("\n") + "\n    }"
-  // );
+  const params: Record<string, string> = {};
+  for (const param of queryParams) {
+    const typescriptSchema = schemaToTypescriptTypes(param.schema);
+    params[param.name] = param.required
+      ? `: ${typescriptSchema}`
+      : `?: ${typescriptSchema}`;
+  }
+  const entries = Object.entries(params);
+  if (entries.length === 1) {
+    return `{ "${entries[0]![0]}" ${entries[0]![1]} }` as const;
+  }
+  return (
+    "{\n" +
+    entries.map(([k, v]) => `  "${k}" ${v},` as const).join("\n") +
+    "\n}"
+  );
 }
 
 function extractPathParams(pathParams: OperationPathParameter[]) {
   const params: Record<string, string> = {};
   for (const param of pathParams) {
     const typescriptSchema = schemaToTypescriptTypes(param.schema);
-    params[param.name] = `: ${typescriptSchema}`;
+    params[param.name] = `: ${typescriptSchema}` as const;
   }
   const entries = Object.entries(params);
   if (entries.length === 1) {
-    return `{/* path */  ${entries[0]![0]}${entries[0]![1]} }`;
+    return `{ "${entries[0]![0]}" ${entries[0]![1]} }` as const;
   }
   return (
-    "{/* path */ \n" +
-    entries.map(([k, v]) => `      ${k}${v},`).join("\n") +
-    "\n    }"
+    "{\n" +
+    entries.map(([k, v]) => `  "${k}" ${v},` as const).join("\n") +
+    "\n}"
   );
 }
 
@@ -625,7 +645,7 @@ function processOperation(
 ) {
   if (operation.__id === "__parameters") {
     return {
-      methodCode: "/* Shared path params for methods below */",
+      methodCode: "/* --- Shared path params for methods below --- */",
       __type: "__parameters",
     } as const;
   }
@@ -633,7 +653,7 @@ function processOperation(
   if (operation.__id === "__servers") {
     const baseUrl = operation.url;
     return {
-      methodCode: `/* Base URL for methods below: ${baseUrl} */`,
+      methodCode: `/* --- Base URL for methods below: ${baseUrl} --- */`,
       __type: "__servers",
     } as const;
   }
@@ -740,7 +760,10 @@ function processTag(tagSchema: TagSchema, rawApiPath: string) {
   let baseUrl = undefined;
 
   for (const operation of Object.values(tagSchema)) {
-    const { methodCode } = processOperation(operation, rawApiPath);
+    const { methodCode, __type } = processOperation(operation, rawApiPath, {
+      sharedPathParams,
+      baseUrl,
+    });
     console.log(methodCode);
     methodsCode.push(methodCode);
   }
