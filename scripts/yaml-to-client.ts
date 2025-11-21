@@ -582,12 +582,45 @@ function schemaToTypescriptTypes(
       return "number" as const;
     }
     case "enum:number": {
-      return schema.enum.map((v) => JSON.stringify(v)).join(" | ");
+      const literals = schema.enum.map((v) => JSON.stringify(v)).join(" | ");
+      return `(${literals})` as const;
+    }
+    case "allOf": {
+      const leftPart: string = schemaToTypescriptTypes(
+        SchemaSchema.parse(schema.allOf[0])
+      );
+      const rightPart: string = schemaToTypescriptTypes(
+        SchemaSchema.parse(schema.allOf[1])
+      );
+      return `${leftPart} & ${rightPart}` as const;
+    }
+    case "oneOf": {
+      const typescriptSchemas: string = schema.oneOf
+        .map((s) => schemaToTypescriptTypes(SchemaSchema.parse(s)))
+        .join(" | ");
+      return `(${typescriptSchemas})` as const;
+    }
+    case "array:primitive": {
+      const typescriptSchema: string = schemaToTypescriptTypes(schema.items);
+      return `(${typescriptSchema})[]` as const;
+    }
+    case "array:notverified:reftoprimitive": {
+      const ref = schema.items.$ref;
+      const name = ref.split("/").pop()!.replace(".yaml", "");
+      const typescriptSchema = `schemas.${name}` as const;
+      return `(${typescriptSchema})[]` as const;
+    }
+    case "additionalProperties":
+    case "anyOf":
+    case "array":
+    case "integer:nullable":
+    case "null":
+    case "string:nullable": {
+      throw new Error("Unsupported schema");
     }
   }
 
-  const typescriptSchema = JSON.stringify(schema);
-  return `{ /* (unsupported_schema:${schema.__schema}) typescriptSchema: ${typescriptSchema} */ }` as const;
+  assertNever(schema);
 }
 
 function extractQueryParams(queryParams: OperationQueryParameter[]) {
@@ -740,7 +773,7 @@ function processOperation(
   const switchCode = `switch (status) {
       ${responseCases}
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }` as const;
 

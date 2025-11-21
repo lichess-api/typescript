@@ -46,7 +46,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -65,7 +65,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -84,7 +84,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -106,7 +106,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -125,7 +125,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -144,7 +144,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -163,7 +163,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -182,7 +182,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -201,7 +201,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -225,7 +225,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -253,7 +253,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -284,7 +284,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -302,7 +302,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -327,7 +327,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -346,7 +346,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -368,7 +368,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -387,7 +387,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -412,7 +412,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -432,7 +432,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -451,7 +451,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -470,7 +470,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -492,7 +492,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -511,7 +511,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -531,7 +531,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -551,7 +551,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -584,7 +584,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -616,7 +616,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -661,7 +661,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -698,7 +698,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -725,7 +725,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -743,7 +743,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -763,7 +763,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -813,7 +813,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -836,7 +836,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -859,7 +859,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -876,7 +876,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -909,7 +909,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -945,7 +945,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -962,7 +962,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -979,7 +979,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1008,7 +1008,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1027,7 +1027,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1198,7 +1198,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1220,7 +1220,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1389,7 +1389,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1423,7 +1423,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1448,7 +1448,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1473,7 +1473,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1506,7 +1506,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1538,7 +1538,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1563,7 +1563,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1597,7 +1597,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1622,7 +1622,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1647,7 +1647,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1782,7 +1782,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1803,7 +1803,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1944,7 +1944,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -1975,7 +1975,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2001,7 +2001,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2020,7 +2020,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2045,7 +2045,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2062,7 +2062,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2094,7 +2094,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2114,7 +2114,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2141,7 +2141,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2172,7 +2172,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2199,7 +2199,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2215,7 +2215,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2250,7 +2250,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2279,7 +2279,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2306,7 +2306,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2323,7 +2323,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2342,7 +2342,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2360,7 +2360,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2380,7 +2380,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2415,7 +2415,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2441,7 +2441,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2467,7 +2467,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2486,7 +2486,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2505,7 +2505,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2534,7 +2534,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2562,7 +2562,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2592,7 +2592,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2616,7 +2616,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2644,7 +2644,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2664,7 +2664,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2691,7 +2691,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2709,7 +2709,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2726,7 +2726,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2743,7 +2743,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2761,7 +2761,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2780,7 +2780,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2800,7 +2800,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2824,7 +2824,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2843,7 +2843,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2863,7 +2863,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2882,7 +2882,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2902,7 +2902,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2922,7 +2922,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2949,7 +2949,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2976,7 +2976,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -2995,7 +2995,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3017,7 +3017,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3037,7 +3037,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3057,7 +3057,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3076,7 +3076,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3104,7 +3104,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3146,7 +3146,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3173,7 +3173,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3204,7 +3204,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3223,7 +3223,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3243,7 +3243,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3260,7 +3260,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3279,7 +3279,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3298,7 +3298,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3317,7 +3317,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3336,7 +3336,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3353,7 +3353,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3363,8 +3363,17 @@ export class Lichess {
    */
   async apiBoardSeek(params: {
     body: {
-      /* (unsupported_schema:allOf) typescriptSchema: {"allOf":[{"type":"object","properties":{"rated":{"type":"boolean","description":"Whether the game is rated and impacts players ratings.","example":true,"default":false},"variant":{"$ref":"../../schemas/VariantKey.yaml"},"ratingRange":{"type":"string","description":"The rating range of potential opponents. Better left empty.\nExample: 1500-1800\n"}}},{"oneOf":[{"type":"object","title":"real-time","required":["time","increment"],"properties":{"time":{"type":"number","description":"Clock initial time in minutes. Required for real-time seeks.","example":15,"minimum":0,"maximum":180},"increment":{"type":"integer","description":"Clock increment in seconds. Required for real-time seeks.","example":15,"minimum":0,"maximum":180},"color":{"description":"The color to play. Better left empty to automatically get 50% white.","$ref":"../../schemas/ChallengeColor.yaml"}}},{"type":"object","title":"correspondence","required":["days"],"properties":{"days":{"type":"integer","description":"Days per turn. Required for correspondence seeks.","enum":[1,2,3,5,7,10,14]}}}]}],"__schema":"allOf"} */
-    };
+      rated?: boolean;
+      variant?: schemas.VariantKey;
+      ratingRange?: string;
+    } & (
+      | {
+          time: number;
+          increment: number;
+          color?: schemas.ChallengeColor;
+        }
+      | { days: 1 | 2 | 3 | 5 | 7 | 10 | 14 }
+    );
   }) {
     const path = "/api/board/seek" as const;
     const body = params.body;
@@ -3381,7 +3390,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3404,7 +3413,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3438,7 +3447,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3457,7 +3466,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3488,7 +3497,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3513,7 +3522,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3538,7 +3547,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3564,7 +3573,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3590,7 +3599,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3615,7 +3624,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3640,7 +3649,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3665,7 +3674,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3683,7 +3692,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3708,7 +3717,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3731,7 +3740,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3764,7 +3773,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3781,7 +3790,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3814,7 +3823,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3839,7 +3848,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3864,7 +3873,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3890,7 +3899,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3916,7 +3925,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3941,7 +3950,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3966,7 +3975,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3988,7 +3997,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -3998,8 +4007,20 @@ export class Lichess {
    */
   async challengeCreate(
     params: { username: string } & {
-      body: {
-        /* (unsupported_schema:allOf) typescriptSchema: {"allOf":[{"oneOf":[{"type":"object","title":"real-time","required":["clock.limit","clock.increment"],"properties":{"clock.limit":{"type":"integer","description":"Clock initial time in seconds. If empty, a correspondence game is created. Valid values are 0, 15, 30, 45, 60, 90, and any multiple of 60 up to 10800 (3 hours).","example":300,"minimum":0,"maximum":10800},"clock.increment":{"type":"integer","description":"Clock increment in seconds. If empty, a correspondence game is created.","example":1,"minimum":0,"maximum":60}}},{"type":"object","title":"correspondence","required":["days"],"properties":{"days":{"type":"integer","description":"Days per move, for correspondence games. Clock settings must be omitted.","enum":[1,2,3,5,7,10,14]}}},{"type":"object","title":"unlimited","properties":{}}]},{"type":"object","properties":{"rated":{"type":"boolean","description":"Game is rated and impacts players ratings","default":false},"color":{"$ref":"../../schemas/ChallengeColor.yaml","description":"Which color you get to play","default":"random"},"variant":{"$ref":"../../schemas/VariantKey.yaml"},"fen":{"$ref":"../../schemas/FromPositionFEN.yaml"},"keepAliveStream":{"type":"boolean","description":"If set, the response is streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).\nThe challenge is kept alive until the connection is closed by the client.\nWhen the challenge is accepted, declined or canceled, a message of the form `{\"done\":\"accepted\"}` is sent,\nthen the connection is closed by the server.\nIf not set, the response is not streamed, and the challenge expires after 20s if not accepted.\n"},"rules":{"type":"string","enum":["noAbort","noRematch","noGiveTime","noClaimWin","noEarlyDraw"],"description":"Extra game rules separated by commas.\nExample: `noAbort,noRematch`\n"}}}],"__schema":"allOf"} */
+      body: (
+        | {
+            "clock.limit": number;
+            "clock.increment": number;
+          }
+        | { days: 1 | 2 | 3 | 5 | 7 | 10 | 14 }
+        | {}
+      ) & {
+        rated?: boolean;
+        color?: schemas.ChallengeColor;
+        variant?: schemas.VariantKey;
+        fen?: schemas.FromPositionFEN;
+        keepAliveStream?: boolean;
+        rules?: string;
       };
     }
   ) {
@@ -4020,7 +4041,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4039,7 +4060,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4067,7 +4088,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4095,7 +4116,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4125,7 +4146,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4174,7 +4195,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4213,7 +4234,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4240,7 +4261,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4259,7 +4280,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4299,7 +4320,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4324,7 +4345,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4349,7 +4370,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4374,7 +4395,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4406,7 +4427,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4426,7 +4447,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4457,7 +4478,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4485,7 +4506,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4515,7 +4536,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4534,7 +4555,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4556,7 +4577,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4577,7 +4598,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4596,7 +4617,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4618,7 +4639,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4644,7 +4665,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4673,7 +4694,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4693,7 +4714,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4719,7 +4740,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4757,7 +4778,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4773,7 +4794,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4803,7 +4824,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4832,7 +4853,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4846,12 +4867,8 @@ export class Lichess {
     variant?: schemas.VariantKey;
     fen?: string;
     play?: string;
-    speeds?: {
-      /* (unsupported_schema:array:notverified:reftoprimitive) typescriptSchema: {"type":"array","items":{"$ref":"../../schemas/Speed.yaml","__schema":"notverified:reftoprimitive"},"__schema":"array:notverified:reftoprimitive"} */
-    };
-    ratings?: {
-      /* (unsupported_schema:array:primitive) typescriptSchema: {"type":"array","items":{"type":"integer","enum":[0,1000,1200,1400,1600,1800,2000,2200,2500],"__schema":"enum:number"},"__schema":"array:primitive"} */
-    };
+    speeds?: schemas.Speed[];
+    ratings?: (0 | 1000 | 1200 | 1400 | 1600 | 1800 | 2000 | 2200 | 2500)[];
     since?: string;
     until?: string;
     moves?: number;
@@ -4870,7 +4887,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4886,12 +4903,8 @@ export class Lichess {
     variant?: schemas.VariantKey;
     fen?: string;
     play?: string;
-    speeds?: {
-      /* (unsupported_schema:array:notverified:reftoprimitive) typescriptSchema: {"type":"array","items":{"$ref":"../../schemas/Speed.yaml","__schema":"notverified:reftoprimitive"},"__schema":"array:notverified:reftoprimitive"} */
-    };
-    modes?: {
-      /* (unsupported_schema:array:primitive) typescriptSchema: {"type":"array","items":{"type":"string","enum":["casual","rated"],"__schema":"string"},"__schema":"array:primitive"} */
-    };
+    speeds?: schemas.Speed[];
+    modes?: string[];
     since?: string;
     until?: string;
     moves?: number;
@@ -4906,7 +4919,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4925,7 +4938,7 @@ export class Lichess {
         return { status, response } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4947,7 +4960,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4969,7 +4982,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
@@ -4991,7 +5004,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       default: {
-        throw new Error("Error");
+        throw new Error("Unexpected status code");
       }
     }
   }
