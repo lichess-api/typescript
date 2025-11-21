@@ -682,9 +682,7 @@ export class Lichess {
       max?: number;
       vs?: string;
       rated?: boolean;
-      perfType?: {
-        /* (unsupported_schema:notverified:reftoprimitive:nullable) typescriptSchema: {"allOf":[{"$ref":"../../schemas/PerfType.yaml","__schema":"$ref"},{"default":null}],"__schema":"notverified:reftoprimitive:nullable"} */
-      };
+      perfType?: schemas.PerfType | null;
       color?: string;
       analysed?: boolean;
       moves?: boolean;
@@ -2272,9 +2270,7 @@ export class Lichess {
   async apiTeamSwiss(
     params: { teamId: string } & {
       max?: number;
-      status?: {
-        /* (unsupported_schema:notverified:reftoprimitive:nullable) typescriptSchema: {"allOf":[{"$ref":"../../schemas/SwissStatus.yaml","__schema":"$ref"},{"default":null}],"__schema":"notverified:reftoprimitive:nullable"} */
-      };
+      status?: schemas.SwissStatus | null;
       createdBy?: string;
       name?: string;
     }
@@ -3138,9 +3134,7 @@ export class Lichess {
   async apiTeamArena(
     params: { teamId: string } & {
       max?: number;
-      status?: {
-        /* (unsupported_schema:notverified:reftoprimitive:nullable) typescriptSchema: {"allOf":[{"$ref":"../../schemas/ArenaStatusName.yaml","__schema":"$ref"},{"default":null}],"__schema":"notverified:reftoprimitive:nullable"} */
-      };
+      status?: schemas.ArenaStatusName | null;
       createdBy?: string;
       name?: string;
     }

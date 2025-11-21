@@ -543,6 +543,12 @@ function schemaToTypescriptTypes(
       const typescriptSchema = `schemas.${name}` as const;
       return typescriptSchema;
     }
+    case "notverified:reftoprimitive:nullable": {
+      const ref = schema.allOf[0].$ref;
+      const name = ref.split("/").pop()!.replace(".yaml", "");
+      const typescriptSchema = `schemas.${name} | null` as const;
+      return typescriptSchema;
+    }
     case "object": {
       const props = schema.properties || {};
       const required = new Set(schema.required || []);
