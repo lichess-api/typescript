@@ -717,7 +717,7 @@ function processOperation(
     queryParams,
     pathParams,
   } = processParams(
-    operation.parameters?.concat(options?.sharedPathParams ?? [])
+    (operation.parameters ?? []).concat(options?.sharedPathParams ?? [])
   );
 
   const pathAssignment =
@@ -738,7 +738,15 @@ function processOperation(
       hasOnlyQueryParams && !requestBodySchema
         ? ("const query = params;\n" as const)
         : hasQueryParams
-          ? ("const query = { /* ~query~ */ } as const;\n" as const)
+          ? ((queryParams) => {
+              const extractedQueryParams = queryParams.map((queryParam) => {
+                return `${queryParam.name}: params.${queryParam.name},` as const;
+              });
+
+              return `const query = { ${extractedQueryParams.join(
+                ""
+              )} } as const;\n` as const;
+            })(queryParams)
           : ("" as const);
 
     const queryArg = hasQueryParams ? ", query" : "";
@@ -795,21 +803,21 @@ function processOperation(
 
 function processTag(tagSchema: TagSchema, rawApiPath: string) {
   const methodsCode: string[] = [];
-  let sharedPathParams = undefined;
-  let baseUrl = undefined;
+  let sharedPathParams: OperationPathParameter[] | undefined = undefined;
+  let baseUrl: string | undefined = undefined;
 
   for (const operation of Object.values(tagSchema)) {
     const processedOperation = processOperation(operation, rawApiPath, {
       sharedPathParams,
       baseUrl,
     });
+    console.log(processedOperation);
     if (processedOperation.__type === "__parameters") {
       sharedPathParams = processedOperation.parameters;
     }
     if (processedOperation.__type === "__servers") {
       baseUrl = processedOperation.baseUrl;
     }
-    console.log(processedOperation.methodCode);
     methodsCode.push(processedOperation.methodCode);
   }
   return methodsCode;

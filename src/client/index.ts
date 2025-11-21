@@ -95,9 +95,7 @@ export class Lichess {
    */
   async apiUser(params: { username: string } & { trophies?: boolean }) {
     const path = `/api/user/${params.username}` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { trophies: params.trophies } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -243,7 +241,9 @@ export class Lichess {
   ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
     const query = {
-      /* ~query~ */
+      difficulty: params.difficulty,
+      nb: params.nb,
+      color: params.color,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -268,9 +268,7 @@ export class Lichess {
     }
   ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { nb: params.nb } as const;
     const body = params.body;
     const { response, status } = await this.requestor.post({
       path,
@@ -357,9 +355,7 @@ export class Lichess {
    */
   async apiStormDashboard(params: { username: string } & { days?: number }) {
     const path = `/api/storm/dashboard/${params.username}` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { days: params.days } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -576,7 +572,16 @@ export class Lichess {
   ) {
     const path = `/game/export/${params.gameId}` as const;
     const query = {
-      /* ~query~ */
+      moves: params.moves,
+      pgnInJson: params.pgnInJson,
+      tags: params.tags,
+      clocks: params.clocks,
+      evals: params.evals,
+      accuracy: params.accuracy,
+      opening: params.opening,
+      division: params.division,
+      literate: params.literate,
+      withBookmarked: params.withBookmarked,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -608,7 +613,15 @@ export class Lichess {
   ) {
     const path = `/api/user/${params.username}/current-game` as const;
     const query = {
-      /* ~query~ */
+      moves: params.moves,
+      pgnInJson: params.pgnInJson,
+      tags: params.tags,
+      clocks: params.clocks,
+      evals: params.evals,
+      accuracy: params.accuracy,
+      opening: params.opening,
+      division: params.division,
+      literate: params.literate,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -653,7 +666,28 @@ export class Lichess {
   ) {
     const path = `/api/games/user/${params.username}` as const;
     const query = {
-      /* ~query~ */
+      since: params.since,
+      until: params.until,
+      max: params.max,
+      vs: params.vs,
+      rated: params.rated,
+      perfType: params.perfType,
+      color: params.color,
+      analysed: params.analysed,
+      moves: params.moves,
+      pgnInJson: params.pgnInJson,
+      tags: params.tags,
+      clocks: params.clocks,
+      evals: params.evals,
+      accuracy: params.accuracy,
+      opening: params.opening,
+      division: params.division,
+      ongoing: params.ongoing,
+      finished: params.finished,
+      literate: params.literate,
+      lastFen: params.lastFen,
+      withBookmarked: params.withBookmarked,
+      sort: params.sort,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -685,7 +719,15 @@ export class Lichess {
   ) {
     const path = "/api/games/export/_ids" as const;
     const query = {
-      /* ~query~ */
+      moves: params.moves,
+      pgnInJson: params.pgnInJson,
+      tags: params.tags,
+      clocks: params.clocks,
+      evals: params.evals,
+      accuracy: params.accuracy,
+      opening: params.opening,
+      division: params.division,
+      literate: params.literate,
     } as const;
     const body = params.body;
     const { response, status } = await this.requestor.post({
@@ -711,9 +753,7 @@ export class Lichess {
     params: { withCurrentGames?: boolean } & { body: string }
   ) {
     const path = "/api/stream/games-by-users" as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { withCurrentGames: params.withCurrentGames } as const;
     const body = params.body;
     const { response, status } = await this.requestor.post({
       path,
@@ -1000,7 +1040,12 @@ export class Lichess {
   ) {
     const path = `/api/tv/${params.channel}` as const;
     const query = {
-      /* ~query~ */
+      nb: params.nb,
+      moves: params.moves,
+      pgnInJson: params.pgnInJson,
+      tags: params.tags,
+      clocks: params.clocks,
+      opening: params.opening,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -1211,9 +1256,7 @@ export class Lichess {
    */
   async tournament(params: { id: string } & { page?: number }) {
     const path = `/api/tournament/${params.id}` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { page: params.page } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -1231,150 +1274,152 @@ export class Lichess {
   /**
    * Update an Arena tournament
    */
-  async apiTournamentUpdate(params: {
-    body: {
-      name?: string;
-      clockTime:
-        | 0
-        | 0.25
-        | 0.5
-        | 0.75
-        | 1
-        | 1.5
-        | 2
-        | 3
-        | 4
-        | 5
-        | 6
-        | 7
-        | 8
-        | 10
-        | 15
-        | 20
-        | 25
-        | 30
-        | 40
-        | 50
-        | 60;
-      clockIncrement:
-        | 0
-        | 1
-        | 2
-        | 3
-        | 4
-        | 5
-        | 6
-        | 7
-        | 10
-        | 15
-        | 20
-        | 25
-        | 30
-        | 40
-        | 50
-        | 60;
-      minutes:
-        | 20
-        | 25
-        | 30
-        | 35
-        | 40
-        | 45
-        | 50
-        | 55
-        | 60
-        | 70
-        | 80
-        | 90
-        | 100
-        | 110
-        | 120
-        | 150
-        | 180
-        | 210
-        | 240
-        | 270
-        | 300
-        | 330
-        | 360
-        | 420
-        | 480
-        | 540
-        | 600
-        | 720;
-      waitMinutes?: 1 | 2 | 3 | 5 | 10 | 15 | 20 | 30 | 45 | 60;
-      startDate?: number;
-      variant?: schemas.VariantKey;
-      rated?: boolean;
-      position?: schemas.FromPositionFEN;
-      berserkable?: boolean;
-      streakable?: boolean;
-      hasChat?: boolean;
-      description?: string;
-      password?: string;
-      "conditions.minRating.rating"?:
-        | 1000
-        | 1100
-        | 1200
-        | 1300
-        | 1400
-        | 1500
-        | 1600
-        | 1700
-        | 1800
-        | 1900
-        | 2000
-        | 2100
-        | 2200
-        | 2300
-        | 2400
-        | 2500
-        | 2600;
-      "conditions.maxRating.rating"?:
-        | 2200
-        | 2100
-        | 2000
-        | 1900
-        | 1800
-        | 1700
-        | 1600
-        | 1500
-        | 1400
-        | 1300
-        | 1200
-        | 1100
-        | 1000
-        | 900
-        | 800;
-      "conditions.nbRatedGame.nb"?:
-        | 0
-        | 5
-        | 10
-        | 15
-        | 20
-        | 30
-        | 40
-        | 50
-        | 75
-        | 100
-        | 150
-        | 200;
-      "conditions.allowList"?: string;
-      "conditions.bots"?: boolean;
-      "conditions.accountAge"?:
-        | 1
-        | 3
-        | 7
-        | 14
-        | 30
-        | 60
-        | 90
-        | 180
-        | 365
-        | 730
-        | 1095;
-    };
-  }) {
+  async apiTournamentUpdate(
+    params: { id: string } & {
+      body: {
+        name?: string;
+        clockTime:
+          | 0
+          | 0.25
+          | 0.5
+          | 0.75
+          | 1
+          | 1.5
+          | 2
+          | 3
+          | 4
+          | 5
+          | 6
+          | 7
+          | 8
+          | 10
+          | 15
+          | 20
+          | 25
+          | 30
+          | 40
+          | 50
+          | 60;
+        clockIncrement:
+          | 0
+          | 1
+          | 2
+          | 3
+          | 4
+          | 5
+          | 6
+          | 7
+          | 10
+          | 15
+          | 20
+          | 25
+          | 30
+          | 40
+          | 50
+          | 60;
+        minutes:
+          | 20
+          | 25
+          | 30
+          | 35
+          | 40
+          | 45
+          | 50
+          | 55
+          | 60
+          | 70
+          | 80
+          | 90
+          | 100
+          | 110
+          | 120
+          | 150
+          | 180
+          | 210
+          | 240
+          | 270
+          | 300
+          | 330
+          | 360
+          | 420
+          | 480
+          | 540
+          | 600
+          | 720;
+        waitMinutes?: 1 | 2 | 3 | 5 | 10 | 15 | 20 | 30 | 45 | 60;
+        startDate?: number;
+        variant?: schemas.VariantKey;
+        rated?: boolean;
+        position?: schemas.FromPositionFEN;
+        berserkable?: boolean;
+        streakable?: boolean;
+        hasChat?: boolean;
+        description?: string;
+        password?: string;
+        "conditions.minRating.rating"?:
+          | 1000
+          | 1100
+          | 1200
+          | 1300
+          | 1400
+          | 1500
+          | 1600
+          | 1700
+          | 1800
+          | 1900
+          | 2000
+          | 2100
+          | 2200
+          | 2300
+          | 2400
+          | 2500
+          | 2600;
+        "conditions.maxRating.rating"?:
+          | 2200
+          | 2100
+          | 2000
+          | 1900
+          | 1800
+          | 1700
+          | 1600
+          | 1500
+          | 1400
+          | 1300
+          | 1200
+          | 1100
+          | 1000
+          | 900
+          | 800;
+        "conditions.nbRatedGame.nb"?:
+          | 0
+          | 5
+          | 10
+          | 15
+          | 20
+          | 30
+          | 40
+          | 50
+          | 75
+          | 100
+          | 150
+          | 200;
+        "conditions.allowList"?: string;
+        "conditions.bots"?: boolean;
+        "conditions.accountAge"?:
+          | 1
+          | 3
+          | 7
+          | 14
+          | 30
+          | 60
+          | 90
+          | 180
+          | 365
+          | 730
+          | 1095;
+      };
+    }
+  ) {
     const path = `/api/tournament/${params.id}` as const;
     const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
@@ -1532,7 +1577,15 @@ export class Lichess {
   ) {
     const path = `/api/tournament/${params.id}/games` as const;
     const query = {
-      /* ~query~ */
+      player: params.player,
+      moves: params.moves,
+      pgnInJson: params.pgnInJson,
+      tags: params.tags,
+      clocks: params.clocks,
+      evals: params.evals,
+      accuracy: params.accuracy,
+      opening: params.opening,
+      division: params.division,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -1556,9 +1609,7 @@ export class Lichess {
     }
   ) {
     const path = `/api/tournament/${params.id}/results` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { nb: params.nb, sheet: params.sheet } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -1615,9 +1666,7 @@ export class Lichess {
     }
   ) {
     const path = `/api/user/${params.username}/tournament/created` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { nb: params.nb, status: params.status } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -1640,9 +1689,7 @@ export class Lichess {
     }
   ) {
     const path = `/api/user/${params.username}/tournament/played` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { nb: params.nb, performance: params.performance } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -1795,7 +1842,7 @@ export class Lichess {
   /**
    * Get info about a Swiss tournament
    */
-  async swiss() {
+  async swiss(params: { id: string }) {
     const path = `/api/swiss/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -2088,7 +2135,15 @@ export class Lichess {
   ) {
     const path = `/api/swiss/${params.id}/games` as const;
     const query = {
-      /* ~query~ */
+      player: params.player,
+      moves: params.moves,
+      pgnInJson: params.pgnInJson,
+      tags: params.tags,
+      clocks: params.clocks,
+      evals: params.evals,
+      accuracy: params.accuracy,
+      opening: params.opening,
+      division: params.division,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -2107,9 +2162,7 @@ export class Lichess {
    */
   async resultsBySwiss(params: { id: string } & { nb?: number }) {
     const path = `/api/swiss/${params.id}/results` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { nb: params.nb } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -2135,7 +2188,10 @@ export class Lichess {
   ) {
     const path = `/api/team/${params.teamId}/swiss` as const;
     const query = {
-      /* ~query~ */
+      max: params.max,
+      status: params.status,
+      createdBy: params.createdBy,
+      name: params.name,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -2166,7 +2222,10 @@ export class Lichess {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}.pgn` as const;
     const query = {
-      /* ~query~ */
+      clocks: params.clocks,
+      comments: params.comments,
+      variations: params.variations,
+      orientation: params.orientation,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -2193,7 +2252,10 @@ export class Lichess {
   ) {
     const path = `/api/study/${params.studyId}.pgn` as const;
     const query = {
-      /* ~query~ */
+      clocks: params.clocks,
+      comments: params.comments,
+      variations: params.variations,
+      orientation: params.orientation,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -2300,7 +2362,10 @@ export class Lichess {
   ) {
     const path = `/study/by/${params.username}/export.pgn` as const;
     const query = {
-      /* ~query~ */
+      clocks: params.clocks,
+      comments: params.comments,
+      variations: params.variations,
+      orientation: params.orientation,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -2398,9 +2463,7 @@ export class Lichess {
     }
   ) {
     const path = `/api/broadcast/by/${params.username}` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { page: params.page, html: params.html } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -2915,9 +2978,7 @@ export class Lichess {
    */
   async teamIdUsers(params: { teamId: string } & { full?: boolean }) {
     const path = `/api/team/${params.teamId}/users` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { full: params.full } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -2943,7 +3004,10 @@ export class Lichess {
   ) {
     const path = `/api/team/${params.teamId}/arena` as const;
     const query = {
-      /* ~query~ */
+      max: params.max,
+      status: params.status,
+      createdBy: params.createdBy,
+      name: params.name,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -3008,9 +3072,7 @@ export class Lichess {
    */
   async teamRequests(params: { teamId: string } & { declined?: boolean }) {
     const path = `/api/team/${params.teamId}/requests` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { declined: params.declined } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -3164,9 +3226,7 @@ export class Lichess {
     } & { matchup?: boolean }
   ) {
     const path = `/api/crosstable/${params.user1}/${params.user2}` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { matchup: params.matchup } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -3432,9 +3492,7 @@ export class Lichess {
   ) {
     const path =
       `/api/board/game/${params.gameId}/move/${params.move}` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { offeringDraw: params.offeringDraw } as const;
     const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
@@ -3460,7 +3518,7 @@ export class Lichess {
   /**
    * Fetch the game chat
    */
-  async boardGameChatGet() {
+  async boardGameChatGet(params: { gameId: string }) {
     const path = `/api/board/game/${params.gameId}/chat` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -3477,12 +3535,14 @@ export class Lichess {
   /**
    * Write in the chat
    */
-  async boardGameChatPost(params: {
-    body: {
-      room: string;
-      text: string;
-    };
-  }) {
+  async boardGameChatPost(
+    params: { gameId: string } & {
+      body: {
+        room: string;
+        text: string;
+      };
+    }
+  ) {
     const path = `/api/board/game/${params.gameId}/chat` as const;
     const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
@@ -3758,9 +3818,7 @@ export class Lichess {
     } & { offeringDraw?: boolean }
   ) {
     const path = `/api/bot/game/${params.gameId}/move/${params.move}` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { offeringDraw: params.offeringDraw } as const;
     const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
@@ -4073,9 +4131,7 @@ export class Lichess {
    */
   async challengeAccept(params: { challengeId: string } & { color?: string }) {
     const path = `/api/challenge/${params.challengeId}/accept` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { color: params.color } as const;
     const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
@@ -4131,9 +4187,7 @@ export class Lichess {
     params: { challengeId: string } & { opponentToken?: string }
   ) {
     const path = `/api/challenge/${params.challengeId}/cancel` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { opponentToken: params.opponentToken } as const;
     const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
@@ -4252,9 +4306,7 @@ export class Lichess {
     }
   ) {
     const path = `/api/challenge/${params.gameId}/start-clocks` as const;
-    const query = {
-      /* ~query~ */
-    } as const;
+    const query = { token1: params.token1, token2: params.token2 } as const;
     const { response, status } = await this.requestor.post({ path, query });
     switch (status) {
       case 200: {
@@ -4421,7 +4473,15 @@ export class Lichess {
   ) {
     const path = `/api/bulk-pairing/${params.id}/games` as const;
     const query = {
-      /* ~query~ */
+      moves: params.moves,
+      pgnInJson: params.pgnInJson,
+      tags: params.tags,
+      clocks: params.clocks,
+      evals: params.evals,
+      accuracy: params.accuracy,
+      opening: params.opening,
+      division: params.division,
+      literate: params.literate,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -4590,7 +4650,7 @@ export class Lichess {
   /**
    * Get external engine
    */
-  async apiExternalEngineGet() {
+  async apiExternalEngineGet(params: { id: string }) {
     const path = `/api/external-engine/${params.id}` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -4609,7 +4669,7 @@ export class Lichess {
   /**
    * Delete external engine
    */
-  async apiExternalEngineDelete() {
+  async apiExternalEngineDelete(params: { id: string }) {
     const path = `/api/external-engine/${params.id}` as const;
     const { response, status } = await this.requestor.delete({ path });
     switch (status) {
@@ -4628,9 +4688,9 @@ export class Lichess {
   /**
    * Update external engine
    */
-  async apiExternalEnginePut(params: {
-    body: schemas.ExternalEngineRegistration;
-  }) {
+  async apiExternalEnginePut(
+    params: { id: string } & { body: schemas.ExternalEngineRegistration }
+  ) {
     const path = `/api/external-engine/${params.id}` as const;
     const body = params.body;
     const { response, status } = await this.requestor.put({ path, body });
@@ -4653,12 +4713,14 @@ export class Lichess {
   /**
    * Analyse with external engine
    */
-  async apiExternalEngineAnalyse(params: {
-    body: {
-      clientSecret: string;
-      work: schemas.ExternalEngineWork;
-    };
-  }) {
+  async apiExternalEngineAnalyse(
+    params: { id: string } & {
+      body: {
+        clientSecret: string;
+        work: schemas.ExternalEngineWork;
+      };
+    }
+  ) {
     const path = `/api/external-engine/${params.id}/analyse` as const;
     const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });
@@ -4708,7 +4770,7 @@ export class Lichess {
   /**
    * Answer analysis request
    */
-  async apiExternalEngineSubmit(params: { body: string }) {
+  async apiExternalEngineSubmit(params: { id: string } & { body: string }) {
     const path = `/api/external-engine/work/${params.id}` as const;
     const body = params.body;
     const { response, status } = await this.requestor.post({ path, body });

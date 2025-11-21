@@ -1,6 +1,6 @@
 import { addQueryParams } from "~/utils";
 
-type QueryParams = Record<string, string | number | boolean>;
+type QueryParams = Record<string, string | number | boolean | null | undefined>;
 
 const responseHandlerMap = {
   json: async (response: Response) => {
