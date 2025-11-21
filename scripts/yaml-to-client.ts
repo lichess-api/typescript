@@ -570,7 +570,8 @@ function schemaToTypescriptTypes(
         "\n}"
       );
     }
-    case "boolean": {
+    case "boolean":
+    case "boolean-like": {
       return "boolean" as const;
     }
     case "string": {
@@ -633,18 +634,8 @@ function extractBodyTypes(bodySchema: Schema) {
   return `{ body: ${typescriptSchema}} ` as const;
 }
 
-function descriptionToJsdoc(description: string) {
-  const descriptionLines = (() => {
-    let descriptionLines = description.split("\n");
-    if (!descriptionLines.at(-1)) return descriptionLines.slice(0, -1);
-    return descriptionLines;
-  })();
-
-  const jsdocContent = descriptionLines
-    .map((line) => `   * ${line}` as const)
-    .join("\n") as `   * ${string}`;
-
-  const jsdoc = `/**\n${jsdocContent}\n   */` as const;
+function toJsdoc(summary: string) {
+  const jsdoc = `/**\n   * ${summary}\n   */` as const;
   return jsdoc;
 }
 
@@ -676,7 +667,7 @@ function processOperation(
   })();
 
   // JSDoc
-  const jsdoc = descriptionToJsdoc(operation.description);
+  const jsdoc = toJsdoc(`${operation.summary}`);
 
   const { responseCases, requestBodySchema } = processMethod({
     method: operation,
