@@ -143,12 +143,7 @@ export class Lichess {
    * Read performance statistics of a user, for a single performance.
    * Similar to the [performance pages on the website](https://lichess.org/@/thibault/perf/bullet).
    */
-  async apiUserPerf(params: {
-    username: string;
-    perf: {
-      /* (unsupported_schema) typescriptSchema: {"$ref":"../../schemas/PerfType.yaml","__schema":"notverified:reftoprimitive"} */
-    };
-  }) {
+  async apiUserPerf(params: { username: string; perf: schemas.PerfType }) {
     const path = `/api/user/${params.username}/perf/${params.perf}` as const;
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
@@ -688,7 +683,7 @@ export class Lichess {
       vs?: string;
       rated?: boolean;
       perfType?: {
-        /* (unsupported_schema) typescriptSchema: {"allOf":[{"$ref":"../../schemas/PerfType.yaml","__schema":"$ref"},{"default":null}],"__schema":"notverified:reftoprimitive:nullable"} */
+        /* (unsupported_schema:notverified:reftoprimitive:nullable) typescriptSchema: {"allOf":[{"$ref":"../../schemas/PerfType.yaml","__schema":"$ref"},{"default":null}],"__schema":"notverified:reftoprimitive:nullable"} */
       };
       color?: string;
       analysed?: boolean;
@@ -1137,18 +1132,75 @@ export class Lichess {
   async apiTournamentPost(params: {
     body: {
       name?: string;
-      clockTime: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Clock initial time in minutes","type":"number","enum":[0,0.25,0.5,0.75,1,1.5,2,3,4,5,6,7,8,10,15,20,25,30,40,50,60],"example":2,"__schema":"number:enum"} */
-      };
-      clockIncrement: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Clock increment in seconds","type":"integer","enum":[0,1,2,3,4,5,6,7,10,15,20,25,30,40,50,60],"example":1,"__schema":"integer:enum"} */
-      };
-      minutes: {
-        /* (unsupported_schema) typescriptSchema: {"description":"How long the tournament lasts, in minutes","type":"integer","enum":[20,25,30,35,40,45,50,55,60,70,80,90,100,110,120,150,180,210,240,270,300,330,360,420,480,540,600,720],"example":60,"__schema":"integer:enum"} */
-      };
-      waitMinutes?: {
-        /* (unsupported_schema) typescriptSchema: {"default":5,"description":"How long to wait before starting the tournament, from now, in minutes","type":"integer","enum":[1,2,3,5,10,15,20,30,45,60],"__schema":"integer:enum"} */
-      };
+      clockTime:
+        | 0
+        | 0.25
+        | 0.5
+        | 0.75
+        | 1
+        | 1.5
+        | 2
+        | 3
+        | 4
+        | 5
+        | 6
+        | 7
+        | 8
+        | 10
+        | 15
+        | 20
+        | 25
+        | 30
+        | 40
+        | 50
+        | 60;
+      clockIncrement:
+        | 0
+        | 1
+        | 2
+        | 3
+        | 4
+        | 5
+        | 6
+        | 7
+        | 10
+        | 15
+        | 20
+        | 25
+        | 30
+        | 40
+        | 50
+        | 60;
+      minutes:
+        | 20
+        | 25
+        | 30
+        | 35
+        | 40
+        | 45
+        | 50
+        | 55
+        | 60
+        | 70
+        | 80
+        | 90
+        | 100
+        | 110
+        | 120
+        | 150
+        | 180
+        | 210
+        | 240
+        | 270
+        | 300
+        | 330
+        | 360
+        | 420
+        | 480
+        | 540
+        | 600
+        | 720;
+      waitMinutes?: 1 | 2 | 3 | 5 | 10 | 15 | 20 | 30 | 45 | 60;
       startDate?: number;
       variant?: schemas.VariantKey;
       rated?: boolean;
@@ -1160,20 +1212,67 @@ export class Lichess {
       password?: string;
       teamBattleByTeam?: string;
       "conditions.teamMember.teamId"?: string;
-      "conditions.minRating.rating"?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Minimum rating to join. Leave empty to let everyone join the tournament.","type":"integer","enum":[1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600],"__schema":"integer:enum"} */
-      };
-      "conditions.maxRating.rating"?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Maximum rating to join. Based on best rating reached in the last 7 days. Leave empty to let everyone join the tournament.","type":"integer","enum":[2200,2100,2000,1900,1800,1700,1600,1500,1400,1300,1200,1100,1000,900,800],"__schema":"integer:enum"} */
-      };
-      "conditions.nbRatedGame.nb"?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Minimum number of rated games required to join.","type":"integer","enum":[0,5,10,15,20,30,40,50,75,100,150,200],"__schema":"integer:enum"} */
-      };
+      "conditions.minRating.rating"?:
+        | 1000
+        | 1100
+        | 1200
+        | 1300
+        | 1400
+        | 1500
+        | 1600
+        | 1700
+        | 1800
+        | 1900
+        | 2000
+        | 2100
+        | 2200
+        | 2300
+        | 2400
+        | 2500
+        | 2600;
+      "conditions.maxRating.rating"?:
+        | 2200
+        | 2100
+        | 2000
+        | 1900
+        | 1800
+        | 1700
+        | 1600
+        | 1500
+        | 1400
+        | 1300
+        | 1200
+        | 1100
+        | 1000
+        | 900
+        | 800;
+      "conditions.nbRatedGame.nb"?:
+        | 0
+        | 5
+        | 10
+        | 15
+        | 20
+        | 30
+        | 40
+        | 50
+        | 75
+        | 100
+        | 150
+        | 200;
       "conditions.allowList"?: string;
       "conditions.bots"?: boolean;
-      "conditions.accountAge"?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Minium account age in days required to join.","type":"integer","enum":[1,3,7,14,30,60,90,180,365,730,1095],"__schema":"integer:enum"} */
-      };
+      "conditions.accountAge"?:
+        | 1
+        | 3
+        | 7
+        | 14
+        | 30
+        | 60
+        | 90
+        | 180
+        | 365
+        | 730
+        | 1095;
     };
   }) {
     const path = "/api/tournament" as const;
@@ -1232,18 +1331,75 @@ export class Lichess {
   async apiTournamentUpdate(params: {
     body: {
       name?: string;
-      clockTime: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Clock initial time in minutes","type":"number","enum":[0,0.25,0.5,0.75,1,1.5,2,3,4,5,6,7,8,10,15,20,25,30,40,50,60],"example":2,"__schema":"number:enum"} */
-      };
-      clockIncrement: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Clock increment in seconds","type":"integer","enum":[0,1,2,3,4,5,6,7,10,15,20,25,30,40,50,60],"example":1,"__schema":"integer:enum"} */
-      };
-      minutes: {
-        /* (unsupported_schema) typescriptSchema: {"description":"How long the tournament lasts, in minutes","type":"integer","enum":[20,25,30,35,40,45,50,55,60,70,80,90,100,110,120,150,180,210,240,270,300,330,360,420,480,540,600,720],"example":60,"__schema":"integer:enum"} */
-      };
-      waitMinutes?: {
-        /* (unsupported_schema) typescriptSchema: {"default":5,"description":"How long to wait before starting the tournament, from now, in minutes","type":"integer","enum":[1,2,3,5,10,15,20,30,45,60],"__schema":"integer:enum"} */
-      };
+      clockTime:
+        | 0
+        | 0.25
+        | 0.5
+        | 0.75
+        | 1
+        | 1.5
+        | 2
+        | 3
+        | 4
+        | 5
+        | 6
+        | 7
+        | 8
+        | 10
+        | 15
+        | 20
+        | 25
+        | 30
+        | 40
+        | 50
+        | 60;
+      clockIncrement:
+        | 0
+        | 1
+        | 2
+        | 3
+        | 4
+        | 5
+        | 6
+        | 7
+        | 10
+        | 15
+        | 20
+        | 25
+        | 30
+        | 40
+        | 50
+        | 60;
+      minutes:
+        | 20
+        | 25
+        | 30
+        | 35
+        | 40
+        | 45
+        | 50
+        | 55
+        | 60
+        | 70
+        | 80
+        | 90
+        | 100
+        | 110
+        | 120
+        | 150
+        | 180
+        | 210
+        | 240
+        | 270
+        | 300
+        | 330
+        | 360
+        | 420
+        | 480
+        | 540
+        | 600
+        | 720;
+      waitMinutes?: 1 | 2 | 3 | 5 | 10 | 15 | 20 | 30 | 45 | 60;
       startDate?: number;
       variant?: schemas.VariantKey;
       rated?: boolean;
@@ -1253,20 +1409,67 @@ export class Lichess {
       hasChat?: boolean;
       description?: string;
       password?: string;
-      "conditions.minRating.rating"?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Minimum rating to join. Leave empty to let everyone join the tournament.","type":"integer","enum":[1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600],"__schema":"integer:enum"} */
-      };
-      "conditions.maxRating.rating"?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Maximum rating to join. Based on best rating reached in the last 7 days. Leave empty to let everyone join the tournament.","type":"integer","enum":[2200,2100,2000,1900,1800,1700,1600,1500,1400,1300,1200,1100,1000,900,800],"__schema":"integer:enum"} */
-      };
-      "conditions.nbRatedGame.nb"?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Minimum number of rated games required to join.","type":"integer","enum":[0,5,10,15,20,30,40,50,75,100,150,200],"__schema":"integer:enum"} */
-      };
+      "conditions.minRating.rating"?:
+        | 1000
+        | 1100
+        | 1200
+        | 1300
+        | 1400
+        | 1500
+        | 1600
+        | 1700
+        | 1800
+        | 1900
+        | 2000
+        | 2100
+        | 2200
+        | 2300
+        | 2400
+        | 2500
+        | 2600;
+      "conditions.maxRating.rating"?:
+        | 2200
+        | 2100
+        | 2000
+        | 1900
+        | 1800
+        | 1700
+        | 1600
+        | 1500
+        | 1400
+        | 1300
+        | 1200
+        | 1100
+        | 1000
+        | 900
+        | 800;
+      "conditions.nbRatedGame.nb"?:
+        | 0
+        | 5
+        | 10
+        | 15
+        | 20
+        | 30
+        | 40
+        | 50
+        | 75
+        | 100
+        | 150
+        | 200;
       "conditions.allowList"?: string;
       "conditions.bots"?: boolean;
-      "conditions.accountAge"?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Minium account age in days required to join.","type":"integer","enum":[1,3,7,14,30,60,90,180,365,730,1095],"__schema":"integer:enum"} */
-      };
+      "conditions.accountAge"?:
+        | 1
+        | 3
+        | 7
+        | 14
+        | 30
+        | 60
+        | 90
+        | 180
+        | 365
+        | 730
+        | 1095;
     };
   }) {
     const path = `/api/tournament/${params.id}` as const;
@@ -1522,9 +1725,7 @@ export class Lichess {
   async apiUserNameTournamentCreated(
     params: { username: string } & {
       nb?: number;
-      status?: {
-        /* (unsupported_schema) typescriptSchema: {"type":"integer","enum":[10,20,30],"__schema":"integer:enum"} */
-      };
+      status?: 10 | 20 | 30;
     }
   ) {
     const path = `/api/user/${params.username}/tournament/created` as const;
@@ -1586,15 +1787,64 @@ export class Lichess {
     params: { teamId: string } & {
       body: {
         name?: string;
-        "clock.limit": {
-          /* (unsupported_schema) typescriptSchema: {"description":"Clock initial time in seconds","type":"integer","enum":[0,15,30,45,60,90,120,180,240,300,360,420,480,600,900,1200,1500,1800,2400,3000,3600,4200,4800,5400,6000,6600,7200,7800,8400,9000,9600,10200,10800],"example":300,"__schema":"integer:enum"} */
-        };
+        "clock.limit":
+          | 0
+          | 15
+          | 30
+          | 45
+          | 60
+          | 90
+          | 120
+          | 180
+          | 240
+          | 300
+          | 360
+          | 420
+          | 480
+          | 600
+          | 900
+          | 1200
+          | 1500
+          | 1800
+          | 2400
+          | 3000
+          | 3600
+          | 4200
+          | 4800
+          | 5400
+          | 6000
+          | 6600
+          | 7200
+          | 7800
+          | 8400
+          | 9000
+          | 9600
+          | 10200
+          | 10800;
         "clock.increment": number;
         nbRounds: number;
         startsAt?: number;
-        roundInterval?: {
-          /* (unsupported_schema) typescriptSchema: {"description":"How long to wait between each round, in seconds.\nSet to 99999999 to manually schedule each round from the tournament UI.\nIf empty or -1, a sensible value is picked automatically.\n","type":"integer","enum":[-1,5,10,20,30,45,60,120,180,300,600,900,1200,1800,2700,3600,86400,172800,604800,99999999],"__schema":"integer:enum"} */
-        };
+        roundInterval?:
+          | -1
+          | 5
+          | 10
+          | 20
+          | 30
+          | 45
+          | 60
+          | 120
+          | 180
+          | 300
+          | 600
+          | 900
+          | 1200
+          | 1800
+          | 2700
+          | 3600
+          | 86400
+          | 172800
+          | 604800
+          | 99999999;
         variant?: schemas.VariantKey;
         position?: schemas.SwissFromPositionFEN;
         description?: string;
@@ -1602,15 +1852,41 @@ export class Lichess {
         password?: string;
         forbiddenPairings?: string;
         manualPairings?: string;
-        chatFor?: {
-          /* (unsupported_schema) typescriptSchema: {"default":20,"description":"Who can read and write in the chat.\n- 0  = No-one\n- 10 = Only team leaders\n- 20 = Only team members\n- 30 = All Lichess players\n","type":"integer","enum":[0,10,20,30],"__schema":"integer:enum"} */
-        };
-        "conditions.minRating.rating"?: {
-          /* (unsupported_schema) typescriptSchema: {"description":"Minimum rating to join. Leave empty to let everyone join the tournament.","type":"integer","enum":[1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600],"__schema":"integer:enum"} */
-        };
-        "conditions.maxRating.rating"?: {
-          /* (unsupported_schema) typescriptSchema: {"description":"Maximum rating to join. Based on best rating reached in the last 7 days. Leave empty to let everyone join the tournament.","type":"integer","enum":[2200,2100,2000,1900,1800,1700,1600,1500,1400,1300,1200,1100,1000,900,800],"__schema":"integer:enum"} */
-        };
+        chatFor?: 0 | 10 | 20 | 30;
+        "conditions.minRating.rating"?:
+          | 1000
+          | 1100
+          | 1200
+          | 1300
+          | 1400
+          | 1500
+          | 1600
+          | 1700
+          | 1800
+          | 1900
+          | 2000
+          | 2100
+          | 2200
+          | 2300
+          | 2400
+          | 2500
+          | 2600;
+        "conditions.maxRating.rating"?:
+          | 2200
+          | 2100
+          | 2000
+          | 1900
+          | 1800
+          | 1700
+          | 1600
+          | 1500
+          | 1400
+          | 1300
+          | 1200
+          | 1100
+          | 1000
+          | 900
+          | 800;
         "conditions.nbRatedGame.nb"?: number;
         "conditions.playYourGames"?: boolean;
         "conditions.allowList"?: string;
@@ -1671,15 +1947,64 @@ export class Lichess {
     params: { id: string } & {
       body: {
         name?: string;
-        "clock.limit": {
-          /* (unsupported_schema) typescriptSchema: {"description":"Clock initial time in seconds","type":"integer","enum":[0,15,30,45,60,90,120,180,240,300,360,420,480,600,900,1200,1500,1800,2400,3000,3600,4200,4800,5400,6000,6600,7200,7800,8400,9000,9600,10200,10800],"example":300,"__schema":"integer:enum"} */
-        };
+        "clock.limit":
+          | 0
+          | 15
+          | 30
+          | 45
+          | 60
+          | 90
+          | 120
+          | 180
+          | 240
+          | 300
+          | 360
+          | 420
+          | 480
+          | 600
+          | 900
+          | 1200
+          | 1500
+          | 1800
+          | 2400
+          | 3000
+          | 3600
+          | 4200
+          | 4800
+          | 5400
+          | 6000
+          | 6600
+          | 7200
+          | 7800
+          | 8400
+          | 9000
+          | 9600
+          | 10200
+          | 10800;
         "clock.increment": number;
         nbRounds: number;
         startsAt?: number;
-        roundInterval?: {
-          /* (unsupported_schema) typescriptSchema: {"description":"How long to wait between each round, in seconds.\nSet to 99999999 to manually schedule each round from the tournament UI, or [with the API](#tag/Swiss-tournaments/operation/apiSwissScheduleNextRound).\nIf empty or -1, a sensible value is picked automatically.\n","type":"integer","enum":[-1,5,10,20,30,45,60,120,180,300,600,900,1200,1800,2700,3600,86400,172800,604800,99999999],"__schema":"integer:enum"} */
-        };
+        roundInterval?:
+          | -1
+          | 5
+          | 10
+          | 20
+          | 30
+          | 45
+          | 60
+          | 120
+          | 180
+          | 300
+          | 600
+          | 900
+          | 1200
+          | 1800
+          | 2700
+          | 3600
+          | 86400
+          | 172800
+          | 604800
+          | 99999999;
         variant?: schemas.VariantKey;
         position?: schemas.SwissFromPositionFEN;
         description?: string;
@@ -1687,15 +2012,41 @@ export class Lichess {
         password?: string;
         forbiddenPairings?: string;
         manualPairings?: string;
-        chatFor?: {
-          /* (unsupported_schema) typescriptSchema: {"default":20,"description":"Who can read and write in the chat.\n- 0  = No-one\n- 10 = Only team leaders\n- 20 = Only team members\n- 30 = All Lichess players\n","type":"integer","enum":[0,10,20,30],"__schema":"integer:enum"} */
-        };
-        "conditions.minRating.rating"?: {
-          /* (unsupported_schema) typescriptSchema: {"description":"Minimum rating to join. Leave empty to let everyone join the tournament.","type":"integer","enum":[1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400,2500,2600],"__schema":"integer:enum"} */
-        };
-        "conditions.maxRating.rating"?: {
-          /* (unsupported_schema) typescriptSchema: {"description":"Maximum rating to join. Based on best rating reached in the last 7 days. Leave empty to let everyone join the tournament.","type":"integer","enum":[2200,2100,2000,1900,1800,1700,1600,1500,1400,1300,1200,1100,1000,900,800],"__schema":"integer:enum"} */
-        };
+        chatFor?: 0 | 10 | 20 | 30;
+        "conditions.minRating.rating"?:
+          | 1000
+          | 1100
+          | 1200
+          | 1300
+          | 1400
+          | 1500
+          | 1600
+          | 1700
+          | 1800
+          | 1900
+          | 2000
+          | 2100
+          | 2200
+          | 2300
+          | 2400
+          | 2500
+          | 2600;
+        "conditions.maxRating.rating"?:
+          | 2200
+          | 2100
+          | 2000
+          | 1900
+          | 1800
+          | 1700
+          | 1600
+          | 1500
+          | 1400
+          | 1300
+          | 1200
+          | 1100
+          | 1000
+          | 900
+          | 800;
         "conditions.nbRatedGame.nb"?: number;
         "conditions.playYourGames"?: boolean;
         "conditions.allowList"?: string;
@@ -1922,7 +2273,7 @@ export class Lichess {
     params: { teamId: string } & {
       max?: number;
       status?: {
-        /* (unsupported_schema) typescriptSchema: {"allOf":[{"$ref":"../../schemas/SwissStatus.yaml","__schema":"$ref"},{"default":null}],"__schema":"notverified:reftoprimitive:nullable"} */
+        /* (unsupported_schema:notverified:reftoprimitive:nullable) typescriptSchema: {"allOf":[{"$ref":"../../schemas/SwissStatus.yaml","__schema":"$ref"},{"default":null}],"__schema":"notverified:reftoprimitive:nullable"} */
       };
       createdBy?: string;
       name?: string;
@@ -2788,7 +3139,7 @@ export class Lichess {
     params: { teamId: string } & {
       max?: number;
       status?: {
-        /* (unsupported_schema) typescriptSchema: {"allOf":[{"$ref":"../../schemas/ArenaStatusName.yaml","__schema":"$ref"},{"default":null}],"__schema":"notverified:reftoprimitive:nullable"} */
+        /* (unsupported_schema:notverified:reftoprimitive:nullable) typescriptSchema: {"allOf":[{"$ref":"../../schemas/ArenaStatusName.yaml","__schema":"$ref"},{"default":null}],"__schema":"notverified:reftoprimitive:nullable"} */
       };
       createdBy?: string;
       name?: string;
@@ -3262,7 +3613,7 @@ export class Lichess {
    */
   async apiBoardSeek(params: {
     body: {
-      /* (unsupported_schema) typescriptSchema: {"allOf":[{"type":"object","properties":{"rated":{"type":"boolean","description":"Whether the game is rated and impacts players ratings.","example":true,"default":false},"variant":{"$ref":"../../schemas/VariantKey.yaml"},"ratingRange":{"type":"string","description":"The rating range of potential opponents. Better left empty.\nExample: 1500-1800\n"}}},{"oneOf":[{"type":"object","title":"real-time","required":["time","increment"],"properties":{"time":{"type":"number","description":"Clock initial time in minutes. Required for real-time seeks.","example":15,"minimum":0,"maximum":180},"increment":{"type":"integer","description":"Clock increment in seconds. Required for real-time seeks.","example":15,"minimum":0,"maximum":180},"color":{"description":"The color to play. Better left empty to automatically get 50% white.","$ref":"../../schemas/ChallengeColor.yaml"}}},{"type":"object","title":"correspondence","required":["days"],"properties":{"days":{"type":"integer","description":"Days per turn. Required for correspondence seeks.","enum":[1,2,3,5,7,10,14]}}}]}],"__schema":"allOf"} */
+      /* (unsupported_schema:allOf) typescriptSchema: {"allOf":[{"type":"object","properties":{"rated":{"type":"boolean","description":"Whether the game is rated and impacts players ratings.","example":true,"default":false},"variant":{"$ref":"../../schemas/VariantKey.yaml"},"ratingRange":{"type":"string","description":"The rating range of potential opponents. Better left empty.\nExample: 1500-1800\n"}}},{"oneOf":[{"type":"object","title":"real-time","required":["time","increment"],"properties":{"time":{"type":"number","description":"Clock initial time in minutes. Required for real-time seeks.","example":15,"minimum":0,"maximum":180},"increment":{"type":"integer","description":"Clock increment in seconds. Required for real-time seeks.","example":15,"minimum":0,"maximum":180},"color":{"description":"The color to play. Better left empty to automatically get 50% white.","$ref":"../../schemas/ChallengeColor.yaml"}}},{"type":"object","title":"correspondence","required":["days"],"properties":{"days":{"type":"integer","description":"Days per turn. Required for correspondence seeks.","enum":[1,2,3,5,7,10,14]}}}]}],"__schema":"allOf"} */
     };
   }) {
     const path = "/api/board/seek" as const;
@@ -3463,7 +3814,7 @@ export class Lichess {
   async boardGameDraw(params: {
     gameId: string;
     accept: {
-      /* (unsupported_schema) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
+      /* (unsupported_schema:boolean-like) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
     };
   }) {
     const path =
@@ -3496,7 +3847,7 @@ export class Lichess {
   async boardGameTakeback(params: {
     gameId: string;
     accept: {
-      /* (unsupported_schema) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
+      /* (unsupported_schema:boolean-like) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
     };
   }) {
     const path =
@@ -3818,7 +4169,7 @@ export class Lichess {
   async botGameDraw(params: {
     gameId: string;
     accept: {
-      /* (unsupported_schema) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
+      /* (unsupported_schema:boolean-like) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
     };
   }) {
     const path =
@@ -3851,7 +4202,7 @@ export class Lichess {
   async botGameTakeback(params: {
     gameId: string;
     accept: {
-      /* (unsupported_schema) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
+      /* (unsupported_schema:boolean-like) typescriptSchema: {"anyOf":[{"type":"boolean","__schema":"boolean"},{"type":"string","const":true}],"example":"yes","__schema":"boolean-like"} */
     };
   }) {
     const path =
@@ -3958,7 +4309,7 @@ export class Lichess {
   async challengeCreate(
     params: { username: string } & {
       body: {
-        /* (unsupported_schema) typescriptSchema: {"allOf":[{"oneOf":[{"type":"object","title":"real-time","required":["clock.limit","clock.increment"],"properties":{"clock.limit":{"type":"integer","description":"Clock initial time in seconds. If empty, a correspondence game is created. Valid values are 0, 15, 30, 45, 60, 90, and any multiple of 60 up to 10800 (3 hours).","example":300,"minimum":0,"maximum":10800},"clock.increment":{"type":"integer","description":"Clock increment in seconds. If empty, a correspondence game is created.","example":1,"minimum":0,"maximum":60}}},{"type":"object","title":"correspondence","required":["days"],"properties":{"days":{"type":"integer","description":"Days per move, for correspondence games. Clock settings must be omitted.","enum":[1,2,3,5,7,10,14]}}},{"type":"object","title":"unlimited","properties":{}}]},{"type":"object","properties":{"rated":{"type":"boolean","description":"Game is rated and impacts players ratings","default":false},"color":{"$ref":"../../schemas/ChallengeColor.yaml","description":"Which color you get to play","default":"random"},"variant":{"$ref":"../../schemas/VariantKey.yaml"},"fen":{"$ref":"../../schemas/FromPositionFEN.yaml"},"keepAliveStream":{"type":"boolean","description":"If set, the response is streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).\nThe challenge is kept alive until the connection is closed by the client.\nWhen the challenge is accepted, declined or canceled, a message of the form `{\"done\":\"accepted\"}` is sent,\nthen the connection is closed by the server.\nIf not set, the response is not streamed, and the challenge expires after 20s if not accepted.\n"},"rules":{"type":"string","enum":["noAbort","noRematch","noGiveTime","noClaimWin","noEarlyDraw"],"description":"Extra game rules separated by commas.\nExample: `noAbort,noRematch`\n"}}}],"__schema":"allOf"} */
+        /* (unsupported_schema:allOf) typescriptSchema: {"allOf":[{"oneOf":[{"type":"object","title":"real-time","required":["clock.limit","clock.increment"],"properties":{"clock.limit":{"type":"integer","description":"Clock initial time in seconds. If empty, a correspondence game is created. Valid values are 0, 15, 30, 45, 60, 90, and any multiple of 60 up to 10800 (3 hours).","example":300,"minimum":0,"maximum":10800},"clock.increment":{"type":"integer","description":"Clock increment in seconds. If empty, a correspondence game is created.","example":1,"minimum":0,"maximum":60}}},{"type":"object","title":"correspondence","required":["days"],"properties":{"days":{"type":"integer","description":"Days per move, for correspondence games. Clock settings must be omitted.","enum":[1,2,3,5,7,10,14]}}},{"type":"object","title":"unlimited","properties":{}}]},{"type":"object","properties":{"rated":{"type":"boolean","description":"Game is rated and impacts players ratings","default":false},"color":{"$ref":"../../schemas/ChallengeColor.yaml","description":"Which color you get to play","default":"random"},"variant":{"$ref":"../../schemas/VariantKey.yaml"},"fen":{"$ref":"../../schemas/FromPositionFEN.yaml"},"keepAliveStream":{"type":"boolean","description":"If set, the response is streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).\nThe challenge is kept alive until the connection is closed by the client.\nWhen the challenge is accepted, declined or canceled, a message of the form `{\"done\":\"accepted\"}` is sent,\nthen the connection is closed by the server.\nIf not set, the response is not streamed, and the challenge expires after 20s if not accepted.\n"},"rules":{"type":"string","enum":["noAbort","noRematch","noGiveTime","noClaimWin","noEarlyDraw"],"description":"Extra game rules separated by commas.\nExample: `noAbort,noRematch`\n"}}}],"__schema":"allOf"} */
       };
     }
   ) {
@@ -4101,9 +4452,7 @@ export class Lichess {
       level: number;
       "clock.limit"?: number;
       "clock.increment"?: number;
-      days?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Days per move, for correspondence games. Clock settings must be omitted.","type":"integer","enum":[1,2,3,5,7,10,14],"__schema":"integer:enum"} */
-      };
+      days?: 1 | 2 | 3 | 5 | 7 | 10 | 14;
       color?: schemas.ChallengeColor;
       variant?: schemas.VariantKey;
       fen?: schemas.FromPositionFEN;
@@ -4160,9 +4509,7 @@ export class Lichess {
       rated?: boolean;
       "clock.limit"?: number;
       "clock.increment"?: number;
-      days?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Days per turn. For correspondence challenges.","type":"integer","enum":[1,2,3,5,7,10,14],"__schema":"integer:enum"} */
-      };
+      days?: 1 | 2 | 3 | 5 | 7 | 10 | 14;
       variant?: schemas.VariantKey;
       fen?: schemas.FromPositionFEN;
       name?: string;
@@ -4271,9 +4618,7 @@ export class Lichess {
       players?: string;
       "clock.limit"?: number;
       "clock.increment"?: number;
-      days?: {
-        /* (unsupported_schema) typescriptSchema: {"description":"Days per turn. For correspondence games only.","type":"integer","enum":[1,2,3,5,7,10,14],"__schema":"integer:enum"} */
-      };
+      days?: 1 | 2 | 3 | 5 | 7 | 10 | 14;
       pairAt?: number;
       startClocksAt?: number;
       rated?: boolean;
@@ -4508,9 +4853,7 @@ export class Lichess {
   async apiCloudEval(params: {
     fen: string;
     multiPv?: number;
-    variant?: {
-      /* (unsupported_schema) typescriptSchema: {"$ref":"../../schemas/VariantKey.yaml","__schema":"notverified:reftoprimitive"} */
-    };
+    variant?: schemas.VariantKey;
   }) {
     const path = "/api/cloud-eval" as const;
     const query = params;
@@ -4924,16 +5267,14 @@ export class Lichess {
    * Example: `curl https://explorer.lichess.ovh/lichess?variant=standard&speeds=blitz,rapid,classical&ratings=2200,2500&fen=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR%20w%20KQkq%20-%200%201`
    */
   async openingExplorerLichess(params: {
-    variant?: {
-      /* (unsupported_schema) typescriptSchema: {"default":"standard","$ref":"../../schemas/VariantKey.yaml","__schema":"notverified:reftoprimitive"} */
-    };
+    variant?: schemas.VariantKey;
     fen?: string;
     play?: string;
     speeds?: {
-      /* (unsupported_schema) typescriptSchema: {"type":"array","items":{"$ref":"../../schemas/Speed.yaml","__schema":"notverified:reftoprimitive"},"__schema":"array:notverified:reftoprimitive"} */
+      /* (unsupported_schema:array:notverified:reftoprimitive) typescriptSchema: {"type":"array","items":{"$ref":"../../schemas/Speed.yaml","__schema":"notverified:reftoprimitive"},"__schema":"array:notverified:reftoprimitive"} */
     };
     ratings?: {
-      /* (unsupported_schema) typescriptSchema: {"type":"array","items":{"type":"integer","enum":[0,1000,1200,1400,1600,1800,2000,2200,2500],"__schema":"integer:enum"},"__schema":"array:primitive"} */
+      /* (unsupported_schema:array:primitive) typescriptSchema: {"type":"array","items":{"type":"integer","enum":[0,1000,1200,1400,1600,1800,2000,2200,2500],"__schema":"enum:number"},"__schema":"array:primitive"} */
     };
     since?: string;
     until?: string;
@@ -4978,16 +5319,14 @@ export class Lichess {
   async openingExplorerPlayer(params: {
     player: string;
     color: string;
-    variant?: {
-      /* (unsupported_schema) typescriptSchema: {"default":"standard","$ref":"../../schemas/VariantKey.yaml","__schema":"notverified:reftoprimitive"} */
-    };
+    variant?: schemas.VariantKey;
     fen?: string;
     play?: string;
     speeds?: {
-      /* (unsupported_schema) typescriptSchema: {"type":"array","items":{"$ref":"../../schemas/Speed.yaml","__schema":"notverified:reftoprimitive"},"__schema":"array:notverified:reftoprimitive"} */
+      /* (unsupported_schema:array:notverified:reftoprimitive) typescriptSchema: {"type":"array","items":{"$ref":"../../schemas/Speed.yaml","__schema":"notverified:reftoprimitive"},"__schema":"array:notverified:reftoprimitive"} */
     };
     modes?: {
-      /* (unsupported_schema) typescriptSchema: {"type":"array","items":{"type":"string","enum":["casual","rated"],"__schema":"string"},"__schema":"array:primitive"} */
+      /* (unsupported_schema:array:primitive) typescriptSchema: {"type":"array","items":{"type":"string","enum":["casual","rated"],"__schema":"string"},"__schema":"array:primitive"} */
     };
     since?: string;
     until?: string;

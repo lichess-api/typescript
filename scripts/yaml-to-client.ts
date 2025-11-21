@@ -536,7 +536,8 @@ function schemaToTypescriptTypes(
   schema: Schema | PathParamSchema | QueryParamSchema
 ) {
   switch (schema.__schema) {
-    case "$ref": {
+    case "$ref":
+    case "notverified:reftoprimitive": {
       const ref = schema.$ref;
       const name = ref.split("/").pop()!.replace(".yaml", "");
       const typescriptSchema = `schemas.${name}` as const;
@@ -573,10 +574,13 @@ function schemaToTypescriptTypes(
     case "integer": {
       return "number" as const;
     }
+    case "enum:number": {
+      return schema.enum.map((v) => JSON.stringify(v)).join(" | ");
+    }
   }
 
   const typescriptSchema = JSON.stringify(schema);
-  return `{ /* (unsupported_schema) typescriptSchema: ${typescriptSchema} */ }` as const;
+  return `{ /* (unsupported_schema:${schema.__schema}) typescriptSchema: ${typescriptSchema} */ }` as const;
 }
 
 function extractQueryParams(queryParams: OperationQueryParameter[]) {

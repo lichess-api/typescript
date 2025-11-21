@@ -26,11 +26,15 @@ type RequestHandlerParams<TQueryParams extends QueryParams, TBody> = {
 type RequestMethod = "GET" | "POST" | "HEAD" | "PUT" | "DELETE";
 
 export class Requestor<T extends string> {
-  private readonly headers: { readonly Authorization: `Bearer ${string}` };
+  private readonly headers:
+    | { readonly Authorization: `Bearer ${string}` }
+    | undefined;
   private readonly baseUrl: T;
 
-  constructor({ token, baseUrl }: { token: string; baseUrl: T }) {
-    this.headers = { Authorization: `Bearer ${token}` } as const;
+  constructor({ token, baseUrl }: { token: string | null; baseUrl: T }) {
+    this.headers = token
+      ? ({ Authorization: `Bearer ${token}` } as const)
+      : undefined;
     this.baseUrl = baseUrl;
   }
 
