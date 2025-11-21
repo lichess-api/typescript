@@ -10,7 +10,8 @@ type BASE_URL = typeof BASE_URL;
 export class Lichess {
   private readonly requestor: Requestor<BASE_URL>;
 
-  constructor({ token }: { token: string }) {
+  constructor(options: { token: string | null }) {
+    const { token } = options;
     this.requestor = new Requestor({ token, baseUrl: BASE_URL });
   }
 
