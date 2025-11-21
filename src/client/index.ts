@@ -1209,9 +1209,11 @@ export class Lichess {
   /**
    * Get info about an Arena tournament
    */
-  async tournament(params: { page?: number }) {
+  async tournament(params: { id: string } & { page?: number }) {
     const path = `/api/tournament/${params.id}` as const;
-    const query = params;
+    const query = {
+      /* ~query~ */
+    } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {

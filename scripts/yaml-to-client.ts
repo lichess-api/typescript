@@ -678,8 +678,10 @@ function processOperation(
   options?: { sharedPathParams?: OperationPathParameter[]; baseUrl?: string }
 ) {
   if (operation.__id === "__parameters") {
+    const parameters = operation.parameters;
     return {
       methodCode: "/* --- Shared path params for methods below --- */",
+      parameters,
       __type: "__parameters",
     } as const;
   }
@@ -714,7 +716,9 @@ function processOperation(
     hasPathParams,
     queryParams,
     pathParams,
-  } = processParams(operation.parameters);
+  } = processParams(
+    operation.parameters?.concat(options?.sharedPathParams ?? [])
+  );
 
   const pathAssignment =
     `const path = ${stringifiedProcessedPath} as const;` as const;
@@ -799,13 +803,19 @@ function processTag(tagSchema: TagSchema, rawApiPath: string) {
       sharedPathParams,
       baseUrl,
     });
+    if (processedOperation.__type === "__parameters") {
+      sharedPathParams = processedOperation.parameters;
+    }
+    if (processedOperation.__type === "__servers") {
+      baseUrl = processedOperation.baseUrl;
+    }
     console.log(processedOperation.methodCode);
     methodsCode.push(processedOperation.methodCode);
   }
   return methodsCode;
 }
 
-async function processSchema(schema: OpenApiSchema) {
+async function processSchema(schema: OpenApiSchema): Promise<void> {
   const tagsDir = "specs/tags" as const;
 
   const methodsCode: string[] = [];
