@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import UciVariant from "./UciVariant";
+import { UciVariant } from "./UciVariant";
 
 const ExternalEngine = z.object({
   id: z.string(),

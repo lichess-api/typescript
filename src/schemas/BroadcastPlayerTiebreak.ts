@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import BroadcastTiebreakExtendedCode from "./BroadcastTiebreakExtendedCode";
+import { BroadcastTiebreakExtendedCode } from "./BroadcastTiebreakExtendedCode";
 
 const BroadcastPlayerTiebreak = z.object({
   extendedCode: BroadcastTiebreakExtendedCode,

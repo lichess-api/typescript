@@ -1,0 +1,20 @@
+type: object
+
+properties:
+  puzzles:
+    type: array
+    items:
+      $ref: "./PuzzleAndGame.yaml"
+  glicko:
+    $ref: "./PuzzleGlicko.yaml"
+  rounds:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+        win:
+          type: boolean
+        ratingDiff:
+          type: integer

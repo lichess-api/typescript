@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import ChallengeJson from "./ChallengeJson";
+import { ChallengeJson } from "./ChallengeJson";
 
 const ChallengeDeclinedJson = z.intersection(
   ChallengeJson,

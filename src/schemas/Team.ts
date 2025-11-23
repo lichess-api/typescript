@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import Flair from "./Flair";
-import LightUser from "./LightUser";
+import { Flair } from "./Flair";
+import { LightUser } from "./LightUser";
 
 const Team = z.object({
   id: z.string(),

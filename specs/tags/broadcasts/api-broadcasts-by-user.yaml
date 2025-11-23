@@ -1,0 +1,76 @@
+get:
+  operationId: broadcastsByUser
+  summary: Get broadcasts created by a user
+  description: |
+    Get all incoming, ongoing, and finished official broadcasts.
+    The broadcasts are sorted by created date, most recent first.
+
+    If you are authenticated as the user whose broadcasts you are requesting, you will also see your private and unlisted broadcasts.
+  tags:
+    - Broadcasts
+  security:
+    - OAuth2: ["study:read"]
+  parameters:
+    - in: path
+      name: username
+      schema:
+        type: string
+      required: true
+    - in: query
+      name: page
+      schema:
+        type: integer
+        example: 1
+        default: 1
+    - in: query
+      name: html
+      description: Convert the "description" field from markdown to HTML
+      schema:
+        type: boolean
+      example: true
+  responses:
+    "200":
+      description: A paginated list of the broadcasts created by a user.
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+            default: "'*'"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              currentPage:
+                type: integer
+                example: 4
+              maxPerPage:
+                type: integer
+                example: 15
+              currentPageResults:
+                type: array
+                items:
+                  $ref: "../../schemas/BroadcastByUser.yaml"
+              nbResults:
+                type: integer
+                example: 205194
+              previousPage:
+                type: [integer, "null"]
+                example: 3
+              nextPage:
+                type: [integer, "null"]
+                example: 5
+              nbPages:
+                type: integer
+                example: 13680
+            required:
+              - currentPage
+              - maxPerPage
+              - currentPageResults
+              - nbResults
+              - previousPage
+              - nextPage
+              - nbPages
+          examples:
+            default:
+              $ref: "../../examples/broadcasts-getBroadcastsCreatedByUser.json.yaml"

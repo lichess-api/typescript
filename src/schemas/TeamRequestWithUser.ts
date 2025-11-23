@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import TeamRequest from "./TeamRequest";
-import User from "./User";
+import { TeamRequest } from "./TeamRequest";
+import { User } from "./User";
 
 const TeamRequestWithUser = z.object({
   request: TeamRequest,

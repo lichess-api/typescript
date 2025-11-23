@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import RatingHistoryEntry from "./RatingHistoryEntry";
+import { RatingHistoryEntry } from "./RatingHistoryEntry";
 
 const RatingHistory = z.array(RatingHistoryEntry);
 

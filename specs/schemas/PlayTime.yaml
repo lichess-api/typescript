@@ -1,0 +1,12 @@
+type: object
+properties:
+  total:
+    type: integer
+  tv:
+    type: integer
+  human:
+    type: integer
+
+required:
+  - total
+  - tv

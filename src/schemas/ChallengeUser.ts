@@ -1,8 +1,9 @@
 import * as z from "zod";
 
-import Flair from "./Flair";
-import PatronColor from "./PatronColor";
-import Title from "./Title";
+import { Flair } from "./Flair";
+import { Patron } from "./Patron";
+import { PatronColor } from "./PatronColor";
+import { Title } from "./Title";
 
 const ChallengeUser = z.object({
   id: z.string(),
@@ -10,7 +11,7 @@ const ChallengeUser = z.object({
   rating: z.int().optional(),
   title: Title.optional(),
   flair: Flair.optional(),
-  patron: z.boolean().optional(),
+  patron: Patron.optional(),
   patronColor: PatronColor.optional(),
   provisional: z.boolean().optional(),
   online: z.boolean().optional(),

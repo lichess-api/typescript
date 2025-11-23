@@ -1,11 +1,11 @@
 import * as z from "zod";
 
-import GameColor from "./GameColor";
-import GameStatusId from "./GameStatusId";
-import GameStatusName from "./GameStatusName";
-import PerfType from "./PerfType";
-import Speed from "./Speed";
-import VariantKey from "./VariantKey";
+import { GameColor } from "./GameColor";
+import { GameStatusId } from "./GameStatusId";
+import { GameStatusName } from "./GameStatusName";
+import { PerfType } from "./PerfType";
+import { Speed } from "./Speed";
+import { VariantKey } from "./VariantKey";
 
 const GameStreamGame = z.object({
   id: z.string(),

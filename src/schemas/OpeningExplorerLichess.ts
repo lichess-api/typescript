@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import OpeningExplorerLichessGame from "./OpeningExplorerLichessGame";
-import OpeningExplorerOpening from "./OpeningExplorerOpening";
+import { OpeningExplorerLichessGame } from "./OpeningExplorerLichessGame";
+import { OpeningExplorerOpening } from "./OpeningExplorerOpening";
 
 const OpeningExplorerLichess = z.object({
   opening: z.union([OpeningExplorerOpening, z.null()]),

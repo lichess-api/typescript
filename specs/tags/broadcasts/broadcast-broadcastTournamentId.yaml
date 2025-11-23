@@ -1,0 +1,28 @@
+get:
+  operationId: broadcastTourGet
+  summary: Get a broadcast tournament
+  description: |
+    Get information about a broadcast tournament.
+  tags:
+    - Broadcasts
+  security:
+    - OAuth2: ["study:read"]
+  parameters:
+    - in: path
+      name: broadcastTournamentId
+      description: The broadcast tournament ID
+      required: true
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 8
+  responses:
+    "200":
+      description: The information about the broadcast tournament.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/BroadcastWithRounds.yaml"
+          examples:
+            default:
+              $ref: "../../examples/broadcasts-getBroadcastTournament.json.yaml"

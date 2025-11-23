@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import GameColor from "./GameColor";
-import OpeningExplorerGamePlayer from "./OpeningExplorerGamePlayer";
+import { GameColor } from "./GameColor";
+import { OpeningExplorerGamePlayer } from "./OpeningExplorerGamePlayer";
 
 const OpeningExplorerMastersGame = z.object({
   id: z.string(),

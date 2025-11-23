@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import VariantKey from "./VariantKey";
+import { VariantKey } from "./VariantKey";
 
 const Variant = z.object({
   key: VariantKey,

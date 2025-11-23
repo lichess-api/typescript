@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import ArenaTournament from "./ArenaTournament";
-import ArenaTournamentPlayer from "./ArenaTournamentPlayer";
+import { ArenaTournament } from "./ArenaTournament";
+import { ArenaTournamentPlayer } from "./ArenaTournamentPlayer";
 
 const ArenaTournamentPlayed = z.object({
   tournament: ArenaTournament,

@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import LightUser from "./LightUser";
-import VariantKey from "./VariantKey";
+import { LightUser } from "./LightUser";
+import { VariantKey } from "./VariantKey";
 
 const Simul = z.object({
   id: z.string(),

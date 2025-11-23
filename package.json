@@ -5,9 +5,13 @@
   "author": "GameRoMan",
   "license": "MIT",
   "scripts": {
+    "gen:schemas": "bun ./scripts/yaml-to-zod && bun ./scripts/export-dir && bun run format",
+    "gen:client": "bun ./scripts/yaml-to-client && bun run format",
+    "gen:full": "bun ./scripts/yaml-to-zod && bun ./scripts/export-dir && bun ./scripts/yaml-to-client && bun run format",
+    "test": "bun test",
     "test:types": "bunx tsc --noEmit",
     "format": "bunx biome format --write",
-    "build": "bunx tsdown",
+    "build": "bunx --bun tsdown",
     "npm:publish": "bun publish --access public"
   },
   "files": [
@@ -19,16 +23,17 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.0",
-    "@lichess-org/types": "^2.0.91",
-    "tsdown": "^0.15.9",
+    "@biomejs/biome": "2.3.7",
+    "@lichess-org/types": "^2.0.100",
+    "tsdown": "^0.16.6",
     "typescript": "^5.9.3"
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
-    ".": "./dist/index.js",
+    ".": "./dist/index.mjs",
+    "./schemas": "./dist/schemas.mjs",
     "./package.json": "./package.json"
   }
 }

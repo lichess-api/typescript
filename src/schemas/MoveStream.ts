@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import MoveStreamEntry from "./MoveStreamEntry";
+import { MoveStreamEntry } from "./MoveStreamEntry";
 
 const MoveStream = z.array(MoveStreamEntry);
 

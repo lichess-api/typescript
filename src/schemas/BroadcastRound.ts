@@ -1,10 +1,10 @@
 import * as z from "zod";
 
-import BroadcastGroup from "./BroadcastGroup";
-import BroadcastRoundGame from "./BroadcastRoundGame";
-import BroadcastRoundInfo from "./BroadcastRoundInfo";
-import BroadcastRoundStudyInfo from "./BroadcastRoundStudyInfo";
-import BroadcastTour from "./BroadcastTour";
+import { BroadcastGroup } from "./BroadcastGroup";
+import { BroadcastRoundGame } from "./BroadcastRoundGame";
+import { BroadcastRoundInfo } from "./BroadcastRoundInfo";
+import { BroadcastRoundStudyInfo } from "./BroadcastRoundStudyInfo";
+import { BroadcastTour } from "./BroadcastTour";
 
 const BroadcastRound = z.object({
   round: BroadcastRoundInfo,

@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import Verdict from "./Verdict";
+import { Verdict } from "./Verdict";
 
 const Verdicts = z.object({
   accepted: z.boolean(),

@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import GameStatusId from "./GameStatusId";
-import GameStatusName from "./GameStatusName";
+import { GameStatusId } from "./GameStatusId";
+import { GameStatusName } from "./GameStatusName";
 
 const GameStatus = z.object({
   id: GameStatusId,

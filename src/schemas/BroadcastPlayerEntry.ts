@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import BroadcastPlayerTiebreak from "./BroadcastPlayerTiebreak";
-import BroadcastPlayerWithFed from "./BroadcastPlayerWithFed";
+import { BroadcastPlayerTiebreak } from "./BroadcastPlayerTiebreak";
+import { BroadcastPlayerWithFed } from "./BroadcastPlayerWithFed";
 
 const BroadcastPlayerEntry = z.intersection(
   BroadcastPlayerWithFed,

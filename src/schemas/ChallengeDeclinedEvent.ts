@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import ChallengeDeclinedJson from "./ChallengeDeclinedJson";
+import { ChallengeDeclinedJson } from "./ChallengeDeclinedJson";
 
 const ChallengeDeclinedEvent = z.object({
   type: z.literal("challengeDeclined"),

@@ -1,9 +1,9 @@
 import * as z from "zod";
 
-import GameEventPlayer from "./GameEventPlayer";
-import GameStateEvent from "./GameStateEvent";
-import Speed from "./Speed";
-import Variant from "./Variant";
+import { GameEventPlayer } from "./GameEventPlayer";
+import { GameStateEvent } from "./GameStateEvent";
+import { Speed } from "./Speed";
+import { Variant } from "./Variant";
 
 const GameFullEvent = z.object({
   type: z.literal("gameFull"),

@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import TablebaseMove from "./TablebaseMove";
+import { TablebaseMove } from "./TablebaseMove";
 
 const TablebaseJson = z.object({
   category: z.literal([

@@ -1,8 +1,8 @@
 import * as z from "zod";
 
-import BroadcastCustomPoints from "./BroadcastCustomPoints";
-import BroadcastPlayerWithFed from "./BroadcastPlayerWithFed";
-import GameColor from "./GameColor";
+import { BroadcastCustomPoints } from "./BroadcastCustomPoints";
+import { BroadcastPlayerWithFed } from "./BroadcastPlayerWithFed";
+import { GameColor } from "./GameColor";
 
 const BroadcastGameEntry = z.object({
   round: z.string(),

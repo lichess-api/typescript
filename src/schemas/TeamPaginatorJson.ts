@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import Team from "./Team";
+import { Team } from "./Team";
 
 const TeamPaginatorJson = z.object({
   currentPage: z.int(),

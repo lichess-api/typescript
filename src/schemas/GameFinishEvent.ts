@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import GameEventInfo from "./GameEventInfo";
+import { GameEventInfo } from "./GameEventInfo";
 
 const GameFinishEvent = z.object({
   type: z.literal("gameFinish"),

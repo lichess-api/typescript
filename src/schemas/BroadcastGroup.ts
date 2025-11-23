@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import BroadcastGroupTour from "./BroadcastGroupTour";
+import { BroadcastGroupTour } from "./BroadcastGroupTour";
 
 const BroadcastGroup = z.object({
   id: z.string(),

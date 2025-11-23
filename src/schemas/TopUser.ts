@@ -1,6 +1,8 @@
 import * as z from "zod";
 
-import Title from "./Title";
+import { Patron } from "./Patron";
+import { PatronColor } from "./PatronColor";
+import { Title } from "./Title";
 
 const TopUser = z.object({
   id: z.string(),
@@ -15,7 +17,8 @@ const TopUser = z.object({
     )
     .optional(),
   title: Title.optional(),
-  patron: z.boolean().optional(),
+  patron: Patron.optional(),
+  patronColor: PatronColor.optional(),
   online: z.boolean().optional(),
 });
 

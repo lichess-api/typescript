@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import BroadcastCustomPointsPerColor from "./BroadcastCustomPointsPerColor";
+import { BroadcastCustomPointsPerColor } from "./BroadcastCustomPointsPerColor";
 
 const BroadcastCustomScoring = z.object({
   white: BroadcastCustomPointsPerColor,

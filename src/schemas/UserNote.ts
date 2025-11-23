@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import LightUser from "./LightUser";
+import { LightUser } from "./LightUser";
 
 const UserNote = z.object({
   from: LightUser.optional(),

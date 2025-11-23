@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import BroadcastGameEntry from "./BroadcastGameEntry";
-import BroadcastPlayerEntry from "./BroadcastPlayerEntry";
+import { BroadcastGameEntry } from "./BroadcastGameEntry";
+import { BroadcastPlayerEntry } from "./BroadcastPlayerEntry";
 
 const BroadcastPlayerEntryWithFideAndGames = z.intersection(
   BroadcastPlayerEntry,

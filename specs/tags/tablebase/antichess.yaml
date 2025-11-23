@@ -1,0 +1,32 @@
+servers:
+  - url: https://tablebase.lichess.ovh
+get:
+  operationId: antichessAtomic
+  summary: Tablebase lookup for Antichess
+  description: |
+    **Endpoint: <https://tablebase.lichess.ovh>**
+  tags:
+    - Tablebase
+  security: []
+  parameters:
+    - in: query
+      name: fen
+      description: X-FEN of the position. Underscores allowed.
+      schema:
+        type: string
+      required: true
+  responses:
+    "200":
+      description: The tablebase information for the position in antichess.
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+            default: "'*'"
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/TablebaseJson.yaml"
+          examples:
+            default:
+              $ref: "../../examples/tablebase-lookupAntichess.json.yaml"

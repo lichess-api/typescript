@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import UciVariant from "./UciVariant";
+import { UciVariant } from "./UciVariant";
 
 const ExternalEngineRegistration = z.object({
   name: z.string().min(3).max(200),

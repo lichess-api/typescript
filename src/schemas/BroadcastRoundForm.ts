@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import BroadcastCustomPoints from "./BroadcastCustomPoints";
-import BroadcastRoundFormName from "./BroadcastRoundFormName";
+import { BroadcastCustomPoints } from "./BroadcastCustomPoints";
+import { BroadcastRoundFormName } from "./BroadcastRoundFormName";
 
 const BroadcastRoundForm = z.intersection(
   z.union([
@@ -28,6 +28,7 @@ const BroadcastRoundForm = z.intersection(
     }),
   ]),
   z.object({
+    syncSource: z.literal(["push", "url", "urls", "ids", "users"]).optional(),
     startsAt: z.int().min(1356998400070).optional(),
     startsAfterPrevious: z.boolean().optional(),
     delay: z.int().min(0).max(3600).optional(),

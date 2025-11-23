@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import Title from "./Title";
+import { Title } from "./Title";
 
 const FIDEPlayer = z.object({
   id: z.int(),

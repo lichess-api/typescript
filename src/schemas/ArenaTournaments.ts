@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import ArenaTournament from "./ArenaTournament";
+import { ArenaTournament } from "./ArenaTournament";
 
 const ArenaTournaments = z.object({
   created: z.array(ArenaTournament),

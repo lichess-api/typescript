@@ -1,10 +1,10 @@
 import * as z from "zod";
 
-import BroadcastWithLastRound from "./BroadcastWithLastRound";
+import { BroadcastWithLastRound } from "./BroadcastWithLastRound";
 
 const BroadcastTop = z.object({
   active: z.array(BroadcastWithLastRound).optional(),
-  upcoming: z.array(BroadcastWithLastRound).optional(),
+  upcoming: z.tuple([]).optional(),
   past: z
     .object({
       currentPage: z.int().optional(),

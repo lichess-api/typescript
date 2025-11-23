@@ -1,12 +1,12 @@
 import * as z from "zod";
 
-import GameColor from "./GameColor";
-import GameCompat from "./GameCompat";
-import GameEventOpponent from "./GameEventOpponent";
-import GameSource from "./GameSource";
-import GameStatus from "./GameStatus";
-import Speed from "./Speed";
-import Variant from "./Variant";
+import { GameColor } from "./GameColor";
+import { GameCompat } from "./GameCompat";
+import { GameEventOpponent } from "./GameEventOpponent";
+import { GameSource } from "./GameSource";
+import { GameStatus } from "./GameStatus";
+import { Speed } from "./Speed";
+import { Variant } from "./Variant";
 
 const GameEventInfo = z.object({
   fullId: z.string(),
@@ -28,6 +28,7 @@ const GameEventInfo = z.object({
   ratingDiff: z.int().optional(),
   compat: GameCompat.optional(),
   id: z.string().optional(),
+  tournamentId: z.string().optional(),
 });
 
 type GameEventInfo = z.infer<typeof GameEventInfo>;
