@@ -1,6 +1,6 @@
-import { Lichess } from "~/.";
-
 import { describe, it, expect } from "bun:test";
+
+import { Lichess } from "~/.";
 
 describe("Lichess", () => {
   it("should work", () => {
