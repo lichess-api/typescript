@@ -11,10 +11,13 @@ const UserActivityCorrespondenceGame = z.object({
   speed: z.literal("correspondence").optional(),
   perf: z.literal("correspondence").optional(),
   rated: z.boolean().optional(),
-  opponent: z.object({
-    user: z.string(),
-    rating: z.int(),
-  }),
+  opponent: z.union([
+    z.object({ aiLevel: z.int() }),
+    z.object({
+      user: z.string(),
+      rating: z.int(),
+    }),
+  ]),
 });
 
 type UserActivityCorrespondenceGame = z.infer<

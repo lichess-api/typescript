@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.7",
-    "@lichess-org/types": "^2.0.99",
+    "@lichess-org/types": "^2.0.100",
     "tsdown": "^0.16.6",
     "typescript": "^5.9.3"
   },
