@@ -1,20 +1,9 @@
 import { addQueryParams } from "~/utils";
 
-type QueryParams = Record<string, string | number | boolean | null | undefined>;
-
-const responseHandlerMap = {
-  json: async (response: Response) => {
-    const json: unknown = await response.json();
-    const status = response.status;
-    return { json, status } as const;
-  },
-  ndjson: async (response: Response) => response,
-  "chess-pgn": async (response: Response) => response,
-} as const satisfies Record<string, (response: Response) => Promise<unknown>>;
-
-type ResponseHandler = "json" | "ndjson" | "chess-pgn";
-
-type ResponseHandlerMap = typeof responseHandlerMap;
+type QueryParams = Record<
+  string,
+  string | number | boolean | string[] | number[] | null | undefined
+>;
 
 type RequestHandlerParams<TQueryParams extends QueryParams, TBody> = {
   path: string;
@@ -71,15 +60,6 @@ export class Requestor<T extends string> {
     const response = await fetch(request);
     const status = response.status;
     return { response, status } as const;
-  }
-
-  processResponse<THandler extends ResponseHandler>(
-    response: Response,
-    handler: THandler
-  ): ReturnType<ResponseHandlerMap[THandler]> {
-    return responseHandlerMap[handler](response) as ReturnType<
-      ResponseHandlerMap[THandler]
-    >;
   }
 
   async get<TQueryParams extends QueryParams>(

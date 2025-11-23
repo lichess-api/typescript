@@ -297,6 +297,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = schemas.PuzzleActivity;
         /* ndjson */
         return { status, response } as const;
       }
@@ -762,6 +763,7 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
+        const schema = schemas.GameStream;
         /* ndjson */
         return { status, response } as const;
       }
@@ -780,6 +782,7 @@ export class Lichess {
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
+        const schema = schemas.GameStream;
         /* ndjson */
         return { status, response } as const;
       }
@@ -867,6 +870,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const schema = schemas.MoveStream;
         /* ndjson */
         return { status, response } as const;
       }
@@ -999,6 +1003,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const schema = schemas.TvFeed;
         /* ndjson */
         return { status, response } as const;
       }
@@ -1016,6 +1021,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const schema = schemas.TvFeed;
         /* ndjson */
         return { status, response } as const;
       }
@@ -1613,6 +1619,18 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = z.object({
+          rank: z.int(),
+          score: z.int(),
+          rating: z.int(),
+          username: z.string(),
+          performance: z.int(),
+          title: schemas.Title.optional(),
+          team: z.string().optional(),
+          flair: schemas.Flair.optional(),
+          patronColor: schemas.PatronColor.optional(),
+          sheet: schemas.ArenaSheet.optional(),
+        });
         /* ndjson */
         return { status, response } as const;
       }
@@ -1670,6 +1688,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = schemas.ArenaTournament;
         /* ndjson */
         return { status, response } as const;
       }
@@ -1693,6 +1712,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = schemas.ArenaTournamentPlayed;
         /* ndjson */
         return { status, response } as const;
       }
@@ -2166,6 +2186,16 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = z.object({
+          absent: z.boolean().optional(),
+          rank: z.int(),
+          points: z.number(),
+          tieBreak: z.int(),
+          rating: z.int(),
+          username: z.string(),
+          title: schemas.Title.optional(),
+          performance: z.int(),
+        });
         /* ndjson */
         return { status, response } as const;
       }
@@ -2196,6 +2226,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = schemas.SwissTournament;
         /* ndjson */
         return { status, response } as const;
       }
@@ -2387,6 +2418,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const schema = schemas.StudyMetadata;
         /* ndjson */
         return { status, response } as const;
       }
@@ -2424,6 +2456,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = schemas.BroadcastWithRounds;
         /* ndjson */
         return { status, response } as const;
       }
@@ -2823,6 +2856,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = schemas.BroadcastMyRound;
         /* ndjson */
         return { status, response } as const;
       }
@@ -2982,6 +3016,13 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = z.object({
+          joinedTeamAt: z.int().optional(),
+          id: z.string(),
+          name: z.string(),
+          title: schemas.Title.optional(),
+          patronColor: schemas.PatronColor.optional(),
+        });
         /* ndjson */
         return { status, response } as const;
       }
@@ -3012,6 +3053,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = schemas.ArenaTournament;
         /* ndjson */
         return { status, response } as const;
       }
@@ -3319,6 +3361,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const schema = schemas.UserExtended;
         /* ndjson */
         return { status, response } as const;
       }
@@ -3412,6 +3455,13 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const schema = z.union([
+          schemas.GameStartEvent,
+          schemas.GameFinishEvent,
+          schemas.ChallengeEvent,
+          schemas.ChallengeCanceledEvent,
+          schemas.ChallengeDeclinedEvent,
+        ]);
         /* ndjson */
         return { status, response } as const;
       }
@@ -3466,6 +3516,12 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const schema = z.union([
+          schemas.GameFullEvent,
+          schemas.GameStateEvent,
+          schemas.ChatLineEvent,
+          schemas.OpponentGoneEvent,
+        ]);
         /* ndjson */
         return { status, response } as const;
       }
@@ -3523,6 +3579,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const schema = schemas.GameChat;
         /* ndjson */
         return { status, response } as const;
       }
@@ -3751,6 +3808,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = schemas.User;
         /* ndjson */
         return { status, response } as const;
       }
@@ -3793,6 +3851,12 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const schema = z.union([
+          schemas.GameFullEvent,
+          schemas.GameStateEvent,
+          schemas.ChatLineEvent,
+          schemas.OpponentGoneEvent,
+        ]);
         /* ndjson */
         return { status, response } as const;
       }
@@ -3847,6 +3911,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
+        const schema = schemas.GameChat;
         /* ndjson */
         return { status, response } as const;
       }
@@ -4726,6 +4791,19 @@ export class Lichess {
     const { response, status } = await this.requestor.post({ path, body });
     switch (status) {
       case 200: {
+        const schema = z.object({
+          time: z.int().min(0),
+          depth: z.int().min(0),
+          nodes: z.int().min(0),
+          pvs: z.array(
+            z.object({
+              depth: z.int().min(0),
+              cp: z.int().optional(),
+              mate: z.int().optional(),
+              moves: z.array(z.string()),
+            })
+          ),
+        });
         /* ndjson */
         return { status, response } as const;
       }
@@ -4980,6 +5058,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
+        const schema = schemas.OpeningExplorerPlayer;
         /* ndjson */
         return { status, response } as const;
       }

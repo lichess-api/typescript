@@ -398,7 +398,6 @@ function processResponseCaseContent(content: ResponseCaseContent) {
       return { caseBody } as const;
     }
     case "json": {
-      console.log(content.schema);
       const { zodSchema } = convertToZod(content.schema, "schemas.");
       const caseBody = `const schema = ${zodSchema};
         const json: unknown = await response.clone().json();
@@ -407,18 +406,20 @@ function processResponseCaseContent(content: ResponseCaseContent) {
       return { caseBody } as const;
     }
     case "ndjson": {
-      const caseBody = `/* ndjson */
-          return { status, response } as const;` as const;
+      const { zodSchema } = convertToZod(content.schema, "schemas.");
+      const caseBody = `const schema = ${zodSchema};
+        /* ndjson */
+        return { status, response } as const;` as const;
       return { caseBody } as const;
     }
     case "chess-pgn": {
       const caseBody = `/* chess-pgn */
-          return { status, response } as const;` as const;
+        return { status, response } as const;` as const;
       return { caseBody } as const;
     }
     case "mixed": {
       const caseBody = `/* mixed */
-          return { status, response } as const;` as const;
+        return { status, response } as const;` as const;
       return { caseBody } as const;
     }
   }
