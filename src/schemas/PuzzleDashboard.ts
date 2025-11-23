@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import PuzzlePerformance from "./PuzzlePerformance";
+import { PuzzlePerformance } from "./PuzzlePerformance";
 
 const PuzzleDashboard = z.object({
   days: z.int(),

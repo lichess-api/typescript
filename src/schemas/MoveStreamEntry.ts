@@ -1,12 +1,12 @@
 import * as z from "zod";
 
-import GameColor from "./GameColor";
-import GamePlayers from "./GamePlayers";
-import GameSource from "./GameSource";
-import GameStatus from "./GameStatus";
-import PerfType from "./PerfType";
-import Speed from "./Speed";
-import Variant from "./Variant";
+import { GameColor } from "./GameColor";
+import { GamePlayers } from "./GamePlayers";
+import { GameSource } from "./GameSource";
+import { GameStatus } from "./GameStatus";
+import { PerfType } from "./PerfType";
+import { Speed } from "./Speed";
+import { Variant } from "./Variant";
 
 const MoveStreamEntry = z.union([
   z.object({

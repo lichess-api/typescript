@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import GameColor from "./GameColor";
-import LightUser from "./LightUser";
+import { GameColor } from "./GameColor";
+import { LightUser } from "./LightUser";
 
 const TvFeedFeatured = z.object({
   t: z.literal("featured"),

@@ -1,12 +1,12 @@
 import * as z from "zod";
 
-import Flair from "./Flair";
-import Patron from "./Patron";
-import PatronColor from "./PatronColor";
-import Perfs from "./Perfs";
-import PlayTime from "./PlayTime";
-import Profile from "./Profile";
-import Title from "./Title";
+import { Flair } from "./Flair";
+import { Patron } from "./Patron";
+import { PatronColor } from "./PatronColor";
+import { Perfs } from "./Perfs";
+import { PlayTime } from "./PlayTime";
+import { Profile } from "./Profile";
+import { Title } from "./Title";
 
 const User = z.object({
   id: z.string(),

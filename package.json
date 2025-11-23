@@ -33,6 +33,7 @@
   "types": "./dist/index.d.mts",
   "exports": {
     ".": "./dist/index.mjs",
+    "./schemas": "./dist/schemas.mjs",
     "./package.json": "./package.json"
   }
 }

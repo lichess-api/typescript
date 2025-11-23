@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import GameStreamGame from "./GameStreamGame";
+import { GameStreamGame } from "./GameStreamGame";
 
 const GameStream = z.array(GameStreamGame);
 

@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import TopUser from "./TopUser";
+import { TopUser } from "./TopUser";
 
 const Leaderboard = z.object({ users: z.array(TopUser) });
 

@@ -1,11 +1,11 @@
 import * as z from "zod";
 
-import Flair from "./Flair";
-import GameColor from "./GameColor";
-import Patron from "./Patron";
-import PatronColor from "./PatronColor";
-import PerfType from "./PerfType";
-import Title from "./Title";
+import { Flair } from "./Flair";
+import { GameColor } from "./GameColor";
+import { Patron } from "./Patron";
+import { PatronColor } from "./PatronColor";
+import { PerfType } from "./PerfType";
+import { Title } from "./Title";
 
 const PuzzleAndGame = z.object({
   game: z.object({

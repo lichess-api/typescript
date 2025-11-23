@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import PerfTop10 from "./PerfTop10";
+import { PerfTop10 } from "./PerfTop10";
 
 const Top10s = z.object({
   bullet: PerfTop10,

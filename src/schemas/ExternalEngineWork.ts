@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import ExternalEngineWorkCommon from "./ExternalEngineWorkCommon";
+import { ExternalEngineWorkCommon } from "./ExternalEngineWorkCommon";
 
 const ExternalEngineWork = z.union([
   z.intersection(

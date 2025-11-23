@@ -1,8 +1,8 @@
 import * as z from "zod";
 
-import Count from "./Count";
-import User from "./User";
-import UserStreamer from "./UserStreamer";
+import { Count } from "./Count";
+import { User } from "./User";
+import { UserStreamer } from "./UserStreamer";
 
 const UserExtended = z.intersection(
   User,

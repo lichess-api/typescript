@@ -1,9 +1,9 @@
 import * as z from "zod";
 
-import Flair from "./Flair";
-import Patron from "./Patron";
-import PatronColor from "./PatronColor";
-import Title from "./Title";
+import { Flair } from "./Flair";
+import { Patron } from "./Patron";
+import { PatronColor } from "./PatronColor";
+import { Title } from "./Title";
 
 const ChallengeUser = z.object({
   id: z.string(),

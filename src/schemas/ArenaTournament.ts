@@ -1,12 +1,12 @@
 import * as z from "zod";
 
-import ArenaPerf from "./ArenaPerf";
-import ArenaPosition from "./ArenaPosition";
-import ArenaRatingObj from "./ArenaRatingObj";
-import ArenaStatus from "./ArenaStatus";
-import Clock from "./Clock";
-import LightUser from "./LightUser";
-import Variant from "./Variant";
+import { ArenaPerf } from "./ArenaPerf";
+import { ArenaPosition } from "./ArenaPosition";
+import { ArenaRatingObj } from "./ArenaRatingObj";
+import { ArenaStatus } from "./ArenaStatus";
+import { Clock } from "./Clock";
+import { LightUser } from "./LightUser";
+import { Variant } from "./Variant";
 
 const ArenaTournament = z.object({
   id: z.string(),

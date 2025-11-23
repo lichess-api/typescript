@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import PuzzleAndGame from "./PuzzleAndGame";
-import PuzzleGlicko from "./PuzzleGlicko";
+import { PuzzleAndGame } from "./PuzzleAndGame";
+import { PuzzleGlicko } from "./PuzzleGlicko";
 
 const PuzzleBatchSelect = z.object({
   puzzles: z.array(PuzzleAndGame).optional(),

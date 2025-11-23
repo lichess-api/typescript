@@ -1,13 +1,13 @@
 import * as z from "zod";
 
-import ArenaRatingObj from "./ArenaRatingObj";
-import ArenaSheet from "./ArenaSheet";
-import Clock from "./Clock";
-import Flair from "./Flair";
-import Patron from "./Patron";
-import PatronColor from "./PatronColor";
-import Title from "./Title";
-import Verdicts from "./Verdicts";
+import { ArenaRatingObj } from "./ArenaRatingObj";
+import { ArenaSheet } from "./ArenaSheet";
+import { Clock } from "./Clock";
+import { Flair } from "./Flair";
+import { Patron } from "./Patron";
+import { PatronColor } from "./PatronColor";
+import { Title } from "./Title";
+import { Verdicts } from "./Verdicts";
 
 const ArenaTournamentFull = z.object({
   id: z.string(),

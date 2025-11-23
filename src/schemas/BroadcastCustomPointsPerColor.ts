@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import BroadcastCustomPoints from "./BroadcastCustomPoints";
+import { BroadcastCustomPoints } from "./BroadcastCustomPoints";
 
 const BroadcastCustomPointsPerColor = z.object({
   win: BroadcastCustomPoints,

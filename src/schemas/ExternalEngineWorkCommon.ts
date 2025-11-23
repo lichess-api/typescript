@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import UciVariant from "./UciVariant";
+import { UciVariant } from "./UciVariant";
 
 const ExternalEngineWorkCommon = z.object({
   sessionId: z.string(),

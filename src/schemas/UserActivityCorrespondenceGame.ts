@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import GameColor from "./GameColor";
-import VariantKey from "./VariantKey";
+import { GameColor } from "./GameColor";
+import { VariantKey } from "./VariantKey";
 
 const UserActivityCorrespondenceGame = z.object({
   id: z.string(),

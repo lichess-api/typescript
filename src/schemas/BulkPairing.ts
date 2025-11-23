@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import Clock from "./Clock";
-import VariantKey from "./VariantKey";
+import { Clock } from "./Clock";
+import { VariantKey } from "./VariantKey";
 
 const BulkPairing = z.object({
   id: z.string(),

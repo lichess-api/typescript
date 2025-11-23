@@ -1,8 +1,8 @@
 import * as z from "zod";
 
-import GameColor from "./GameColor";
-import OpeningExplorerGamePlayer from "./OpeningExplorerGamePlayer";
-import Speed from "./Speed";
+import { GameColor } from "./GameColor";
+import { OpeningExplorerGamePlayer } from "./OpeningExplorerGamePlayer";
+import { Speed } from "./Speed";
 
 const OpeningExplorerLichessGame = z.object({
   id: z.string(),

@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import Perf from "./Perf";
-import PuzzleModePerf from "./PuzzleModePerf";
+import { Perf } from "./Perf";
+import { PuzzleModePerf } from "./PuzzleModePerf";
 
 const Perfs = z.object({
   chess960: Perf.optional(),

@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import BroadcastTiebreakExtendedCode from "./BroadcastTiebreakExtendedCode";
+import { BroadcastTiebreakExtendedCode } from "./BroadcastTiebreakExtendedCode";
 
 const BroadcastForm = z.object({
   name: z.string().min(3).max(80),

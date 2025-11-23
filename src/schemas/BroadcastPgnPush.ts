@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import BroadcastPgnPushTags from "./BroadcastPgnPushTags";
+import { BroadcastPgnPushTags } from "./BroadcastPgnPushTags";
 
 const BroadcastPgnPush = z.object({
   games: z.array(

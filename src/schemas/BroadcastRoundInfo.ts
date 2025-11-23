@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import BroadcastCustomScoring from "./BroadcastCustomScoring";
+import { BroadcastCustomScoring } from "./BroadcastCustomScoring";
 
 const BroadcastRoundInfo = z.object({
   id: z.string(),

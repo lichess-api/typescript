@@ -1,8 +1,8 @@
 import * as z from "zod";
 
-import Patron from "./Patron";
-import PatronColor from "./PatronColor";
-import Title from "./Title";
+import { Patron } from "./Patron";
+import { PatronColor } from "./PatronColor";
+import { Title } from "./Title";
 
 const TopUser = z.object({
   id: z.string(),

@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import PerfType from "./PerfType";
+import { PerfType } from "./PerfType";
 
 const ArenaRatingObj = z.object({
   perf: PerfType.optional(),

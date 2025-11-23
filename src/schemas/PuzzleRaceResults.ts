@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import Patron from "./Patron";
-import PatronColor from "./PatronColor";
+import { Patron } from "./Patron";
+import { PatronColor } from "./PatronColor";
 
 const PuzzleRaceResults = z.object({
   id: z.string(),

@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import Title from "./Title";
+import { Title } from "./Title";
 
 const GameEventPlayer = z.object({
   aiLevel: z.int().optional(),

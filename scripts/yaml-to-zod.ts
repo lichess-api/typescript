@@ -10,7 +10,7 @@ async function processFile(filePath: string) {
 
   uniqueRefs.sort();
   const refImports = uniqueRefs
-    .map((refName) => `import ${refName} from "./${refName}";` as const)
+    .map((refName) => `import { ${refName} } from "./${refName}";` as const)
     .join("\n");
   const spacedRefImports = refImports
     ? (`\n${refImports}\n` as const)

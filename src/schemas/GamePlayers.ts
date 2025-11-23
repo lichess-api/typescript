@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import GamePlayerUser from "./GamePlayerUser";
+import { GamePlayerUser } from "./GamePlayerUser";
 
 const GamePlayers = z.object({
   white: GamePlayerUser,

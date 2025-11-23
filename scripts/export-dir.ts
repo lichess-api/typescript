@@ -12,14 +12,11 @@ async function main() {
     throw new Error("Empty dir");
   }
 
-  console.log(tsFiles);
-
   const importLines = tsFiles.map(
-    (name) => `import ${name} from "./${name}";` as const
+    (name) => `export { ${name} } from "./${name}";` as const
   );
-  const exportLine = `export {\n  ${tsFiles.join(",\n  ")},\n};` as const;
 
-  const content = `${importLines.join("\n")}\n\n${exportLine}` as const;
+  const content = importLines.join("\n");
 
   const outFile = `${dir}/index.ts` as const;
 

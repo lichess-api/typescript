@@ -1,10 +1,10 @@
 import * as z from "zod";
 
-import Flair from "./Flair";
-import PuzzleModePerf from "./PuzzleModePerf";
-import UserActivityCorrespondenceGame from "./UserActivityCorrespondenceGame";
-import UserActivityFollowList from "./UserActivityFollowList";
-import UserActivityScore from "./UserActivityScore";
+import { Flair } from "./Flair";
+import { PuzzleModePerf } from "./PuzzleModePerf";
+import { UserActivityCorrespondenceGame } from "./UserActivityCorrespondenceGame";
+import { UserActivityFollowList } from "./UserActivityFollowList";
+import { UserActivityScore } from "./UserActivityScore";
 
 const UserActivity = z.object({
   interval: z.object({

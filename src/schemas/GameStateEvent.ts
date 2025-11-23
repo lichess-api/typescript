@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import GameColor from "./GameColor";
-import GameStatusName from "./GameStatusName";
+import { GameColor } from "./GameColor";
+import { GameStatusName } from "./GameStatusName";
 
 const GameStateEvent = z.object({
   type: z.literal("gameState"),

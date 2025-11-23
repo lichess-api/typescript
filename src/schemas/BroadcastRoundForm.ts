@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import BroadcastCustomPoints from "./BroadcastCustomPoints";
-import BroadcastRoundFormName from "./BroadcastRoundFormName";
+import { BroadcastCustomPoints } from "./BroadcastCustomPoints";
+import { BroadcastRoundFormName } from "./BroadcastRoundFormName";
 
 const BroadcastRoundForm = z.intersection(
   z.union([

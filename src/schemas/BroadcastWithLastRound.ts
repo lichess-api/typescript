@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import BroadcastRoundInfo from "./BroadcastRoundInfo";
-import BroadcastTour from "./BroadcastTour";
+import { BroadcastRoundInfo } from "./BroadcastRoundInfo";
+import { BroadcastTour } from "./BroadcastTour";
 
 const BroadcastWithLastRound = z.object({
   group: z.string().optional(),

@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import LightUser from "./LightUser";
+import { LightUser } from "./LightUser";
 
 const PerfStat = z.object({
   user: z.object({ name: z.string() }),

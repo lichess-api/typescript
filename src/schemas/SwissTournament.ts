@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-import SwissStatus from "./SwissStatus";
-import Verdicts from "./Verdicts";
+import { SwissStatus } from "./SwissStatus";
+import { Verdicts } from "./Verdicts";
 
 const SwissTournament = z.object({
   id: z.string(),

@@ -1,12 +1,12 @@
 import * as z from "zod";
 
-import ChallengeColor from "./ChallengeColor";
-import ChallengeStatus from "./ChallengeStatus";
-import ChallengeUser from "./ChallengeUser";
-import GameColor from "./GameColor";
-import Speed from "./Speed";
-import TimeControl from "./TimeControl";
-import Variant from "./Variant";
+import { ChallengeColor } from "./ChallengeColor";
+import { ChallengeStatus } from "./ChallengeStatus";
+import { ChallengeUser } from "./ChallengeUser";
+import { GameColor } from "./GameColor";
+import { Speed } from "./Speed";
+import { TimeControl } from "./TimeControl";
+import { Variant } from "./Variant";
 
 const ChallengeJson = z.object({
   id: z.string(),
