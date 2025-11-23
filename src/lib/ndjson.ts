@@ -1,9 +1,12 @@
 import * as z from "zod";
 
-async function* ndjsonStream<T>(
-  response: Response,
-  schema: z.ZodType<T>
-): AsyncGenerator<T, void, undefined> {
+async function* ndjsonStream<T>({
+  response,
+  schema,
+}: {
+  response: Response;
+  schema: z.ZodType<T>;
+}): AsyncGenerator<T, void, undefined> {
   if (!response.body) {
     throw new Error("Response has no body");
   }

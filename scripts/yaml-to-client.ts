@@ -408,8 +408,8 @@ function processResponseCaseContent(content: ResponseCaseContent) {
     case "ndjson": {
       const { zodSchema } = convertToZod(content.schema, "schemas.");
       const caseBody = `const schema = ${zodSchema};
-        /* ndjson */
-        return { status, response } as const;` as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;` as const;
       return { caseBody } as const;
     }
     case "chess-pgn": {
@@ -846,6 +846,8 @@ async function processSchema(schema: OpenApiSchema): Promise<void> {
   const clientCodeTs = `import * as z from "zod";
 
 import * as schemas from "~/schemas";
+
+import { ndjsonStream } from "~/lib/ndjson";
 
 import { Requestor } from "./requestor";
 

@@ -2,6 +2,8 @@ import * as z from "zod";
 
 import * as schemas from "~/schemas";
 
+import { ndjsonStream } from "~/lib/ndjson";
+
 import { Requestor } from "./requestor";
 
 export const BASE_URL = "https://lichess.org";
@@ -298,8 +300,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.PuzzleActivity;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -764,8 +766,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.GameStream;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -783,8 +785,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.GameStream;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -871,8 +873,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.MoveStream;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       case 429: {
         const schema = z.object({ error: z.string().optional() });
@@ -1004,8 +1006,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.TvFeed;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -1022,8 +1024,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.TvFeed;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -1631,8 +1633,8 @@ export class Lichess {
           patronColor: schemas.PatronColor.optional(),
           sheet: schemas.ArenaSheet.optional(),
         });
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -1689,8 +1691,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournament;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -1713,8 +1715,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournamentPlayed;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -2196,8 +2198,8 @@ export class Lichess {
           title: schemas.Title.optional(),
           performance: z.int(),
         });
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -2227,8 +2229,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.SwissTournament;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -2419,8 +2421,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.StudyMetadata;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -2457,8 +2459,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastWithRounds;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -2857,8 +2859,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.BroadcastMyRound;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -3023,8 +3025,8 @@ export class Lichess {
           title: schemas.Title.optional(),
           patronColor: schemas.PatronColor.optional(),
         });
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -3054,8 +3056,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.ArenaTournament;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -3362,8 +3364,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.UserExtended;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -3462,8 +3464,8 @@ export class Lichess {
           schemas.ChallengeCanceledEvent,
           schemas.ChallengeDeclinedEvent,
         ]);
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -3522,8 +3524,8 @@ export class Lichess {
           schemas.ChatLineEvent,
           schemas.OpponentGoneEvent,
         ]);
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
@@ -3580,8 +3582,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.GameChat;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -3809,8 +3811,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.User;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -3857,8 +3859,8 @@ export class Lichess {
           schemas.ChatLineEvent,
           schemas.OpponentGoneEvent,
         ]);
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       case 404: {
         const schema = schemas.NotFound;
@@ -3912,8 +3914,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.GameChat;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -4804,8 +4806,8 @@ export class Lichess {
             })
           ),
         });
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -5059,8 +5061,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = schemas.OpeningExplorerPlayer;
-        /* ndjson */
-        return { status, response } as const;
+        const stream = ndjsonStream({ response, schema });
+        return { status, stream } as const;
       }
       default: {
         throw new Error("Unexpected status code");
