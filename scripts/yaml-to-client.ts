@@ -263,7 +263,9 @@ const OperationQueryParameterSchema = OperationParameterBase.extend({
   in: z.literal("query"),
   required: z.boolean().optional(),
   schema: QueryParamSchemaSchema,
-}).strict();
+})
+  .strict()
+  .transform((s) => ({ ...s, __type: "query" as const }));
 
 type OperationQueryParameter = z.infer<typeof OperationQueryParameterSchema>;
 
@@ -279,13 +281,20 @@ const OperationPathParameterSchema = OperationParameterBase.extend({
   in: z.literal("path"),
   required: z.literal(true),
   schema: PathParamSchemaSchema,
-}).strict();
+})
+  .strict()
+  .transform((s) => ({ ...s, __type: "path" as const }));
 
 type OperationPathParameter = z.infer<typeof OperationPathParameterSchema>;
+
+const OperationParameterRefSchema = z
+  .object({ $ref: z.string() })
+  .transform((s) => ({ ...s, __type: "$ref" as const }));
 
 const OperationParameter = z.union([
   OperationQueryParameterSchema,
   OperationPathParameterSchema,
+  OperationParameterRefSchema,
 ]);
 const OperationParameters = z.array(OperationParameter).optional();
 type OperationParameters = z.infer<typeof OperationParameters>;
@@ -513,8 +522,8 @@ function processParams(params: OperationParameters) {
     } as const;
   }
 
-  const queryParams = params.filter((param) => param.in === "query");
-  const pathParams = params.filter((param) => param.in === "path");
+  const queryParams = params.filter((param) => param.__type === "query");
+  const pathParams = params.filter((param) => param.__type === "path");
   const hasQueryParams = queryParams.length > 0;
   const hasPathParams = pathParams.length > 0;
   const hasQueryAndPathParams = hasQueryParams && hasPathParams;

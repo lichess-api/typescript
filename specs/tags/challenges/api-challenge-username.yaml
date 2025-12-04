@@ -3,7 +3,7 @@ post:
   summary: Create a challenge
   description: |
     Challenge someone to play. The targeted player can choose to accept or decline.
-    If the challenge is accepted, you will be notified on the [event stream](#operation/apiStreamEvent)
+    If the challenge is accepted, you will be notified on the [event stream](#tag/board/get/apiboardgamestreamgameid)
     that a new game has started. The game ID will be the same as the challenge ID.
     Challenges for realtime games (not correspondence) expire after 20s if not accepted.
     To prevent that, use the `keepAliveStream` flag described below.
@@ -79,7 +79,7 @@ post:
                 keepAliveStream:
                   type: boolean
                   description: |
-                    If set, the response is streamed as [ndjson](#section/Introduction/Streaming-with-ND-JSON).
+                    If set, the response is streamed as [ndjson](#description/streaming-with-nd-json).
                     The challenge is kept alive until the connection is closed by the client.
                     When the challenge is accepted, declined or canceled, a message of the form `{"done":"accepted"}` is sent,
                     then the connection is closed by the server.

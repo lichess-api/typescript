@@ -6,6 +6,7 @@ const Perf = z.object({
   rd: z.int(),
   prog: z.int(),
   prov: z.boolean().optional(),
+  rank: z.int().optional(),
 });
 
 type Perf = z.infer<typeof Perf>;

@@ -95,9 +95,19 @@ export class Lichess {
   /**
    * Get user public data
    */
-  async apiUser(params: { username: string } & { trophies?: boolean }) {
+  async apiUser(
+    params: { username: string } & {
+      trophies?: boolean;
+      profile?: boolean;
+      rank?: boolean;
+    }
+  ) {
     const path = `/api/user/${params.username}` as const;
-    const query = { trophies: params.trophies } as const;
+    const query = {
+      trophies: params.trophies,
+      profile: params.profile,
+      rank: params.rank,
+    } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
@@ -420,10 +430,20 @@ export class Lichess {
   /**
    * Get users by ID
    */
-  async apiUsers(params: { body: string }) {
+  async apiUsers(
+    params: {
+      profile?: boolean;
+      rank?: boolean;
+    } & { body: string }
+  ) {
     const path = "/api/users" as const;
+    const query = { profile: params.profile, rank: params.rank } as const;
     const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
+    const { response, status } = await this.requestor.post({
+      path,
+      query,
+      body,
+    });
     switch (status) {
       case 200: {
         const schema = z.array(schemas.User);
@@ -648,7 +668,7 @@ export class Lichess {
       max?: number;
       vs?: string;
       rated?: boolean;
-      perfType?: schemas.PerfType | null;
+      perfType?: schemas.PerfType;
       color?: string;
       analysed?: boolean;
       moves?: boolean;
@@ -2213,7 +2233,7 @@ export class Lichess {
   async apiTeamSwiss(
     params: { teamId: string } & {
       max?: number;
-      status?: schemas.SwissStatus | null;
+      status?: schemas.SwissStatus;
       createdBy?: string;
       name?: string;
     }
@@ -3040,7 +3060,7 @@ export class Lichess {
   async apiTeamArena(
     params: { teamId: string } & {
       max?: number;
-      status?: schemas.ArenaStatusName | null;
+      status?: schemas.ArenaStatusName;
       createdBy?: string;
       name?: string;
     }
@@ -3290,12 +3310,14 @@ export class Lichess {
    */
   async apiPlayerAutocomplete(params: {
     term: string;
+    exists?: boolean;
     object?: boolean;
     names?: boolean;
     friend?: boolean;
     team?: string;
     tour?: string;
     swiss?: string;
+    teacher?: boolean;
   }) {
     const path = "/api/player/autocomplete" as const;
     const query = params;
