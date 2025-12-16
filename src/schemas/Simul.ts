@@ -12,7 +12,7 @@ const Simul = z.object({
       provisional: z.boolean().optional(),
       gameId: z.string().optional(),
       online: z.boolean().optional(),
-    })
+    }),
   ),
   name: z.string(),
   fullName: z.string(),
@@ -21,7 +21,7 @@ const Simul = z.object({
       key: VariantKey.optional(),
       icon: z.string().optional(),
       name: z.string().optional(),
-    })
+    }),
   ),
   isCreated: z.boolean(),
   isFinished: z.boolean(),

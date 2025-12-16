@@ -14,7 +14,7 @@ const CloudEval = z.object({
         mate: z.int(),
         moves: z.string(),
       }),
-    ])
+    ]),
   ),
 });
 

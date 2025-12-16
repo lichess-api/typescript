@@ -15,7 +15,7 @@ const BroadcastRoundGame = z.object({
         fideId: z.int().optional(),
         fed: z.string().optional(),
         clock: z.int().optional(),
-      })
+      }),
     )
     .optional(),
   lastMove: z.string().optional(),

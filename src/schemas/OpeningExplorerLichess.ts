@@ -18,14 +18,14 @@ const OpeningExplorerLichess = z.object({
       black: z.int(),
       game: z.union([OpeningExplorerLichessGame, z.null()]),
       opening: z.union([OpeningExplorerOpening, z.null()]),
-    })
+    }),
   ),
   topGames: z.array(
-    z.intersection(z.object({ uci: z.string() }), OpeningExplorerLichessGame)
+    z.intersection(z.object({ uci: z.string() }), OpeningExplorerLichessGame),
   ),
   recentGames: z
     .array(
-      z.intersection(z.object({ uci: z.string() }), OpeningExplorerLichessGame)
+      z.intersection(z.object({ uci: z.string() }), OpeningExplorerLichessGame),
     )
     .optional(),
   history: z
@@ -35,7 +35,7 @@ const OpeningExplorerLichess = z.object({
         white: z.int(),
         draws: z.int(),
         black: z.int(),
-      })
+      }),
     )
     .optional(),
 });

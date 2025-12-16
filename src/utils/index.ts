@@ -1,6 +1,6 @@
 export function addQueryParams(
   url: URL,
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
 ): void {
   Object.entries(params).forEach(([key, value]) => {
     if (value === undefined || value === null) return;

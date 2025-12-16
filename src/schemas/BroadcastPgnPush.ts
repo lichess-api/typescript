@@ -8,7 +8,7 @@ const BroadcastPgnPush = z.object({
       tags: BroadcastPgnPushTags,
       moves: z.int().optional(),
       error: z.string().optional(),
-    })
+    }),
   ),
 });
 

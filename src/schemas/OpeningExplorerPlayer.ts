@@ -20,10 +20,10 @@ const OpeningExplorerPlayer = z.object({
       black: z.int(),
       game: z.union([OpeningExplorerPlayerGame, z.null()]),
       opening: z.union([OpeningExplorerOpening, z.null()]),
-    })
+    }),
   ),
   recentGames: z.array(
-    z.intersection(z.object({ uci: z.string() }), OpeningExplorerPlayerGame)
+    z.intersection(z.object({ uci: z.string() }), OpeningExplorerPlayerGame),
   ),
 });
 

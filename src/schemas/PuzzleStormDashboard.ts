@@ -11,7 +11,7 @@ const PuzzleStormDashboard = z.object({
       runs: z.int(),
       score: z.int(),
       time: z.int(),
-    })
+    }),
   ),
   high: z.object({
     allTime: z.int(),

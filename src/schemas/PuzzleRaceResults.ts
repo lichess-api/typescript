@@ -14,7 +14,7 @@ const PuzzleRaceResults = z.object({
       flair: z.string().optional(),
       patron: Patron.optional(),
       patronColor: PatronColor.optional(),
-    })
+    }),
   ),
   puzzles: z.array(
     z.object({
@@ -22,7 +22,7 @@ const PuzzleRaceResults = z.object({
       fen: z.string(),
       line: z.string(),
       rating: z.int(),
-    })
+    }),
   ),
   finishesAt: z.int(),
   startsAt: z.int(),

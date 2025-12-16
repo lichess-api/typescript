@@ -39,7 +39,7 @@ const BroadcastRoundForm = z.intersection(
     "customScoring.black.win": BroadcastCustomPoints.optional(),
     "customScoring.black.draw": BroadcastCustomPoints.optional(),
     period: z.int().min(2).max(60).optional(),
-  })
+  }),
 );
 
 type BroadcastRoundForm = z.infer<typeof BroadcastRoundForm>;

@@ -298,7 +298,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
     case "additionalProperties": {
       const { zodSchema: valueSchemaStr, refs } = convertToZod(
         schema.additionalProperties,
-        prefix
+        prefix,
       );
       return {
         zodSchema: `z.record(z.string(), ${valueSchemaStr})`,
@@ -338,7 +338,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       }
       const { zodSchema: itemSchema, refs: itemRefs } = convertToZod(
         items,
-        prefix
+        prefix,
       );
       let zodSchemaStr: string;
       if (
@@ -381,7 +381,7 @@ function assertNever(schema: never): never {
 
 function convertToZod(
   schema: unknown | SchemaUnparsed,
-  prefix: string = ""
+  prefix: string = "",
 ): ConvertResult {
   return convertToZod_(SchemaSchema.parse(schema), prefix);
 }

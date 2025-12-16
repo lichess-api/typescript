@@ -37,7 +37,7 @@ const Timeline = z.object({
       TimelineEntryPlanRenew,
       TimelineEntryUblogPostLike,
       TimelineEntryStreamStart,
-    ])
+    ]),
   ),
   users: z.record(
     z.string(),
@@ -48,7 +48,7 @@ const Timeline = z.object({
       flair: Flair.optional(),
       patron: Patron.optional(),
       patronColor: PatronColor.optional(),
-    })
+    }),
   ),
 });
 

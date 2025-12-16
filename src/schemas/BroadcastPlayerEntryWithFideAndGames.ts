@@ -19,7 +19,7 @@ const BroadcastPlayerEntryWithFideAndGames = z.intersection(
       })
       .optional(),
     games: z.array(BroadcastGameEntry).optional(),
-  })
+  }),
 );
 
 type BroadcastPlayerEntryWithFideAndGames = z.infer<

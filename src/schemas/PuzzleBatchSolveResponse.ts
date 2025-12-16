@@ -12,7 +12,7 @@ const PuzzleBatchSolveResponse = z.object({
         id: z.string().optional(),
         win: z.boolean().optional(),
         ratingDiff: z.int().optional(),
-      })
+      }),
     )
     .optional(),
 });

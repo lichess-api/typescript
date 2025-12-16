@@ -13,7 +13,7 @@ async function main() {
   }
 
   const importLines = tsFiles.map(
-    (name) => `export { ${name} } from "./${name}";` as const
+    (name) => `export { ${name} } from "./${name}";` as const,
   );
 
   const content = importLines.join("\n");

@@ -10,7 +10,7 @@ const PuzzleDashboard = z.object({
     z.object({
       results: PuzzlePerformance,
       theme: z.string(),
-    })
+    }),
   ),
 });
 
