@@ -63,35 +63,35 @@ export class Requestor<T extends string> {
   }
 
   async get<TQueryParams extends QueryParams>(
-    params: RequestHandlerParams<TQueryParams, never>
+    params: RequestHandlerParams<TQueryParams, never>,
   ) {
     const request = this.buildRequest({ method: "GET", ...params });
     return this.makeAndHandleRequest(request);
   }
 
   async post<TQueryParams extends QueryParams, TBody>(
-    params: RequestHandlerParams<TQueryParams, TBody>
+    params: RequestHandlerParams<TQueryParams, TBody>,
   ) {
     const request = this.buildRequest({ method: "POST", ...params });
     return this.makeAndHandleRequest(request);
   }
 
   async head<TQueryParams extends QueryParams>(
-    params: RequestHandlerParams<TQueryParams, never>
+    params: RequestHandlerParams<TQueryParams, never>,
   ) {
     const request = this.buildRequest({ method: "HEAD", ...params });
     return this.makeAndHandleRequest(request);
   }
 
   async delete<TQueryParams extends QueryParams>(
-    params: RequestHandlerParams<TQueryParams, never>
+    params: RequestHandlerParams<TQueryParams, never>,
   ) {
     const request = this.buildRequest({ method: "DELETE", ...params });
     return this.makeAndHandleRequest(request);
   }
 
   async put<TQueryParams extends QueryParams, TBody>(
-    params: RequestHandlerParams<TQueryParams, TBody>
+    params: RequestHandlerParams<TQueryParams, TBody>,
   ) {
     const request = this.buildRequest({ method: "PUT", ...params });
     return this.makeAndHandleRequest(request);

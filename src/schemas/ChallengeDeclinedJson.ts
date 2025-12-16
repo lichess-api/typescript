@@ -19,7 +19,7 @@ const ChallengeDeclinedJson = z.intersection(
       "nobot",
       "onlybot",
     ]),
-  })
+  }),
 );
 
 type ChallengeDeclinedJson = z.infer<typeof ChallengeDeclinedJson>;

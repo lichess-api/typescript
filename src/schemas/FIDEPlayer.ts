@@ -1,5 +1,6 @@
 import * as z from "zod";
 
+import { FIDEPlayerPhoto } from "./FIDEPlayerPhoto";
 import { Title } from "./Title";
 
 const FIDEPlayer = z.object({
@@ -12,6 +13,7 @@ const FIDEPlayer = z.object({
   standard: z.int().optional(),
   rapid: z.int().optional(),
   blitz: z.int().optional(),
+  photo: FIDEPlayerPhoto.optional(),
 });
 
 type FIDEPlayer = z.infer<typeof FIDEPlayer>;

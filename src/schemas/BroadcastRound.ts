@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 import { BroadcastGroup } from "./BroadcastGroup";
+import { BroadcastPhotos } from "./BroadcastPhotos";
 import { BroadcastRoundGame } from "./BroadcastRoundGame";
 import { BroadcastRoundInfo } from "./BroadcastRoundInfo";
 import { BroadcastRoundStudyInfo } from "./BroadcastRoundStudyInfo";
@@ -13,6 +14,7 @@ const BroadcastRound = z.object({
   games: z.array(BroadcastRoundGame),
   group: BroadcastGroup.optional(),
   isSubscribed: z.boolean().optional(),
+  photos: BroadcastPhotos,
 });
 
 type BroadcastRound = z.infer<typeof BroadcastRound>;

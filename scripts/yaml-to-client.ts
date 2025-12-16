@@ -221,7 +221,7 @@ const SchemaSchemaNullableRefToPrimitive = z
   .brand("notverified:SchemaSchemaNullableRefToPrimitive");
 
 const SchemaSchemaRefToPrimitive = SchemaSchemaRef.brand(
-  "notverified:SchemaSchemaRefToPrimitive"
+  "notverified:SchemaSchemaRefToPrimitive",
 ).transform((s) => ({ ...s, __schema: "notverified:reftoprimitive" as const }));
 
 const SchemaSchemaBooleanLike = z
@@ -362,7 +362,7 @@ const TagSchemaSchemaHead = BaseTagSchemaOperation.extend({})
 const TagSchemaSchemaDelete = BaseTagSchemaOperation.extend({})
   .strict()
   .transform(
-    (s) => ({ ...s, __id: "method:delete", __method: "delete" }) as const
+    (s) => ({ ...s, __id: "method:delete", __method: "delete" }) as const,
   );
 
 const TagSchemaSchemaPut = BaseTagSchemaOperation.extend({
@@ -543,7 +543,7 @@ function processParams(params: OperationParameters) {
 }
 
 function schemaToTypescriptTypes(
-  schema: Schema | PathParamSchema | QueryParamSchema
+  schema: Schema | PathParamSchema | QueryParamSchema,
 ) {
   switch (schema.__schema) {
     case "$ref":
@@ -597,10 +597,10 @@ function schemaToTypescriptTypes(
     }
     case "allOf": {
       const leftPart: string = schemaToTypescriptTypes(
-        SchemaSchema.parse(schema.allOf[0])
+        SchemaSchema.parse(schema.allOf[0]),
       );
       const rightPart: string = schemaToTypescriptTypes(
-        SchemaSchema.parse(schema.allOf[1])
+        SchemaSchema.parse(schema.allOf[1]),
       );
       return `${leftPart} & ${rightPart}` as const;
     }
@@ -685,7 +685,7 @@ function toJsdoc(summary: string) {
 function processOperation(
   operation: Operation,
   rawApiPath: string,
-  options?: { sharedPathParams?: OperationPathParameter[]; baseUrl?: string }
+  options?: { sharedPathParams?: OperationPathParameter[]; baseUrl?: string },
 ) {
   if (operation.__id === "__parameters") {
     const parameters = operation.parameters;
@@ -727,7 +727,7 @@ function processOperation(
     queryParams,
     pathParams,
   } = processParams(
-    (operation.parameters ?? []).concat(options?.sharedPathParams ?? [])
+    (operation.parameters ?? []).concat(options?.sharedPathParams ?? []),
   );
 
   const pathAssignment =
@@ -754,7 +754,7 @@ function processOperation(
               });
 
               return `const query = { ${extractedQueryParams.join(
-                ""
+                "",
               )} } as const;\n` as const;
             })(queryParams)
           : ("" as const);

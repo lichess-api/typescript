@@ -10,7 +10,7 @@ const BulkPairing = z.object({
       id: z.string().optional(),
       black: z.string().optional(),
       white: z.string().optional(),
-    })
+    }),
   ),
   variant: VariantKey,
   clock: Clock,

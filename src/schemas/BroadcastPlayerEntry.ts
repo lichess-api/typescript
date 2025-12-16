@@ -12,7 +12,7 @@ const BroadcastPlayerEntry = z.intersection(
     performance: z.int().optional(),
     tiebreaks: z.array(BroadcastPlayerTiebreak).max(5).optional(),
     rank: z.int().min(1).optional(),
-  })
+  }),
 );
 
 type BroadcastPlayerEntry = z.infer<typeof BroadcastPlayerEntry>;

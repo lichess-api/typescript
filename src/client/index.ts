@@ -42,7 +42,7 @@ export class Lichess {
             streaming: z.boolean().optional(),
             patron: schemas.Patron.optional(),
             patronColor: schemas.PatronColor.optional(),
-          })
+          }),
         );
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
@@ -100,7 +100,7 @@ export class Lichess {
       trophies?: boolean;
       profile?: boolean;
       rank?: boolean;
-    }
+    },
   ) {
     const path = `/api/user/${params.username}` as const;
     const query = {
@@ -249,7 +249,7 @@ export class Lichess {
       difficulty?: string;
       nb?: number;
       color?: string;
-    }
+    },
   ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
     const query = {
@@ -277,7 +277,7 @@ export class Lichess {
   async apiPuzzleBatchSolve(
     params: { angle: string } & { nb?: number } & {
       body: schemas.PuzzleBatchSolveRequest;
-    }
+    },
   ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
     const query = { nb: params.nb } as const;
@@ -434,7 +434,7 @@ export class Lichess {
     params: {
       profile?: boolean;
       rank?: boolean;
-    } & { body: string }
+    } & { body: string },
   ) {
     const path = "/api/users" as const;
     const query = { profile: params.profile, rank: params.rank } as const;
@@ -591,7 +591,7 @@ export class Lichess {
       division?: boolean;
       literate?: boolean;
       withBookmarked?: boolean;
-    }
+    },
   ) {
     const path = `/game/export/${params.gameId}` as const;
     const query = {
@@ -632,7 +632,7 @@ export class Lichess {
       opening?: boolean;
       division?: boolean;
       literate?: boolean;
-    }
+    },
   ) {
     const path = `/api/user/${params.username}/current-game` as const;
     const query = {
@@ -685,7 +685,7 @@ export class Lichess {
       lastFen?: boolean;
       withBookmarked?: boolean;
       sort?: string;
-    }
+    },
   ) {
     const path = `/api/games/user/${params.username}` as const;
     const query = {
@@ -738,7 +738,7 @@ export class Lichess {
       opening?: boolean;
       division?: boolean;
       literate?: boolean;
-    } & { body: string }
+    } & { body: string },
   ) {
     const path = "/api/games/export/_ids" as const;
     const query = {
@@ -773,7 +773,7 @@ export class Lichess {
    * Stream games of users
    */
   async gamesByUsers(
-    params: { withCurrentGames?: boolean } & { body: string }
+    params: { withCurrentGames?: boolean } & { body: string },
   ) {
     const path = "/api/stream/games-by-users" as const;
     const query = { withCurrentGames: params.withCurrentGames } as const;
@@ -871,7 +871,7 @@ export class Lichess {
               swissId: z.string().optional(),
               winner: schemas.GameColor.optional(),
               ratingDiff: z.int().optional(),
-            })
+            }),
           ),
         });
         const json: unknown = await response.clone().json();
@@ -1064,7 +1064,7 @@ export class Lichess {
       tags?: boolean;
       clocks?: boolean;
       opening?: boolean;
-    }
+    },
   ) {
     const path = `/api/tv/${params.channel}` as const;
     const query = {
@@ -1446,7 +1446,7 @@ export class Lichess {
           | 730
           | 1095;
       };
-    }
+    },
   ) {
     const path = `/api/tournament/${params.id}` as const;
     const body = params.body;
@@ -1480,7 +1480,7 @@ export class Lichess {
         team?: string;
         pairMeAsap?: boolean;
       };
-    }
+    },
   ) {
     const path = `/api/tournament/${params.id}/join` as const;
     const body = params.body;
@@ -1563,7 +1563,7 @@ export class Lichess {
         teams: string;
         nbLeaders: number;
       };
-    }
+    },
   ) {
     const path = `/api/tournament/team-battle/${params.id}` as const;
     const body = params.body;
@@ -1601,7 +1601,7 @@ export class Lichess {
       accuracy?: boolean;
       opening?: boolean;
       division?: boolean;
-    }
+    },
   ) {
     const path = `/api/tournament/${params.id}/games` as const;
     const query = {
@@ -1634,7 +1634,7 @@ export class Lichess {
     params: { id: string } & {
       nb?: number;
       sheet?: boolean;
-    }
+    },
   ) {
     const path = `/api/tournament/${params.id}/results` as const;
     const query = { nb: params.nb, sheet: params.sheet } as const;
@@ -1681,9 +1681,9 @@ export class Lichess {
                 z.object({
                   user: schemas.LightUser,
                   score: z.int().optional(),
-                })
+                }),
               ),
-            })
+            }),
           ),
         });
         const json: unknown = await response.clone().json();
@@ -1703,7 +1703,7 @@ export class Lichess {
     params: { username: string } & {
       nb?: number;
       status?: 10 | 20 | 30;
-    }
+    },
   ) {
     const path = `/api/user/${params.username}/tournament/created` as const;
     const query = { nb: params.nb, status: params.status } as const;
@@ -1727,7 +1727,7 @@ export class Lichess {
     params: { username: string } & {
       nb?: number;
       performance?: boolean;
-    }
+    },
   ) {
     const path = `/api/user/${params.username}/tournament/played` as const;
     const query = { nb: params.nb, performance: params.performance } as const;
@@ -1855,7 +1855,7 @@ export class Lichess {
         "conditions.playYourGames"?: boolean;
         "conditions.allowList"?: string;
       };
-    }
+    },
   ) {
     const path = `/api/swiss/new/${params.teamId}` as const;
     const body = params.body;
@@ -2011,7 +2011,7 @@ export class Lichess {
         "conditions.playYourGames"?: boolean;
         "conditions.allowList"?: string;
       };
-    }
+    },
   ) {
     const path = `/api/swiss/${params.id}/edit` as const;
     const body = params.body;
@@ -2045,7 +2045,7 @@ export class Lichess {
    * Manually schedule the next round
    */
   async apiSwissScheduleNextRound(
-    params: { id: string } & { body: { date?: number } }
+    params: { id: string } & { body: { date?: number } },
   ) {
     const path = `/api/swiss/${params.id}/schedule-next-round` as const;
     const body = params.body;
@@ -2173,7 +2173,7 @@ export class Lichess {
       accuracy?: boolean;
       opening?: boolean;
       division?: boolean;
-    }
+    },
   ) {
     const path = `/api/swiss/${params.id}/games` as const;
     const query = {
@@ -2236,7 +2236,7 @@ export class Lichess {
       status?: schemas.SwissStatus;
       createdBy?: string;
       name?: string;
-    }
+    },
   ) {
     const path = `/api/team/${params.teamId}/swiss` as const;
     const query = {
@@ -2270,7 +2270,7 @@ export class Lichess {
       comments?: boolean;
       variations?: boolean;
       orientation?: boolean;
-    }
+    },
   ) {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}.pgn` as const;
@@ -2301,7 +2301,7 @@ export class Lichess {
       comments?: boolean;
       variations?: boolean;
       orientation?: boolean;
-    }
+    },
   ) {
     const path = `/api/study/${params.studyId}.pgn` as const;
     const query = {
@@ -2349,7 +2349,7 @@ export class Lichess {
         orientation?: string;
         variant?: schemas.VariantKey;
       };
-    }
+    },
   ) {
     const path = `/api/study/${params.studyId}/import-pgn` as const;
     const body = params.body;
@@ -2380,7 +2380,7 @@ export class Lichess {
     params: {
       studyId: string;
       chapterId: string;
-    } & { body: { pgn: string } }
+    } & { body: { pgn: string } },
   ) {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}/tags` as const;
@@ -2411,7 +2411,7 @@ export class Lichess {
       comments?: boolean;
       variations?: boolean;
       orientation?: boolean;
-    }
+    },
   ) {
     const path = `/study/by/${params.username}/export.pgn` as const;
     const query = {
@@ -2515,7 +2515,7 @@ export class Lichess {
     params: { username: string } & {
       page?: number;
       html?: boolean;
-    }
+    },
   ) {
     const path = `/api/broadcast/by/${params.username}` as const;
     const query = { page: params.page, html: params.html } as const;
@@ -2632,7 +2632,7 @@ export class Lichess {
   }
 
   /**
-   * Get a player from a broadcast
+   * Get a player of a broadcast
    */
   async broadcastPlayerGet(params: {
     broadcastTournamentId: string;
@@ -2664,7 +2664,7 @@ export class Lichess {
    * Update your broadcast tournament
    */
   async broadcastTourUpdate(
-    params: { broadcastTournamentId: string } & { body: schemas.BroadcastForm }
+    params: { broadcastTournamentId: string } & { body: schemas.BroadcastForm },
   ) {
     const path = `/broadcast/${params.broadcastTournamentId}/edit` as const;
     const body = params.body;
@@ -2694,7 +2694,7 @@ export class Lichess {
   async broadcastRoundCreate(
     params: { broadcastTournamentId: string } & {
       body: schemas.BroadcastRoundForm;
-    }
+    },
   ) {
     const path = `/broadcast/${params.broadcastTournamentId}/new` as const;
     const body = params.body;
@@ -2746,7 +2746,7 @@ export class Lichess {
    * Update a broadcast round
    */
   async broadcastRoundUpdate(
-    params: { broadcastRoundId: string } & { body: schemas.BroadcastRoundForm }
+    params: { broadcastRoundId: string } & { body: schemas.BroadcastRoundForm },
   ) {
     const path = `/broadcast/round/${params.broadcastRoundId}/edit` as const;
     const body = params.body;
@@ -3063,7 +3063,7 @@ export class Lichess {
       status?: schemas.ArenaStatusName;
       createdBy?: string;
       name?: string;
-    }
+    },
   ) {
     const path = `/api/team/${params.teamId}/arena` as const;
     const query = {
@@ -3094,7 +3094,7 @@ export class Lichess {
         message?: string;
         password?: string;
       };
-    }
+    },
   ) {
     const path = `/team/${params.teamId}/join` as const;
     const body = params.body;
@@ -3214,7 +3214,7 @@ export class Lichess {
    * Message all members
    */
   async teamIdPmAll(
-    params: { teamId: string } & { body: { message?: string } }
+    params: { teamId: string } & { body: { message?: string } },
   ) {
     const path = `/team/${params.teamId}/pm-all` as const;
     const body = params.body;
@@ -3252,7 +3252,7 @@ export class Lichess {
             z.object({
               stream: z
                 .object({
-                  service: z.literal(["twitch", "youTube"]).optional(),
+                  service: z.literal(["twitch", "youtube"]).optional(),
                   status: z.string().optional(),
                   lang: z.string().optional(),
                 })
@@ -3263,12 +3263,12 @@ export class Lichess {
                   headline: z.string().optional(),
                   description: z.string().optional(),
                   twitch: z.url().optional(),
-                  youTube: z.url().optional(),
+                  youtube: z.url().optional(),
                   image: z.url().optional(),
                 })
                 .optional(),
-            })
-          )
+            }),
+          ),
         );
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
@@ -3287,7 +3287,7 @@ export class Lichess {
     params: {
       user1: string;
       user2: string;
-    } & { matchup?: boolean }
+    } & { matchup?: boolean },
   ) {
     const path = `/api/crosstable/${params.user1}/${params.user2}` as const;
     const query = { matchup: params.matchup } as const;
@@ -3568,7 +3568,7 @@ export class Lichess {
     params: {
       gameId: string;
       move: string;
-    } & { offeringDraw?: boolean }
+    } & { offeringDraw?: boolean },
   ) {
     const path =
       `/api/board/game/${params.gameId}/move/${params.move}` as const;
@@ -3622,7 +3622,7 @@ export class Lichess {
         room: string;
         text: string;
       };
-    }
+    },
   ) {
     const path = `/api/board/game/${params.gameId}/chat` as const;
     const body = params.body;
@@ -3903,7 +3903,7 @@ export class Lichess {
     params: {
       gameId: string;
       move: string;
-    } & { offeringDraw?: boolean }
+    } & { offeringDraw?: boolean },
   ) {
     const path = `/api/bot/game/${params.gameId}/move/${params.move}` as const;
     const query = { offeringDraw: params.offeringDraw } as const;
@@ -3954,7 +3954,7 @@ export class Lichess {
         room: string;
         text: string;
       };
-    }
+    },
   ) {
     const path = `/api/bot/game/${params.gameId}/chat` as const;
     const body = params.body;
@@ -4172,7 +4172,7 @@ export class Lichess {
         keepAliveStream?: boolean;
         rules?: string;
       };
-    }
+    },
   ) {
     const path = `/api/challenge/${params.username}` as const;
     const body = params.body;
@@ -4245,7 +4245,7 @@ export class Lichess {
    * Decline a challenge
    */
   async challengeDecline(
-    params: { challengeId: string } & { body: { reason?: string } }
+    params: { challengeId: string } & { body: { reason?: string } },
   ) {
     const path = `/api/challenge/${params.challengeId}/decline` as const;
     const body = params.body;
@@ -4273,7 +4273,7 @@ export class Lichess {
    * Cancel a challenge
    */
   async challengeCancel(
-    params: { challengeId: string } & { opponentToken?: string }
+    params: { challengeId: string } & { opponentToken?: string },
   ) {
     const path = `/api/challenge/${params.challengeId}/cancel` as const;
     const query = { opponentToken: params.opponentToken } as const;
@@ -4392,7 +4392,7 @@ export class Lichess {
     params: { gameId: string } & {
       token1: string;
       token2?: string;
-    }
+    },
   ) {
     const path = `/api/challenge/${params.gameId}/start-clocks` as const;
     const query = { token1: params.token1, token2: params.token2 } as const;
@@ -4558,7 +4558,7 @@ export class Lichess {
       opening?: boolean;
       division?: boolean;
       literate?: boolean;
-    }
+    },
   ) {
     const path = `/api/bulk-pairing/${params.id}/games` as const;
     const query = {
@@ -4639,7 +4639,7 @@ export class Lichess {
    * Send a private message
    */
   async inboxUsername(
-    params: { username: string } & { body: { text: string } }
+    params: { username: string } & { body: { text: string } },
   ) {
     const path = `/inbox/${params.username}` as const;
     const body = params.body;
@@ -4778,7 +4778,7 @@ export class Lichess {
    * Update external engine
    */
   async apiExternalEnginePut(
-    params: { id: string } & { body: schemas.ExternalEngineRegistration }
+    params: { id: string } & { body: schemas.ExternalEngineRegistration },
   ) {
     const path = `/api/external-engine/${params.id}` as const;
     const body = params.body;
@@ -4808,7 +4808,7 @@ export class Lichess {
         clientSecret: string;
         work: schemas.ExternalEngineWork;
       };
-    }
+    },
   ) {
     const path = `/api/external-engine/${params.id}/analyse` as const;
     const body = params.body;
@@ -4825,7 +4825,7 @@ export class Lichess {
               cp: z.int().optional(),
               mate: z.int().optional(),
               moves: z.array(z.string()),
-            })
+            }),
           ),
         });
         const stream = ndjsonStream({ response, schema });
@@ -4984,7 +4984,7 @@ export class Lichess {
               expires: z.int().nullable().optional(),
             }),
             z.null(),
-          ])
+          ]),
         );
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);

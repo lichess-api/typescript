@@ -39,7 +39,7 @@ const PerfStat = z.object({
           opId: LightUser,
           at: z.iso.datetime(),
           gameId: z.string(),
-        })
+        }),
       ),
     }),
     worstLosses: z.object({
@@ -49,7 +49,7 @@ const PerfStat = z.object({
           opId: LightUser,
           at: z.iso.datetime(),
           gameId: z.string(),
-        })
+        }),
       ),
     }),
     count: z.object({

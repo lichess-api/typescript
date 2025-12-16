@@ -80,7 +80,7 @@ const ArenaTournamentFull = z.object({
             }),
           ])
           .optional(),
-      })
+      }),
     )
     .optional(),
   standing: z
@@ -98,7 +98,7 @@ const ArenaTournamentFull = z.object({
             rating: z.int().optional(),
             score: z.int().optional(),
             sheet: ArenaSheet.optional(),
-          })
+          }),
         )
         .optional(),
     })
@@ -153,7 +153,7 @@ const ArenaTournamentFull = z.object({
           })
           .optional(),
         performance: z.int().optional(),
-      })
+      }),
     )
     .optional(),
   stats: z

@@ -13,7 +13,7 @@ const TopUser = z.object({
       z.object({
         rating: z.int(),
         progress: z.int(),
-      })
+      }),
     )
     .optional(),
   title: Title.optional(),

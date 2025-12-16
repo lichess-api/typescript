@@ -19,7 +19,7 @@ const StudyImportPgnChapters = z.object({
           ])
           .optional(),
         status: z.string().optional(),
-      })
+      }),
     )
     .optional(),
 });

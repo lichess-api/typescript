@@ -18,10 +18,10 @@ const OpeningExplorerMasters = z.object({
       black: z.int(),
       game: z.union([OpeningExplorerMastersGame, z.null()]),
       opening: z.union([OpeningExplorerOpening, z.null()]),
-    })
+    }),
   ),
   topGames: z.array(
-    z.intersection(z.object({ uci: z.string() }), OpeningExplorerMastersGame)
+    z.intersection(z.object({ uci: z.string() }), OpeningExplorerMastersGame),
   ),
 });
 

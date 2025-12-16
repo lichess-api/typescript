@@ -45,7 +45,7 @@ const UserActivity = z.object({
             score: z.int(),
             rank: z.int(),
             rankPercent: z.int(),
-          })
+          }),
         )
         .optional(),
     })
@@ -56,7 +56,7 @@ const UserActivity = z.object({
         url: z.string(),
         name: z.string(),
         nbPositions: z.int(),
-      })
+      }),
     )
     .optional(),
   simuls: z.array(z.string()).optional(),
@@ -85,7 +85,7 @@ const UserActivity = z.object({
       z.object({
         id: z.string(),
         name: z.string(),
-      })
+      }),
     )
     .optional(),
   teams: z
@@ -94,7 +94,7 @@ const UserActivity = z.object({
         url: z.url(),
         name: z.string(),
         flair: Flair.optional(),
-      })
+      }),
     )
     .optional(),
   posts: z
@@ -106,9 +106,9 @@ const UserActivity = z.object({
           z.object({
             url: z.string(),
             text: z.string(),
-          })
+          }),
         ),
-      })
+      }),
     )
     .optional(),
   patron: z.object({ months: z.int() }).optional(),

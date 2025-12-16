@@ -7,7 +7,7 @@ const PuzzleBatchSolveRequest = z.object({
         id: z.string().optional(),
         win: z.boolean().optional(),
         rated: z.boolean().optional(),
-      })
+      }),
     )
     .optional(),
 });

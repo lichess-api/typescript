@@ -16,6 +16,12 @@ const GameStateEvent = z.object({
   bdraw: z.boolean().optional(),
   wtakeback: z.boolean().optional(),
   btakeback: z.boolean().optional(),
+  expiration: z
+    .object({
+      idleMillis: z.int(),
+      millisToMove: z.int(),
+    })
+    .optional(),
 });
 
 type GameStateEvent = z.infer<typeof GameStateEvent>;
