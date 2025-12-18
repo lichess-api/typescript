@@ -228,7 +228,7 @@ const SchemaSchemaBooleanLike = z
   .object({
     anyOf: z.tuple([
       SchemaSchemaBoolean,
-      z.object({ type: z.literal("string"), const: z.literal(true) }),
+      z.object({ type: z.literal("string"), const: z.literal("yes") }),
     ]),
     example: z.literal("yes"),
   })
@@ -843,6 +843,7 @@ async function processSchema(schema: OpenApiSchema): Promise<void> {
     const fullYamlPath = `${tagsDir}/${tagPath}` as const;
     const yamlStr = await Bun.file(fullYamlPath).text();
     const schema = Bun.YAML.parse(yamlStr);
+    console.log({ fullYamlPath, schema });
     const tagSchema = TagSchemaSchema.parse(schema);
     const newMethods = processTag(tagSchema, rawApiPath);
     methodsCode.push(...newMethods);
