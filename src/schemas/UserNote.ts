@@ -12,4 +12,3 @@ const UserNote = z.object({
 type UserNote = z.infer<typeof UserNote>;
 
 export { UserNote };
-export default UserNote;

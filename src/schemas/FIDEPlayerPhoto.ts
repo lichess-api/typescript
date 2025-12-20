@@ -9,4 +9,3 @@ const FIDEPlayerPhoto = z.object({
 type FIDEPlayerPhoto = z.infer<typeof FIDEPlayerPhoto>;
 
 export { FIDEPlayerPhoto };
-export default FIDEPlayerPhoto;

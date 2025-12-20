@@ -17,4 +17,3 @@ const PuzzleReplay = z.object({
 type PuzzleReplay = z.infer<typeof PuzzleReplay>;
 
 export { PuzzleReplay };
-export default PuzzleReplay;

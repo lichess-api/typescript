@@ -7,4 +7,3 @@ const GameStatusId = z.literal([
 type GameStatusId = z.infer<typeof GameStatusId>;
 
 export { GameStatusId };
-export default GameStatusId;

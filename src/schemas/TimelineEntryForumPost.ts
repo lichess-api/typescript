@@ -14,4 +14,3 @@ const TimelineEntryForumPost = z.object({
 type TimelineEntryForumPost = z.infer<typeof TimelineEntryForumPost>;
 
 export { TimelineEntryForumPost };
-export default TimelineEntryForumPost;

@@ -21,4 +21,3 @@ const ChallengeUser = z.object({
 type ChallengeUser = z.infer<typeof ChallengeUser>;
 
 export { ChallengeUser };
-export default ChallengeUser;

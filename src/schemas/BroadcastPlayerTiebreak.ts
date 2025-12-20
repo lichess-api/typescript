@@ -11,4 +11,3 @@ const BroadcastPlayerTiebreak = z.object({
 type BroadcastPlayerTiebreak = z.infer<typeof BroadcastPlayerTiebreak>;
 
 export { BroadcastPlayerTiebreak };
-export default BroadcastPlayerTiebreak;

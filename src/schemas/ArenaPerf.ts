@@ -12,4 +12,3 @@ const ArenaPerf = z.object({
 type ArenaPerf = z.infer<typeof ArenaPerf>;
 
 export { ArenaPerf };
-export default ArenaPerf;

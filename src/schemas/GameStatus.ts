@@ -11,4 +11,3 @@ const GameStatus = z.object({
 type GameStatus = z.infer<typeof GameStatus>;
 
 export { GameStatus };
-export default GameStatus;

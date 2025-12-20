@@ -10,4 +10,3 @@ const LightUserOnline = z.intersection(
 type LightUserOnline = z.infer<typeof LightUserOnline>;
 
 export { LightUserOnline };
-export default LightUserOnline;

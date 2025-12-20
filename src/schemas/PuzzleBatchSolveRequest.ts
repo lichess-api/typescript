@@ -15,4 +15,3 @@ const PuzzleBatchSolveRequest = z.object({
 type PuzzleBatchSolveRequest = z.infer<typeof PuzzleBatchSolveRequest>;
 
 export { PuzzleBatchSolveRequest };
-export default PuzzleBatchSolveRequest;

@@ -12,4 +12,3 @@ const TimelineEntryTeamJoin = z.object({
 type TimelineEntryTeamJoin = z.infer<typeof TimelineEntryTeamJoin>;
 
 export { TimelineEntryTeamJoin };
-export default TimelineEntryTeamJoin;

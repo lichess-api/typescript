@@ -17,4 +17,3 @@ const TimeControl = z.union([
 type TimeControl = z.infer<typeof TimeControl>;
 
 export { TimeControl };
-export default TimeControl;

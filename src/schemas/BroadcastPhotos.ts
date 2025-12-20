@@ -12,4 +12,3 @@ const BroadcastPhotos = z.record(
 type BroadcastPhotos = z.infer<typeof BroadcastPhotos>;
 
 export { BroadcastPhotos };
-export default BroadcastPhotos;

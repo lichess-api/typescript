@@ -19,4 +19,3 @@ const Count = z.object({
 type Count = z.infer<typeof Count>;
 
 export { Count };
-export default Count;

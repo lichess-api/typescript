@@ -7,4 +7,3 @@ const RatingHistory = z.array(RatingHistoryEntry);
 type RatingHistory = z.infer<typeof RatingHistory>;
 
 export { RatingHistory };
-export default RatingHistory;

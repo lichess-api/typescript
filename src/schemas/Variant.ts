@@ -11,4 +11,3 @@ const Variant = z.object({
 type Variant = z.infer<typeof Variant>;
 
 export { Variant };
-export default Variant;

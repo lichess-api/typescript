@@ -28,4 +28,3 @@ const User = z.object({
 type User = z.infer<typeof User>;
 
 export { User };
-export default User;

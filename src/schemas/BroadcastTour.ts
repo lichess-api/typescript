@@ -32,4 +32,3 @@ const BroadcastTour = z.object({
 type BroadcastTour = z.infer<typeof BroadcastTour>;
 
 export { BroadcastTour };
-export default BroadcastTour;

@@ -20,4 +20,3 @@ const PuzzleBatchSolveResponse = z.object({
 type PuzzleBatchSolveResponse = z.infer<typeof PuzzleBatchSolveResponse>;
 
 export { PuzzleBatchSolveResponse };
-export default PuzzleBatchSolveResponse;

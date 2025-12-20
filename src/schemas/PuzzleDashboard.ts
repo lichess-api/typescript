@@ -17,4 +17,3 @@ const PuzzleDashboard = z.object({
 type PuzzleDashboard = z.infer<typeof PuzzleDashboard>;
 
 export { PuzzleDashboard };
-export default PuzzleDashboard;

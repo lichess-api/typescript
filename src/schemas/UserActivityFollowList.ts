@@ -8,4 +8,3 @@ const UserActivityFollowList = z.object({
 type UserActivityFollowList = z.infer<typeof UserActivityFollowList>;
 
 export { UserActivityFollowList };
-export default UserActivityFollowList;

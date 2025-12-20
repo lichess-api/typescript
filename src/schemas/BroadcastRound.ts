@@ -20,4 +20,3 @@ const BroadcastRound = z.object({
 type BroadcastRound = z.infer<typeof BroadcastRound>;
 
 export { BroadcastRound };
-export default BroadcastRound;

@@ -32,4 +32,3 @@ const ChallengeJson = z.object({
 type ChallengeJson = z.infer<typeof ChallengeJson>;
 
 export { ChallengeJson };
-export default ChallengeJson;

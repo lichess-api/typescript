@@ -19,4 +19,3 @@ const Team = z.object({
 type Team = z.infer<typeof Team>;
 
 export { Team };
-export default Team;

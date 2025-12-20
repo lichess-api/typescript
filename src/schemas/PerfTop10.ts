@@ -18,4 +18,3 @@ const PerfTop10 = z.tuple([
 type PerfTop10 = z.infer<typeof PerfTop10>;
 
 export { PerfTop10 };
-export default PerfTop10;

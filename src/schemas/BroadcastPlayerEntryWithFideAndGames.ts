@@ -27,4 +27,3 @@ type BroadcastPlayerEntryWithFideAndGames = z.infer<
 >;
 
 export { BroadcastPlayerEntryWithFideAndGames };
-export default BroadcastPlayerEntryWithFideAndGames;

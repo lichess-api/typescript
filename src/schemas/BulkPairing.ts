@@ -24,4 +24,3 @@ const BulkPairing = z.object({
 type BulkPairing = z.infer<typeof BulkPairing>;
 
 export { BulkPairing };
-export default BulkPairing;

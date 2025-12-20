@@ -8,4 +8,3 @@ const RatingHistoryEntry = z.object({
 type RatingHistoryEntry = z.infer<typeof RatingHistoryEntry>;
 
 export { RatingHistoryEntry };
-export default RatingHistoryEntry;

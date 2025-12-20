@@ -10,4 +10,3 @@ const GameChat = z.array(
 type GameChat = z.infer<typeof GameChat>;
 
 export { GameChat };
-export default GameChat;

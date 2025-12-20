@@ -55,4 +55,3 @@ const Timeline = z.object({
 type Timeline = z.infer<typeof Timeline>;
 
 export { Timeline };
-export default Timeline;

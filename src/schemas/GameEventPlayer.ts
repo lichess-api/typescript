@@ -14,4 +14,3 @@ const GameEventPlayer = z.object({
 type GameEventPlayer = z.infer<typeof GameEventPlayer>;
 
 export { GameEventPlayer };
-export default GameEventPlayer;

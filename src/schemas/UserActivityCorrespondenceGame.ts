@@ -25,4 +25,3 @@ type UserActivityCorrespondenceGame = z.infer<
 >;
 
 export { UserActivityCorrespondenceGame };
-export default UserActivityCorrespondenceGame;

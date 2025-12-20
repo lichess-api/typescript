@@ -10,4 +10,3 @@ const GameFinishEvent = z.object({
 type GameFinishEvent = z.infer<typeof GameFinishEvent>;
 
 export { GameFinishEvent };
-export default GameFinishEvent;

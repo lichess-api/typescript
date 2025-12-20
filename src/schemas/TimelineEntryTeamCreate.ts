@@ -12,4 +12,3 @@ const TimelineEntryTeamCreate = z.object({
 type TimelineEntryTeamCreate = z.infer<typeof TimelineEntryTeamCreate>;
 
 export { TimelineEntryTeamCreate };
-export default TimelineEntryTeamCreate;

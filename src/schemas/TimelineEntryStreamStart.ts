@@ -12,4 +12,3 @@ const TimelineEntryStreamStart = z.object({
 type TimelineEntryStreamStart = z.infer<typeof TimelineEntryStreamStart>;
 
 export { TimelineEntryStreamStart };
-export default TimelineEntryStreamStart;

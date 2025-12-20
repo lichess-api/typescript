@@ -26,4 +26,3 @@ const BroadcastForm = z.object({
 type BroadcastForm = z.infer<typeof BroadcastForm>;
 
 export { BroadcastForm };
-export default BroadcastForm;

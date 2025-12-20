@@ -8,4 +8,3 @@ const GameCompat = z.object({
 type GameCompat = z.infer<typeof GameCompat>;
 
 export { GameCompat };
-export default GameCompat;

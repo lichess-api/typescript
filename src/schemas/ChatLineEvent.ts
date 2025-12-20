@@ -10,4 +10,3 @@ const ChatLineEvent = z.object({
 type ChatLineEvent = z.infer<typeof ChatLineEvent>;
 
 export { ChatLineEvent };
-export default ChatLineEvent;

@@ -13,4 +13,3 @@ const UserActivityScore = z.object({
 type UserActivityScore = z.infer<typeof UserActivityScore>;
 
 export { UserActivityScore };
-export default UserActivityScore;

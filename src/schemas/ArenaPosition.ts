@@ -16,4 +16,3 @@ const ArenaPosition = z.union([
 type ArenaPosition = z.infer<typeof ArenaPosition>;
 
 export { ArenaPosition };
-export default ArenaPosition;

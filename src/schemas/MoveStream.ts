@@ -7,4 +7,3 @@ const MoveStream = z.array(MoveStreamEntry);
 type MoveStream = z.infer<typeof MoveStream>;
 
 export { MoveStream };
-export default MoveStream;

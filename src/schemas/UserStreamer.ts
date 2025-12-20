@@ -8,4 +8,3 @@ const UserStreamer = z.object({
 type UserStreamer = z.infer<typeof UserStreamer>;
 
 export { UserStreamer };
-export default UserStreamer;

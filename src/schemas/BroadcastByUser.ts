@@ -7,4 +7,3 @@ const BroadcastByUser = z.object({ tour: BroadcastTour });
 type BroadcastByUser = z.infer<typeof BroadcastByUser>;
 
 export { BroadcastByUser };
-export default BroadcastByUser;

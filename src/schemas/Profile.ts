@@ -17,4 +17,3 @@ const Profile = z.object({
 type Profile = z.infer<typeof Profile>;
 
 export { Profile };
-export default Profile;

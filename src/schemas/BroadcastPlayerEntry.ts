@@ -18,4 +18,3 @@ const BroadcastPlayerEntry = z.intersection(
 type BroadcastPlayerEntry = z.infer<typeof BroadcastPlayerEntry>;
 
 export { BroadcastPlayerEntry };
-export default BroadcastPlayerEntry;

@@ -10,4 +10,3 @@ const GamePlayers = z.object({
 type GamePlayers = z.infer<typeof GamePlayers>;
 
 export { GamePlayers };
-export default GamePlayers;

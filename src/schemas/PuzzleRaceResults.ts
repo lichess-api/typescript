@@ -31,4 +31,3 @@ const PuzzleRaceResults = z.object({
 type PuzzleRaceResults = z.infer<typeof PuzzleRaceResults>;
 
 export { PuzzleRaceResults };
-export default PuzzleRaceResults;

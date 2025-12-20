@@ -9,4 +9,3 @@ const GameOpening = z.object({
 type GameOpening = z.infer<typeof GameOpening>;
 
 export { GameOpening };
-export default GameOpening;

@@ -17,4 +17,3 @@ const PuzzleActivity = z.object({
 type PuzzleActivity = z.infer<typeof PuzzleActivity>;
 
 export { PuzzleActivity };
-export default PuzzleActivity;

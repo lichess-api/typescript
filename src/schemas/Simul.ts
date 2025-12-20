@@ -37,4 +37,3 @@ const Simul = z.object({
 type Simul = z.infer<typeof Simul>;
 
 export { Simul };
-export default Simul;

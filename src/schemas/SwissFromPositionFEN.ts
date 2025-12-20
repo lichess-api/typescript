@@ -5,4 +5,3 @@ const SwissFromPositionFEN = z.string();
 type SwissFromPositionFEN = z.infer<typeof SwissFromPositionFEN>;
 
 export { SwissFromPositionFEN };
-export default SwissFromPositionFEN;

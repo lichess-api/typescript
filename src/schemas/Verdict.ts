@@ -8,4 +8,3 @@ const Verdict = z.object({
 type Verdict = z.infer<typeof Verdict>;
 
 export { Verdict };
-export default Verdict;

@@ -12,4 +12,3 @@ const TimelineEntryPlanRenew = z.object({
 type TimelineEntryPlanRenew = z.infer<typeof TimelineEntryPlanRenew>;
 
 export { TimelineEntryPlanRenew };
-export default TimelineEntryPlanRenew;

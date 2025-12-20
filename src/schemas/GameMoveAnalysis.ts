@@ -16,4 +16,3 @@ const GameMoveAnalysis = z.object({
 type GameMoveAnalysis = z.infer<typeof GameMoveAnalysis>;
 
 export { GameMoveAnalysis };
-export default GameMoveAnalysis;

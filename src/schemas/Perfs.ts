@@ -27,4 +27,3 @@ const Perfs = z.object({
 type Perfs = z.infer<typeof Perfs>;
 
 export { Perfs };
-export default Perfs;

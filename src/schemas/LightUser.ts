@@ -17,4 +17,3 @@ const LightUser = z.object({
 type LightUser = z.infer<typeof LightUser>;
 
 export { LightUser };
-export default LightUser;

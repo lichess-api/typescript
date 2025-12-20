@@ -17,4 +17,3 @@ const BroadcastGameEntry = z.object({
 type BroadcastGameEntry = z.infer<typeof BroadcastGameEntry>;
 
 export { BroadcastGameEntry };
-export default BroadcastGameEntry;

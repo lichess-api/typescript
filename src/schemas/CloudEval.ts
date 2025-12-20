@@ -21,4 +21,3 @@ const CloudEval = z.object({
 type CloudEval = z.infer<typeof CloudEval>;
 
 export { CloudEval };
-export default CloudEval;

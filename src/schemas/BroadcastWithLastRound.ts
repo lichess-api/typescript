@@ -12,4 +12,3 @@ const BroadcastWithLastRound = z.object({
 type BroadcastWithLastRound = z.infer<typeof BroadcastWithLastRound>;
 
 export { BroadcastWithLastRound };
-export default BroadcastWithLastRound;

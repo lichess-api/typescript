@@ -25,4 +25,3 @@ const TopUser = z.object({
 type TopUser = z.infer<typeof TopUser>;
 
 export { TopUser };
-export default TopUser;

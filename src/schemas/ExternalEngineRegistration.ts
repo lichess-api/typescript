@@ -14,4 +14,3 @@ const ExternalEngineRegistration = z.object({
 type ExternalEngineRegistration = z.infer<typeof ExternalEngineRegistration>;
 
 export { ExternalEngineRegistration };
-export default ExternalEngineRegistration;

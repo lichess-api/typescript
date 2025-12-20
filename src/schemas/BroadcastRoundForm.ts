@@ -45,4 +45,3 @@ const BroadcastRoundForm = z.intersection(
 type BroadcastRoundForm = z.infer<typeof BroadcastRoundForm>;
 
 export { BroadcastRoundForm };
-export default BroadcastRoundForm;

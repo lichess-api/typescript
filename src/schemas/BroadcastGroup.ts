@@ -12,4 +12,3 @@ const BroadcastGroup = z.object({
 type BroadcastGroup = z.infer<typeof BroadcastGroup>;
 
 export { BroadcastGroup };
-export default BroadcastGroup;

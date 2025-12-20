@@ -23,7 +23,6 @@ const ${fileName} = ${zodSchema};
 type ${fileName} = z.infer<typeof ${fileName}>;
 
 export { ${fileName} };
-export default ${fileName};
 ` as const;
 
   const outFilePath = `src/schemas/${fileName}.ts` as const;

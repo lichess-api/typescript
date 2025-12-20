@@ -47,4 +47,3 @@ const GameJson = z.object({
 type GameJson = z.infer<typeof GameJson>;
 
 export { GameJson };
-export default GameJson;

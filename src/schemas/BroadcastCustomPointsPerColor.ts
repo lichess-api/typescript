@@ -12,4 +12,3 @@ type BroadcastCustomPointsPerColor = z.infer<
 >;
 
 export { BroadcastCustomPointsPerColor };
-export default BroadcastCustomPointsPerColor;

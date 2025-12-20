@@ -10,4 +10,3 @@ const BroadcastGroupTour = z.object({
 type BroadcastGroupTour = z.infer<typeof BroadcastGroupTour>;
 
 export { BroadcastGroupTour };
-export default BroadcastGroupTour;

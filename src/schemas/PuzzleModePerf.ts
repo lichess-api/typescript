@@ -8,4 +8,3 @@ const PuzzleModePerf = z.object({
 type PuzzleModePerf = z.infer<typeof PuzzleModePerf>;
 
 export { PuzzleModePerf };
-export default PuzzleModePerf;

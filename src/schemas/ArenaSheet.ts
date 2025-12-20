@@ -8,4 +8,3 @@ const ArenaSheet = z.object({
 type ArenaSheet = z.infer<typeof ArenaSheet>;
 
 export { ArenaSheet };
-export default ArenaSheet;

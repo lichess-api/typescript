@@ -12,4 +12,3 @@ const Speed = z.literal([
 type Speed = z.infer<typeof Speed>;
 
 export { Speed };
-export default Speed;

@@ -27,4 +27,3 @@ const StudyImportPgnChapters = z.object({
 type StudyImportPgnChapters = z.infer<typeof StudyImportPgnChapters>;
 
 export { StudyImportPgnChapters };
-export default StudyImportPgnChapters;

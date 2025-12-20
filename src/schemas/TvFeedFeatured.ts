@@ -29,4 +29,3 @@ const TvFeedFeatured = z.object({
 type TvFeedFeatured = z.infer<typeof TvFeedFeatured>;
 
 export { TvFeedFeatured };
-export default TvFeedFeatured;

@@ -21,4 +21,3 @@ const Top10s = z.object({
 type Top10s = z.infer<typeof Top10s>;
 
 export { Top10s };
-export default Top10s;

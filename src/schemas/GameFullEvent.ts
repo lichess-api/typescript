@@ -30,4 +30,3 @@ const GameFullEvent = z.object({
 type GameFullEvent = z.infer<typeof GameFullEvent>;
 
 export { GameFullEvent };
-export default GameFullEvent;

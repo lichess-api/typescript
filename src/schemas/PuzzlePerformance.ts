@@ -11,4 +11,3 @@ const PuzzlePerformance = z.object({
 type PuzzlePerformance = z.infer<typeof PuzzlePerformance>;
 
 export { PuzzlePerformance };
-export default PuzzlePerformance;

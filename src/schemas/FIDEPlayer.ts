@@ -19,4 +19,3 @@ const FIDEPlayer = z.object({
 type FIDEPlayer = z.infer<typeof FIDEPlayer>;
 
 export { FIDEPlayer };
-export default FIDEPlayer;

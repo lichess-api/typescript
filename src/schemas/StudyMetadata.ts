@@ -10,4 +10,3 @@ const StudyMetadata = z.object({
 type StudyMetadata = z.infer<typeof StudyMetadata>;
 
 export { StudyMetadata };
-export default StudyMetadata;

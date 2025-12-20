@@ -25,4 +25,3 @@ const ChallengeDeclinedJson = z.intersection(
 type ChallengeDeclinedJson = z.infer<typeof ChallengeDeclinedJson>;
 
 export { ChallengeDeclinedJson };
-export default ChallengeDeclinedJson;

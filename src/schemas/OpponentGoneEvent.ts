@@ -9,4 +9,3 @@ const OpponentGoneEvent = z.object({
 type OpponentGoneEvent = z.infer<typeof OpponentGoneEvent>;
 
 export { OpponentGoneEvent };
-export default OpponentGoneEvent;

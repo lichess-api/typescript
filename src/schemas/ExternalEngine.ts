@@ -16,4 +16,3 @@ const ExternalEngine = z.object({
 type ExternalEngine = z.infer<typeof ExternalEngine>;
 
 export { ExternalEngine };
-export default ExternalEngine;

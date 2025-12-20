@@ -16,4 +16,3 @@ const TimelineEntryGameEnd = z.object({
 type TimelineEntryGameEnd = z.infer<typeof TimelineEntryGameEnd>;
 
 export { TimelineEntryGameEnd };
-export default TimelineEntryGameEnd;

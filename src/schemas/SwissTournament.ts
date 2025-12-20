@@ -42,4 +42,3 @@ const SwissTournament = z.object({
 type SwissTournament = z.infer<typeof SwissTournament>;
 
 export { SwissTournament };
-export default SwissTournament;

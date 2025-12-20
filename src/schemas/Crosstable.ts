@@ -8,4 +8,3 @@ const Crosstable = z.object({
 type Crosstable = z.infer<typeof Crosstable>;
 
 export { Crosstable };
-export default Crosstable;

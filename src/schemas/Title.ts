@@ -18,4 +18,3 @@ const Title = z.literal([
 type Title = z.infer<typeof Title>;
 
 export { Title };
-export default Title;

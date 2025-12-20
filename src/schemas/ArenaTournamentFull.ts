@@ -173,4 +173,3 @@ const ArenaTournamentFull = z.object({
 type ArenaTournamentFull = z.infer<typeof ArenaTournamentFull>;
 
 export { ArenaTournamentFull };
-export default ArenaTournamentFull;

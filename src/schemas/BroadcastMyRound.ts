@@ -13,4 +13,3 @@ const BroadcastMyRound = z.object({
 type BroadcastMyRound = z.infer<typeof BroadcastMyRound>;
 
 export { BroadcastMyRound };
-export default BroadcastMyRound;

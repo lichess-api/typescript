@@ -17,4 +17,3 @@ const GameEventOpponent = z.union([
 type GameEventOpponent = z.infer<typeof GameEventOpponent>;
 
 export { GameEventOpponent };
-export default GameEventOpponent;

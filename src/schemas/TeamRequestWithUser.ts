@@ -11,4 +11,3 @@ const TeamRequestWithUser = z.object({
 type TeamRequestWithUser = z.infer<typeof TeamRequestWithUser>;
 
 export { TeamRequestWithUser };
-export default TeamRequestWithUser;

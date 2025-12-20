@@ -30,4 +30,3 @@ const OpeningExplorerPlayer = z.object({
 type OpeningExplorerPlayer = z.infer<typeof OpeningExplorerPlayer>;
 
 export { OpeningExplorerPlayer };
-export default OpeningExplorerPlayer;

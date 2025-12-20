@@ -20,4 +20,3 @@ const PerfType = z.literal([
 type PerfType = z.infer<typeof PerfType>;
 
 export { PerfType };
-export default PerfType;

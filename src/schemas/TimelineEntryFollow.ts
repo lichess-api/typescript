@@ -12,4 +12,3 @@ const TimelineEntryFollow = z.object({
 type TimelineEntryFollow = z.infer<typeof TimelineEntryFollow>;
 
 export { TimelineEntryFollow };
-export default TimelineEntryFollow;

@@ -12,4 +12,3 @@ const Perf = z.object({
 type Perf = z.infer<typeof Perf>;
 
 export { Perf };
-export default Perf;

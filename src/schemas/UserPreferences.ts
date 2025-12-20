@@ -145,4 +145,3 @@ const UserPreferences = z.object({
 type UserPreferences = z.infer<typeof UserPreferences>;
 
 export { UserPreferences };
-export default UserPreferences;

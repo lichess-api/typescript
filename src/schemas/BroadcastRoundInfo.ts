@@ -21,4 +21,3 @@ const BroadcastRoundInfo = z.object({
 type BroadcastRoundInfo = z.infer<typeof BroadcastRoundInfo>;
 
 export { BroadcastRoundInfo };
-export default BroadcastRoundInfo;

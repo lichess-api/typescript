@@ -45,4 +45,3 @@ const GameStreamGame = z.object({
 type GameStreamGame = z.infer<typeof GameStreamGame>;
 
 export { GameStreamGame };
-export default GameStreamGame;

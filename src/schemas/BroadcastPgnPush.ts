@@ -15,4 +15,3 @@ const BroadcastPgnPush = z.object({
 type BroadcastPgnPush = z.infer<typeof BroadcastPgnPush>;
 
 export { BroadcastPgnPush };
-export default BroadcastPgnPush;

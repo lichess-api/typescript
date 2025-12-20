@@ -11,4 +11,3 @@ const ArenaTournamentPlayed = z.object({
 type ArenaTournamentPlayed = z.infer<typeof ArenaTournamentPlayed>;
 
 export { ArenaTournamentPlayed };
-export default ArenaTournamentPlayed;

@@ -118,4 +118,3 @@ const UserActivity = z.object({
 type UserActivity = z.infer<typeof UserActivity>;
 
 export { UserActivity };
-export default UserActivity;

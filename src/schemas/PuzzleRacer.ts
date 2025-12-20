@@ -8,4 +8,3 @@ const PuzzleRacer = z.object({
 type PuzzleRacer = z.infer<typeof PuzzleRacer>;
 
 export { PuzzleRacer };
-export default PuzzleRacer;

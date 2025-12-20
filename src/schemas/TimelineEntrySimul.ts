@@ -13,4 +13,3 @@ const TimelineEntrySimul = z.object({
 type TimelineEntrySimul = z.infer<typeof TimelineEntrySimul>;
 
 export { TimelineEntrySimul };
-export default TimelineEntrySimul;

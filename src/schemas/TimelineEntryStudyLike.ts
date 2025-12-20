@@ -13,4 +13,3 @@ const TimelineEntryStudyLike = z.object({
 type TimelineEntryStudyLike = z.infer<typeof TimelineEntryStudyLike>;
 
 export { TimelineEntryStudyLike };
-export default TimelineEntryStudyLike;

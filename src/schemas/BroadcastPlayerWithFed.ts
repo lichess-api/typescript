@@ -14,4 +14,3 @@ const BroadcastPlayerWithFed = z.object({
 type BroadcastPlayerWithFed = z.infer<typeof BroadcastPlayerWithFed>;
 
 export { BroadcastPlayerWithFed };
-export default BroadcastPlayerWithFed;

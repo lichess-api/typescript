@@ -16,4 +16,3 @@ const VariantKey = z.literal([
 type VariantKey = z.infer<typeof VariantKey>;
 
 export { VariantKey };
-export default VariantKey;

@@ -28,4 +28,3 @@ const OpeningExplorerMasters = z.object({
 type OpeningExplorerMasters = z.infer<typeof OpeningExplorerMasters>;
 
 export { OpeningExplorerMasters };
-export default OpeningExplorerMasters;

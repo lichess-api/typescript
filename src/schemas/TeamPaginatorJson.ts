@@ -15,4 +15,3 @@ const TeamPaginatorJson = z.object({
 type TeamPaginatorJson = z.infer<typeof TeamPaginatorJson>;
 
 export { TeamPaginatorJson };
-export default TeamPaginatorJson;

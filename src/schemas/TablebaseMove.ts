@@ -32,4 +32,3 @@ const TablebaseMove = z.object({
 type TablebaseMove = z.infer<typeof TablebaseMove>;
 
 export { TablebaseMove };
-export default TablebaseMove;

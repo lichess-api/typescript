@@ -13,4 +13,3 @@ const TvFeedFen = z.object({
 type TvFeedFen = z.infer<typeof TvFeedFen>;
 
 export { TvFeedFen };
-export default TvFeedFen;

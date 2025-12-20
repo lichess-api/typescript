@@ -13,4 +13,3 @@ const TimelineEntryBlogPost = z.object({
 type TimelineEntryBlogPost = z.infer<typeof TimelineEntryBlogPost>;
 
 export { TimelineEntryBlogPost };
-export default TimelineEntryBlogPost;

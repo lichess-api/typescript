@@ -27,4 +27,3 @@ const GameStateEvent = z.object({
 type GameStateEvent = z.infer<typeof GameStateEvent>;
 
 export { GameStateEvent };
-export default GameStateEvent;

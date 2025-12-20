@@ -15,4 +15,3 @@ const ExternalEngineWorkCommon = z.object({
 type ExternalEngineWorkCommon = z.infer<typeof ExternalEngineWorkCommon>;
 
 export { ExternalEngineWorkCommon };
-export default ExternalEngineWorkCommon;

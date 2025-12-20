@@ -14,4 +14,3 @@ const UciVariant = z.literal([
 type UciVariant = z.infer<typeof UciVariant>;
 
 export { UciVariant };
-export default UciVariant;

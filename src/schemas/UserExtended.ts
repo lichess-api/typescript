@@ -21,4 +21,3 @@ const UserExtended = z.intersection(
 type UserExtended = z.infer<typeof UserExtended>;
 
 export { UserExtended };
-export default UserExtended;

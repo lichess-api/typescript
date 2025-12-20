@@ -11,4 +11,3 @@ const PuzzleBatchSelect = z.object({
 type PuzzleBatchSelect = z.infer<typeof PuzzleBatchSelect>;
 
 export { PuzzleBatchSelect };
-export default PuzzleBatchSelect;

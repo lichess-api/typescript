@@ -8,4 +8,3 @@ const OpeningExplorerOpening = z.object({
 type OpeningExplorerOpening = z.infer<typeof OpeningExplorerOpening>;
 
 export { OpeningExplorerOpening };
-export default OpeningExplorerOpening;

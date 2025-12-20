@@ -10,4 +10,3 @@ const ChallengeCanceledEvent = z.object({
 type ChallengeCanceledEvent = z.infer<typeof ChallengeCanceledEvent>;
 
 export { ChallengeCanceledEvent };
-export default ChallengeCanceledEvent;

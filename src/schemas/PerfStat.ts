@@ -175,4 +175,3 @@ const PerfStat = z.object({
 type PerfStat = z.infer<typeof PerfStat>;
 
 export { PerfStat };
-export default PerfStat;

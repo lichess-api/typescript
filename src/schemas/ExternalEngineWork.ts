@@ -14,4 +14,3 @@ const ExternalEngineWork = z.union([
 type ExternalEngineWork = z.infer<typeof ExternalEngineWork>;
 
 export { ExternalEngineWork };
-export default ExternalEngineWork;

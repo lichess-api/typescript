@@ -8,4 +8,3 @@ const OAuthError = z.object({
 type OAuthError = z.infer<typeof OAuthError>;
 
 export { OAuthError };
-export default OAuthError;

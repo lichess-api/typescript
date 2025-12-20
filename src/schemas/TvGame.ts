@@ -13,4 +13,3 @@ const TvGame = z.object({
 type TvGame = z.infer<typeof TvGame>;
 
 export { TvGame };
-export default TvGame;

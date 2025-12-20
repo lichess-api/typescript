@@ -8,4 +8,3 @@ const Clock = z.object({
 type Clock = z.infer<typeof Clock>;
 
 export { Clock };
-export default Clock;

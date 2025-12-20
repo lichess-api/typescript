@@ -27,4 +27,3 @@ const BroadcastRoundGame = z.object({
 type BroadcastRoundGame = z.infer<typeof BroadcastRoundGame>;
 
 export { BroadcastRoundGame };
-export default BroadcastRoundGame;

@@ -10,4 +10,3 @@ const ArenaRatingObj = z.object({
 type ArenaRatingObj = z.infer<typeof ArenaRatingObj>;
 
 export { ArenaRatingObj };
-export default ArenaRatingObj;

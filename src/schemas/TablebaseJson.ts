@@ -31,4 +31,3 @@ const TablebaseJson = z.object({
 type TablebaseJson = z.infer<typeof TablebaseJson>;
 
 export { TablebaseJson };
-export default TablebaseJson;

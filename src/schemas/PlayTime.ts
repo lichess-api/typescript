@@ -9,4 +9,3 @@ const PlayTime = z.object({
 type PlayTime = z.infer<typeof PlayTime>;
 
 export { PlayTime };
-export default PlayTime;

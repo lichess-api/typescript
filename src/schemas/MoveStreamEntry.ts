@@ -37,4 +37,3 @@ const MoveStreamEntry = z.union([
 type MoveStreamEntry = z.infer<typeof MoveStreamEntry>;
 
 export { MoveStreamEntry };
-export default MoveStreamEntry;

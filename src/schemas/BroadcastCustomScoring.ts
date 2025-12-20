@@ -10,4 +10,3 @@ const BroadcastCustomScoring = z.object({
 type BroadcastCustomScoring = z.infer<typeof BroadcastCustomScoring>;
 
 export { BroadcastCustomScoring };
-export default BroadcastCustomScoring;

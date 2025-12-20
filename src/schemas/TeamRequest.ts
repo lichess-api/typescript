@@ -10,4 +10,3 @@ const TeamRequest = z.object({
 type TeamRequest = z.infer<typeof TeamRequest>;
 
 export { TeamRequest };
-export default TeamRequest;

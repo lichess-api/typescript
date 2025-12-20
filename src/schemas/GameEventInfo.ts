@@ -34,4 +34,3 @@ const GameEventInfo = z.object({
 type GameEventInfo = z.infer<typeof GameEventInfo>;
 
 export { GameEventInfo };
-export default GameEventInfo;

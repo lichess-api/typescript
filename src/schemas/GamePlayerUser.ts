@@ -24,4 +24,3 @@ const GamePlayerUser = z.object({
 type GamePlayerUser = z.infer<typeof GamePlayerUser>;
 
 export { GamePlayerUser };
-export default GamePlayerUser;

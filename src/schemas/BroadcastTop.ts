@@ -19,4 +19,3 @@ const BroadcastTop = z.object({
 type BroadcastTop = z.infer<typeof BroadcastTop>;
 
 export { BroadcastTop };
-export default BroadcastTop;

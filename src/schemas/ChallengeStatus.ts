@@ -11,4 +11,3 @@ const ChallengeStatus = z.literal([
 type ChallengeStatus = z.infer<typeof ChallengeStatus>;
 
 export { ChallengeStatus };
-export default ChallengeStatus;

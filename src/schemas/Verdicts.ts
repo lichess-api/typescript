@@ -10,4 +10,3 @@ const Verdicts = z.object({
 type Verdicts = z.infer<typeof Verdicts>;
 
 export { Verdicts };
-export default Verdicts;

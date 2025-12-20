@@ -10,4 +10,3 @@ const GameStartEvent = z.object({
 type GameStartEvent = z.infer<typeof GameStartEvent>;
 
 export { GameStartEvent };
-export default GameStartEvent;

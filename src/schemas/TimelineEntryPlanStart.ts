@@ -9,4 +9,3 @@ const TimelineEntryPlanStart = z.object({
 type TimelineEntryPlanStart = z.infer<typeof TimelineEntryPlanStart>;
 
 export { TimelineEntryPlanStart };
-export default TimelineEntryPlanStart;

@@ -43,4 +43,3 @@ type BroadcastTiebreakExtendedCode = z.infer<
 >;
 
 export { BroadcastTiebreakExtendedCode };
-export default BroadcastTiebreakExtendedCode;

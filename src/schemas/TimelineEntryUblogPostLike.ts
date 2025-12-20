@@ -13,4 +13,3 @@ const TimelineEntryUblogPostLike = z.object({
 type TimelineEntryUblogPostLike = z.infer<typeof TimelineEntryUblogPostLike>;
 
 export { TimelineEntryUblogPostLike };
-export default TimelineEntryUblogPostLike;

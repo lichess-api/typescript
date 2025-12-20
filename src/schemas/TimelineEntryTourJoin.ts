@@ -13,4 +13,3 @@ const TimelineEntryTourJoin = z.object({
 type TimelineEntryTourJoin = z.infer<typeof TimelineEntryTourJoin>;
 
 export { TimelineEntryTourJoin };
-export default TimelineEntryTourJoin;

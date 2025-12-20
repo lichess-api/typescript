@@ -19,4 +19,3 @@ const GameSource = z.literal([
 type GameSource = z.infer<typeof GameSource>;
 
 export { GameSource };
-export default GameSource;

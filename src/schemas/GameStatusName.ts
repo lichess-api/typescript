@@ -20,4 +20,3 @@ const GameStatusName = z.literal([
 type GameStatusName = z.infer<typeof GameStatusName>;
 
 export { GameStatusName };
-export default GameStatusName;
