@@ -179,7 +179,7 @@ type Schema = z.infer<typeof SchemaSchema>;
 
 type ConvertResult = { readonly zodSchema: string; readonly refs: string[] };
 
-function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
+function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
   if (schema.const !== undefined) {
     return {
       zodSchema: `z.literal(${JSON.stringify(schema.const)})`,
@@ -195,7 +195,9 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       return { zodSchema: prefixedName, refs: prefix ? [] : [name] } as const;
     }
     case "oneOf": {
-      const subResults = schema.oneOf.map((item) => convertToZod(item, prefix));
+      const subResults = schema.oneOf.map((item) =>
+        convertToZod(SchemaSchema.parse(item), prefix),
+      );
       const zodSchemas = subResults.map((r) => r.zodSchema);
       const allRefs = new Set<string>();
       subResults.forEach((r) => r.refs.forEach((ref) => allRefs.add(ref)));
@@ -205,8 +207,14 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       } as const;
     }
     case "allOf": {
-      const leftPart = convertToZod(schema.allOf[0], prefix);
-      const rightPart = convertToZod(schema.allOf[1], prefix);
+      const leftPart = convertToZod(
+        SchemaSchema.parse(schema.allOf[0]),
+        prefix,
+      );
+      const rightPart = convertToZod(
+        SchemaSchema.parse(schema.allOf[1]),
+        prefix,
+      );
       const allRefs = new Set([...leftPart.refs, ...rightPart.refs]);
       return {
         zodSchema: `z.intersection(${leftPart.zodSchema}, ${rightPart.zodSchema})`,
@@ -297,7 +305,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
     }
     case "additionalProperties": {
       const { zodSchema: valueSchemaStr, refs } = convertToZod(
-        schema.additionalProperties,
+        SchemaSchema.parse(schema.additionalProperties),
         prefix,
       );
       return {
@@ -311,7 +319,10 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
       const zodProps: Record<string, string> = {};
       const allRefs = new Set<string>();
       for (const [k, v] of Object.entries(props)) {
-        const { zodSchema: sch, refs: propRefs } = convertToZod(v, prefix);
+        const { zodSchema: sch, refs: propRefs } = convertToZod(
+          SchemaSchema.parse(v),
+          prefix,
+        );
         propRefs.forEach((r) => allRefs.add(r));
         let propStr = sch;
         if (!required.has(k)) {
@@ -337,7 +348,7 @@ function convertToZod_(schema: Schema, prefix: string = ""): ConvertResult {
         return { zodSchema: "z.array(z.unknown())", refs: [] } as const;
       }
       const { zodSchema: itemSchema, refs: itemRefs } = convertToZod(
-        items,
+        SchemaSchema.parse(items),
         prefix,
       );
       let zodSchemaStr: string;
@@ -379,12 +390,5 @@ function assertNever(schema: never): never {
   throw new Error(`Unknown schema: ${JSON.stringify(schema)}`);
 }
 
-function convertToZod(
-  schema: unknown | SchemaUnparsed,
-  prefix: string = "",
-): ConvertResult {
-  return convertToZod_(SchemaSchema.parse(schema), prefix);
-}
-
-export { SchemaSchema, convertToZod, assertNever, convertToZod_ };
+export { SchemaSchema, convertToZod, assertNever };
 export type { Schema, SchemaUnparsed, ConvertResult };

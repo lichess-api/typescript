@@ -1,4 +1,4 @@
-import { convertToZod } from "./shared";
+import { convertToZod, SchemaSchema } from "./shared";
 
 import { readdirSync } from "node:fs";
 import path from "node:path";
@@ -9,8 +9,9 @@ async function processFile(filePath: string) {
   const fileName = filePath.split("/").pop()!.replace(".yaml", "");
   console.log({ filePath, fileName });
   const yamlStr = await Bun.file(filePath).text();
-  const schema = Bun.YAML.parse(yamlStr);
-  const { zodSchema, refs: uniqueRefs } = convertToZod(schema);
+  const yamlContent = Bun.YAML.parse(yamlStr);
+  const parsedSchema = SchemaSchema.parse(yamlContent);
+  const { zodSchema, refs: uniqueRefs } = convertToZod(parsedSchema);
 
   uniqueRefs.sort();
   const refImports = uniqueRefs

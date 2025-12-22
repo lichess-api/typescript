@@ -3,7 +3,7 @@ import * as z from "zod";
 import {
   SchemaSchemaRef,
   SchemaSchema,
-  convertToZod_ as convertToZod,
+  convertToZod,
   Primitive,
   SchemaSchemaPrimitive,
   SchemaSchemaBoolean,
