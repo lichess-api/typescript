@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 
 const SchemaUnparsed = z.unknown().brand("SchemaUnparsed");
 type SchemaUnparsed = z.infer<typeof SchemaUnparsed>;

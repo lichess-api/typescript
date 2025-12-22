@@ -5,9 +5,9 @@
   "author": "GameRoMan",
   "license": "MIT",
   "scripts": {
-    "gen:schemas": "bun ./scripts/yaml-to-zod && bun ./scripts/export-dir && bun run format",
-    "gen:client": "bun ./scripts/yaml-to-client && bun run format",
-    "gen:full": "bun ./scripts/yaml-to-zod && bun ./scripts/export-dir && bun ./scripts/yaml-to-client && bun run format",
+    "gen:schemas": "bun ./scripts/gen-schemas && bun run format",
+    "gen:client": "bun ./scripts/gen-client && bun run format",
+    "gen:full": "bun ./scripts/gen-schemas && bun ./scripts/gen-client && bun run format",
     "test": "bun test",
     "test:types": "bunx tsc --noEmit",
     "format": "bunx biome format --write",

@@ -86,7 +86,6 @@ export { GameStreamGame } from "./GameStreamGame";
 export { Leaderboard } from "./Leaderboard";
 export { LightUser } from "./LightUser";
 export { LightUserOnline } from "./LightUserOnline";
-export { Move } from "./Move";
 export { MoveStream } from "./MoveStream";
 export { MoveStreamEntry } from "./MoveStreamEntry";
 export { NotFound } from "./NotFound";
