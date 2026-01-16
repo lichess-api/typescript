@@ -8,6 +8,7 @@ describe.concurrent("Lichess", () => {
   it("should work", () => {
     const lichess = new Lichess({ token: null });
     expect(lichess).toBeDefined();
+    expect(lichess).toBeInstanceOf(Lichess);
   }, 1_000);
 
   it("should correctly make a simple request", async () => {
