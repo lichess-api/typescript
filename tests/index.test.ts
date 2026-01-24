@@ -1,8 +1,8 @@
 import { describe, it, expect } from "bun:test";
 
-import { Lichess } from "~/.";
+import { Lichess } from "@lichess/api";
 
-import type * as schemas from "~/schemas";
+import type * as schemas from "@lichess/api/schemas";
 
 describe.concurrent("Lichess", () => {
   it("should work", () => {
@@ -32,5 +32,5 @@ describe.concurrent("Lichess", () => {
 
     expect(received.length).toBeGreaterThanOrEqual(2);
     expect(received[0]?.t).toBe("featured");
-  }, 2_000);
+  }, 2_500);
 });
