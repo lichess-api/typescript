@@ -100,6 +100,7 @@ export { OpeningExplorerOpening } from "./OpeningExplorerOpening";
 export { OpeningExplorerPlayer } from "./OpeningExplorerPlayer";
 export { OpeningExplorerPlayerGame } from "./OpeningExplorerPlayerGame";
 export { OpponentGoneEvent } from "./OpponentGoneEvent";
+export { PatchQuery } from "./PatchQuery";
 export { Patron } from "./Patron";
 export { PatronColor } from "./PatronColor";
 export { Perf } from "./Perf";
