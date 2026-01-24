@@ -2413,7 +2413,7 @@ export class Lichess {
       orientation?: boolean;
     },
   ) {
-    const path = `/study/by/${params.username}/export.pgn` as const;
+    const path = `/api/study/by/${params.username}/export.pgn` as const;
     const query = {
       clocks: params.clocks,
       comments: params.comments,
