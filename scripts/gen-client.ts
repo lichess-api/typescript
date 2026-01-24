@@ -1,14 +1,17 @@
 import * as z from "zod";
 
 import {
-  SchemaSchemaRef,
-  SchemaSchema,
-  convertToZod,
-  Primitive,
-  SchemaSchemaPrimitive,
-  SchemaSchemaBoolean,
   assertNever,
+  convertToZod,
+  OperationParameterBase,
+  OperationQueryParameterSchema,
+  QueryParamSchemaSchema,
   type Schema,
+  SchemaSchema,
+  SchemaSchemaBoolean,
+  SchemaSchemaPrimitive,
+  SchemaSchemaRef,
+  SchemaSchemaRefToPrimitive,
 } from "./shared";
 
 const Semver = z.string().brand("Semver");
@@ -21,9 +24,7 @@ const OpenApiSchemaInfo = z.object({
     url: z.url(),
     email: z.email(),
   }),
-  "x-logo": z.object({
-    url: z.url(),
-  }),
+  "x-logo": z.object({ url: z.url() }),
   license: z.object({
     name: z.string(),
     url: z.url(),
@@ -85,18 +86,22 @@ const AccessTokenScopeSchema = z.union([
 
 const OAuth2Scope = z.union([AccessTokenScopeSchema, z.literal(["web:mod"])]);
 
-const OAuth2Schema = z.tuple([z.object({ OAuth2: z.array(OAuth2Scope) })]);
+const OAuth2Schema = z.object({ OAuth2: z.array(OAuth2Scope) });
 
-const SecuritySchema = z.union([z.array(AccessTokenScopeSchema), OAuth2Schema]);
+const SecuritySchema = z.union([
+  z.array(AccessTokenScopeSchema),
+  z.union([
+    z.tuple([OAuth2Schema]),
+    z.tuple([z.strictObject({}), OAuth2Schema]),
+  ]),
+]);
 
 const StringJsonRef = z
-  .string()
-  .refine((str) => str.endsWith(".json"))
+  .templateLiteral([z.string(), ".json"])
   .brand("StringJsonRef");
 
 const SchemaSchemaExampleRef = z
-  .object({ $ref: StringJsonRef })
-  .strict()
+  .strictObject({ $ref: StringJsonRef })
   .transform((s) => ({ ...s, __schema: "$ref" as const }));
 
 const ResponseContentBaseContent = z.object({
@@ -124,37 +129,34 @@ const ResponseContentChessPgnContent = ResponseContentBaseContent.extend({})
 const ResponseContentJson = z
   .union([
     z
-      .object({ "application/json": ResponseContentJsonContent })
-      .strict()
+      .strictObject({ "application/json": ResponseContentJsonContent })
       .transform((x) => x["application/json"]),
     z
-      .object({ "application/vnd.lichess.v3+json": ResponseContentJsonContent })
-      .strict()
+      .strictObject({
+        "application/vnd.lichess.v3+json": ResponseContentJsonContent,
+      })
       .transform((x) => x["application/vnd.lichess.v3+json"]),
   ])
   .transform((x) => ({ ...x, __content_type: "json" as const }));
 
 const ResponseContentNdjson = z
-  .object({ "application/x-ndjson": ResponseContentNdjsonContent })
-  .strict()
+  .strictObject({ "application/x-ndjson": ResponseContentNdjsonContent })
   .transform((x) => x["application/x-ndjson"])
   .transform((x) => ({ ...x, __content_type: "ndjson" as const }));
 
 const ResponseContentChessPgn = z
-  .object({ "application/x-chess-pgn": ResponseContentChessPgnContent })
-  .strict()
+  .strictObject({ "application/x-chess-pgn": ResponseContentChessPgnContent })
   .transform((x) => x["application/x-chess-pgn"])
   .transform((x) => ({ ...x, __content_type: "chess-pgn" as const }));
 
 const ResponseContentMixed = z
-  .object({
+  .strictObject({
     "text/plain": ResponseContextPlainTextContent.optional(),
     "application/json": ResponseContentJsonContent.optional(),
     "application/vnd.lichess.v3+json": ResponseContentJsonContent.optional(),
     "application/x-chess-pgn": ResponseContentChessPgnContent.optional(),
     "application/x-ndjson": ResponseContentNdjsonContent.optional(),
   })
-  .strict()
   .transform((x) => ({ ...x, __content_type: "mixed" as const }));
 
 const ResponseContentNoContent = z
@@ -170,102 +172,42 @@ const ResponseContent = z.union([
 ]);
 type ResponseCaseContent = z.infer<typeof ResponseContent>;
 
-const ResponseSchemaHeaders = z
-  .object({
-    "Access-Control-Allow-Origin": z
-      .object({
-        schema: z.object({
-          type: z.literal("string"),
-          default: z.literal("'*'"),
-        }),
-      })
-      .strict(),
-    "Last-Modified": z
-      .object({
-        schema: z.object({
-          type: z.literal("string"),
-          example: z.string(),
-        }),
-      })
-      .strict()
-      .optional(),
-  })
-  .strict();
+const ResponseSchemaHeaders = z.strictObject({
+  "Access-Control-Allow-Origin": z.strictObject({
+    schema: z.object({
+      type: z.literal("string"),
+      default: z.literal("'*'"),
+    }),
+  }),
+  "Last-Modified": z
+    .strictObject({
+      schema: z.object({
+        type: z.literal("string"),
+        example: z.string(),
+      }),
+    })
+    .optional(),
+});
 
-const ResponseSchema = z
-  .object({
-    description: z.string(),
-    headers: ResponseSchemaHeaders.optional(),
-    content: ResponseContent,
-  })
-  .strict();
+const ResponseSchema = z.strictObject({
+  description: z.string(),
+  headers: ResponseSchemaHeaders.optional(),
+  content: ResponseContent,
+});
 type ResponseCase = z.infer<typeof ResponseSchema>;
 
-const OperationParameterBase = z
-  .object({
-    name: z.string(),
-    description: z.string().optional(),
-    example: Primitive.optional(),
-  })
-  .strict();
-
-const SchemaSchemaNullableRefToPrimitive = z
-  .object({
-    allOf: z.tuple([SchemaSchemaRef, z.object({ default: z.null() })]),
-  })
-  .strict()
-  .transform((s) => ({
-    ...s,
-    __schema: "notverified:reftoprimitive:nullable" as const,
-  }))
-  .brand("notverified:SchemaSchemaNullableRefToPrimitive");
-
-const SchemaSchemaRefToPrimitive = SchemaSchemaRef.brand(
-  "notverified:SchemaSchemaRefToPrimitive",
-).transform((s) => ({ ...s, __schema: "notverified:reftoprimitive" as const }));
-
 const SchemaSchemaBooleanLike = z
-  .object({
+  .strictObject({
     anyOf: z.tuple([
       SchemaSchemaBoolean,
       z.object({ type: z.literal("string"), const: z.literal("yes") }),
     ]),
     example: z.literal("yes"),
   })
-  .strict()
   .transform((s) => ({ ...s, __schema: "boolean-like" as const }))
   .brand("SchemaSchemaBooleanLike");
 
-const SchemaSchemaArrayOfPrimitive = z
-  .object({ type: z.literal("array"), items: SchemaSchemaPrimitive })
-  .strict()
-  .transform((s) => ({ ...s, __schema: "array:primitive" as const }));
-
-const SchemaSchemaArrayOfRefToPrimitive = z
-  .object({ type: z.literal("array"), items: SchemaSchemaRefToPrimitive })
-  .strict()
-  .transform((s) => ({
-    ...s,
-    __schema: "array:notverified:reftoprimitive" as const,
-  }));
-
-const QueryParamSchemaSchema = z.union([
-  SchemaSchemaPrimitive,
-  SchemaSchemaArrayOfPrimitive,
-  SchemaSchemaRefToPrimitive,
-  SchemaSchemaArrayOfRefToPrimitive,
-  SchemaSchemaNullableRefToPrimitive,
-]);
-
 type QueryParamSchema = z.infer<typeof QueryParamSchemaSchema>;
-
-const OperationQueryParameterSchema = OperationParameterBase.extend({
-  in: z.literal("query"),
-  required: z.boolean().optional(),
-  schema: QueryParamSchemaSchema,
-})
-  .strict()
-  .transform((s) => ({ ...s, __type: "query" as const }));
 
 type OperationQueryParameter = z.infer<typeof OperationQueryParameterSchema>;
 
@@ -315,20 +257,17 @@ const BaseTagSchemaOperation = z.object({
 });
 
 const RequestBodyContentJson = z
-  .object({ "application/json": z.object({ schema: SchemaSchema }) })
-  .strict()
+  .strictObject({ "application/json": z.object({ schema: SchemaSchema }) })
   .transform((s) => ({ ...s, __type: "json" as const }));
 
 const RequestBodyContentPlainText = z
-  .object({ "text/plain": z.object({ schema: SchemaSchema }) })
-  .strict()
+  .strictObject({ "text/plain": z.object({ schema: SchemaSchema }) })
   .transform((s) => ({ ...s, __type: "text/plain" as const }));
 
 const RequestBodyContentWebFormUrlEncoded = z
-  .object({
+  .strictObject({
     "application/x-www-form-urlencoded": z.object({ schema: SchemaSchema }),
   })
-  .strict()
   .transform((s) => ({ ...s, __type: "x-www-form-urlencoded" as const }));
 
 const RequestBodyContent = z.union([
@@ -337,13 +276,11 @@ const RequestBodyContent = z.union([
   RequestBodyContentWebFormUrlEncoded,
 ]);
 
-const RequestBodySchema = z
-  .object({
-    description: z.string().optional(),
-    required: z.boolean().optional(),
-    content: RequestBodyContent,
-  })
-  .strict();
+const RequestBodySchema = z.strictObject({
+  description: z.string().optional(),
+  required: z.boolean().optional(),
+  content: RequestBodyContent,
+});
 
 const TagSchemaSchemaGet = BaseTagSchemaOperation.extend({})
   .strict()
@@ -628,6 +565,9 @@ function schemaToTypescriptTypes(
     case "string:nullable": {
       throw new Error("Unsupported schema");
     }
+    case "unknown": {
+      return "unknown" as const;
+    }
   }
 
   assertNever(schema);
@@ -821,7 +761,6 @@ function processTag(tagSchema: TagSchema, rawApiPath: string) {
       sharedPathParams,
       baseUrl,
     });
-    console.log(processedOperation);
     if (processedOperation.__type === "__parameters") {
       sharedPathParams = processedOperation.parameters;
     }
@@ -843,9 +782,13 @@ async function processSchema(schema: OpenApiSchema): Promise<void> {
     const fullYamlPath = `${tagsDir}/${tagPath}` as const;
     const yamlStr = await Bun.file(fullYamlPath).text();
     const schema = Bun.YAML.parse(yamlStr);
-    console.log({ fullYamlPath, schema });
-    const tagSchema = TagSchemaSchema.parse(schema);
-    const newMethods = processTag(tagSchema, rawApiPath);
+    const tagSchema = TagSchemaSchema.safeParse(schema);
+    if (tagSchema.error) {
+      console.error(`Error while parsing ${tagPath}`);
+      console.error(z.prettifyError(tagSchema.error));
+      throw tagSchema.error;
+    }
+    const newMethods = processTag(tagSchema.data, rawApiPath);
     methodsCode.push(...newMethods);
   }
 
@@ -855,9 +798,9 @@ async function processSchema(schema: OpenApiSchema): Promise<void> {
 
   const clientCodeTs = `import * as z from "zod";
 
-import * as schemas from "~/schemas";
-
 import { ndjsonStream } from "~/lib/ndjson";
+
+import * as schemas from "~/schemas";
 
 import { Requestor } from "./requestor";
 
@@ -883,11 +826,13 @@ export class Lichess {
 }
 
 async function main() {
+  console.log("Generating client...");
   const filePath = "specs/lichess-api.yaml" as const;
   const yamlStr = await Bun.file(filePath).text();
   const yamlContent = Bun.YAML.parse(yamlStr);
   const parsedSchema = OpenApiSchemaSchema.parse(yamlContent);
   await processSchema(parsedSchema);
+  console.log("Client generated");
 }
 
 await main();

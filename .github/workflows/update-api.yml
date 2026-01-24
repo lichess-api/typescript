@@ -1,0 +1,69 @@
+name: Update API
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+jobs:
+  update-api:
+    name: Update API
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Checkout lichess-org/api
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          repository: lichess-org/api
+          ref: master
+          path: lichess-api
+          fetch-depth: 1
+
+      - name: Copy files
+        run: |
+          rm -rf specs/*
+
+          mkdir -p specs/schemas specs/tags
+
+          cp -r lichess-api/doc/specs/schemas/.         specs/schemas/
+          cp -r lichess-api/doc/specs/tags/.            specs/tags/
+          cp    lichess-api/doc/specs/lichess-api.yaml  specs/lichess-api.yaml
+
+          rm -rf lichess-api
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@b7a1c7ccf290d58743029c4f6903da283811b979 # v2.1.0
+        with:
+          bun-version-file: ".bun-version"
+
+      - name: Install dependencies
+        run: bun ci
+
+      - name: Generate files
+        run: bun run gen
+
+      - name: Build
+        run: bun run build
+
+      - name: Run tests
+        run: bun run test
+
+      - name: Create or update Pull Request
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+        with:
+          commit-message: "ci: update api"
+          title: "ci: update api"
+          committer: CI <ci@rman.dev>
+          author: CI <ci@rman.dev>
+          body: Update API
+          branch: update-api
+          delete-branch: true
+          assignees: gameroman
+          reviewers: gameroman
+          labels: ci

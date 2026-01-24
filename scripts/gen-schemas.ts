@@ -1,20 +1,35 @@
+import { readdirSync } from "node:fs";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import { ZodError } from "zod";
+import { prettifyError } from "zod/mini";
 import { convertToZod, SchemaSchema } from "./shared";
 
-import { readdirSync } from "node:fs";
-import path from "node:path";
-import * as fs from "node:fs/promises";
-
 async function processFile(filePath: string) {
-  filePath = filePath.replaceAll("\\", "/");
-  const fileName = filePath.split("/").pop()!.replace(".yaml", "");
-  console.log({ filePath, fileName });
-  const yamlStr = await Bun.file(filePath).text();
+  const normalizedFilePath = filePath.replaceAll("\\", "/");
+  const fileName = normalizedFilePath.split("/").pop()!.replace(".yaml", "");
+  const yamlStr = await Bun.file(normalizedFilePath).text();
   const yamlContent = Bun.YAML.parse(yamlStr);
-  const parsedSchema = SchemaSchema.parse(yamlContent);
-  const { zodSchema, refs: uniqueRefs } = convertToZod(parsedSchema);
+  const parsedSchema = SchemaSchema.safeParse(yamlContent);
+  if (parsedSchema.error) {
+    console.error(`Error while parsing ${normalizedFilePath}`);
+    console.error(prettifyError(parsedSchema.error));
+    throw parsedSchema.error;
+  }
+  const { zodSchema, refs } = (() => {
+    try {
+      return convertToZod(parsedSchema.data);
+    } catch (e) {
+      if (e instanceof ZodError) {
+        console.error(`Error while converting ${normalizedFilePath}`);
+        console.error(prettifyError(e));
+      }
+      throw e;
+    }
+  })();
 
-  uniqueRefs.sort();
-  const refImports = uniqueRefs
+  const refImports = refs
+    .toSorted()
     .map((refName) => `import { ${refName} } from "./${refName}";` as const)
     .join("\n");
   const spacedRefImports = refImports
@@ -37,13 +52,14 @@ export { ${fileName} };
 }
 
 async function main() {
+  console.log("Generating schemas...");
   const outDir = "src/schemas" as const;
   await fs.rm(outDir, { recursive: true, force: true });
   const schemasDir = "specs/schemas" as const;
   const glob = new Bun.Glob(`${schemasDir}/*.{yaml}` as const);
   const yamlFiles = await Array.fromAsync(glob.scan());
-  const filesToProcess = yamlFiles.filter((f) => !f.includes("_index.yaml"));
-  for (const fullPath of filesToProcess) {
+  for (const fullPath of yamlFiles) {
+    if (fullPath.includes("_index.yaml")) continue;
     await processFile(fullPath);
   }
   const tsFiles = readdirSync(outDir)
@@ -56,6 +72,7 @@ async function main() {
   const content = importLines.join("\n");
   const outFile = `${outDir}/index.ts` as const;
   await Bun.write(outFile, content);
+  console.log("Schemas generated");
 }
 
 await main();

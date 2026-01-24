@@ -10,7 +10,7 @@
     "gen": "bun run gen:schemas && bun run gen:client && bun run format",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
-    "format": "biome format --write",
+    "format": "biome check --write --linter-enabled=false",
     "build": "bunx --bun tsdown",
     "prepublishOnly": "bun run build"
   },
@@ -32,8 +32,6 @@
     "@typescript/native-preview": "^7.0.0-dev.20260124.1",
     "tsdown": "^0.20.1"
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "exports": {
     ".": "./dist/index.mjs",

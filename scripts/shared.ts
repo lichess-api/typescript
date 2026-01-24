@@ -21,8 +21,7 @@ const BaseSchema = z.object({
 });
 
 const StringYamlRef = z
-  .string()
-  .refine((str) => str.endsWith(".yaml"))
+  .templateLiteral([z.string(), ".yaml"])
   .brand("StringYamlRef");
 
 export const SchemaSchemaRef = BaseSchema.extend({
@@ -108,6 +107,54 @@ export const SchemaSchemaPrimitive = z.union([
   SchemaSchemaBoolean,
 ]);
 
+const SchemaSchemaArrayOfPrimitive = z
+  .strictObject({ type: z.literal("array"), items: SchemaSchemaPrimitive })
+  .transform((s) => ({ ...s, __schema: "array:primitive" as const }));
+
+export const SchemaSchemaRefToPrimitive = SchemaSchemaRef.transform((s) => ({
+  ...s,
+  __schema: "notverified:reftoprimitive" as const,
+})).brand("notverified:SchemaSchemaRefToPrimitive");
+
+const SchemaSchemaArrayOfRefToPrimitive = z
+  .strictObject({ type: z.literal("array"), items: SchemaSchemaRefToPrimitive })
+  .transform((s) => ({
+    ...s,
+    __schema: "array:notverified:reftoprimitive" as const,
+  }));
+
+const SchemaSchemaNullableRefToPrimitive = z
+  .strictObject({
+    allOf: z.tuple([SchemaSchemaRef, z.object({ default: z.null() })]),
+  })
+  .transform((s) => ({
+    ...s,
+    __schema: "notverified:reftoprimitive:nullable" as const,
+  }))
+  .brand("notverified:SchemaSchemaNullableRefToPrimitive");
+
+export const QueryParamSchemaSchema = z.union([
+  SchemaSchemaPrimitive,
+  SchemaSchemaArrayOfPrimitive,
+  SchemaSchemaRefToPrimitive,
+  SchemaSchemaArrayOfRefToPrimitive,
+  SchemaSchemaNullableRefToPrimitive,
+]);
+
+export const OperationParameterBase = BaseSchema.extend({
+  name: z.string(),
+  description: z.string().optional(),
+  example: Primitive.optional(),
+}).strict();
+
+export const OperationQueryParameterSchema = OperationParameterBase.extend({
+  in: z.literal("query"),
+  required: z.boolean().optional(),
+  schema: QueryParamSchemaSchema,
+})
+  .strict()
+  .transform((s) => ({ ...s, __schema: "unknown", __type: "query" }) as const);
+
 const SchemaSchemaObject = BaseSchema.extend({
   type: z.literal("object").optional(),
   title: z.string().optional(),
@@ -157,6 +204,7 @@ const SchemaSchemaAnyOf = BaseSchema.extend({
     propertyName: z.string(),
     mapping: z.record(z.string(), StringYamlRef),
   }),
+  required: z.array(z.string()).optional(),
 })
   .strict()
   .transform((s) => ({ ...s, __schema: "anyOf" as const }));
@@ -173,6 +221,7 @@ const SchemaSchema = z.union([
   SchemaSchemaOneOf,
   SchemaSchemaAllOf,
   SchemaSchemaAnyOf,
+  OperationQueryParameterSchema,
 ]);
 
 type Schema = z.infer<typeof SchemaSchema>;
@@ -187,200 +236,213 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
     } as const;
   }
 
-  switch (schema.__schema) {
-    case "$ref": {
-      const ref = schema.$ref;
-      const name = ref.split("/").pop()!.replace(".yaml", "");
-      const prefixedName = `${prefix}${name}` as const;
-      return { zodSchema: prefixedName, refs: prefix ? [] : [name] } as const;
-    }
-    case "oneOf": {
-      const subResults = schema.oneOf.map((item) =>
-        convertToZod(SchemaSchema.parse(item), prefix),
-      );
-      const zodSchemas = subResults.map((r) => r.zodSchema);
-      const allRefs = new Set<string>();
-      subResults.forEach((r) => r.refs.forEach((ref) => allRefs.add(ref)));
-      return {
-        zodSchema: `z.union([${zodSchemas.join(", ")}])`,
-        refs: Array.from(allRefs),
-      } as const;
-    }
-    case "allOf": {
-      const leftPart = convertToZod(
-        SchemaSchema.parse(schema.allOf[0]),
-        prefix,
-      );
-      const rightPart = convertToZod(
-        SchemaSchema.parse(schema.allOf[1]),
-        prefix,
-      );
-      const allRefs = new Set([...leftPart.refs, ...rightPart.refs]);
-      return {
-        zodSchema: `z.intersection(${leftPart.zodSchema}, ${rightPart.zodSchema})`,
-        refs: Array.from(allRefs),
-      } as const;
-    }
-    case "anyOf": {
-      const refNames: string[] = [];
-      const allRefs = new Set<string>();
-      for (const [_, refYaml] of Object.entries(schema.discriminator.mapping)) {
-        const name = refYaml.split("/").pop()!.replace(".yaml", "");
-        refNames.push(prefix + name);
-        if (!prefix) allRefs.add(name);
+  try {
+    switch (schema.__schema) {
+      case "$ref": {
+        const ref = schema.$ref;
+        const name = ref.split("/").pop()!.replace(".yaml", "");
+        const prefixedName = `${prefix}${name}` as const;
+        return { zodSchema: prefixedName, refs: prefix ? [] : [name] } as const;
       }
-      return {
-        zodSchema: `z.discriminatedUnion("${
-          schema.discriminator.propertyName
-        }", [${refNames.join(", ")}])`,
-        refs: Array.from(allRefs),
-      } as const;
-    }
-    case "null": {
-      return { zodSchema: "z.null()", refs: [] } as const;
-    }
-    case "string": {
-      if (schema.enum) {
-        const literals = JSON.stringify(schema.enum);
-        return { zodSchema: `z.literal(${literals})`, refs: [] } as const;
+      case "oneOf": {
+        const subResults = schema.oneOf.map((item) =>
+          convertToZod(SchemaSchema.parse(item), prefix),
+        );
+        const zodSchemas = subResults.map((r) => r.zodSchema);
+        const allRefs = new Set<string>();
+        subResults.forEach((r) => r.refs.forEach((ref) => allRefs.add(ref)));
+        return {
+          zodSchema: `z.union([${zodSchemas.join(", ")}])`,
+          refs: Array.from(allRefs),
+        } as const;
       }
-      if (schema.format === "uri") {
-        return { zodSchema: "z.url()", refs: [] } as const;
-      }
-      if (schema.format === "date-time") {
-        return { zodSchema: "z.iso.datetime()", refs: [] } as const;
-      }
-      let schemaStr = "z.string()";
-      if (schema.minLength !== undefined) {
-        schemaStr += `.min(${schema.minLength})`;
-      }
-      if (schema.maxLength !== undefined) {
-        schemaStr += `.max(${schema.maxLength})`;
-      }
-      return { zodSchema: schemaStr, refs: [] } as const;
-    }
-    case "string:nullable": {
-      return { zodSchema: "z.string().nullable()", refs: [] } as const;
-    }
-    case "enum:number": {
-      const literals = schema.enum.map((v) => JSON.stringify(v)).join(", ");
-      return { zodSchema: `z.literal([${literals}])`, refs: [] } as const;
-    }
-    case "integer": {
-      let schemaStr = "z.int()";
-      if (schema.minimum !== undefined && schema.maximum !== undefined) {
-        const diff = schema.maximum - schema.minimum;
-        if (diff <= 10) {
-          const values: number[] = [];
-          for (let i = schema.minimum; i <= schema.maximum; i++) {
-            values.push(i);
-          }
-          const literals = values.join(", ");
-          return { zodSchema: `z.literal([${literals}])`, refs: [] } as const;
-        }
-      }
-      if (schema.minimum !== undefined) {
-        schemaStr += `.min(${schema.minimum})`;
-      }
-      if (schema.maximum !== undefined) {
-        schemaStr += `.max(${schema.maximum})`;
-      }
-      return { zodSchema: schemaStr, refs: [] } as const;
-    }
-    case "integer:nullable": {
-      return { zodSchema: "z.int().nullable()", refs: [] } as const;
-    }
-    case "number": {
-      let schemaStr = "z.number()";
-      if (schema.minimum !== undefined) {
-        schemaStr += `.min(${schema.minimum})`;
-      }
-      if (schema.maximum !== undefined) {
-        schemaStr += `.max(${schema.maximum})`;
-      }
-      return { zodSchema: schemaStr, refs: [] } as const;
-    }
-    case "boolean": {
-      return { zodSchema: "z.boolean()", refs: [] } as const;
-    }
-    case "additionalProperties": {
-      const { zodSchema: valueSchemaStr, refs } = convertToZod(
-        SchemaSchema.parse(schema.additionalProperties),
-        prefix,
-      );
-      return {
-        zodSchema: `z.record(z.string(), ${valueSchemaStr})`,
-        refs,
-      } as const;
-    }
-    case "object": {
-      const props = schema.properties || {};
-      const required = new Set(schema.required || []);
-      const zodProps: Record<string, string> = {};
-      const allRefs = new Set<string>();
-      for (const [k, v] of Object.entries(props)) {
-        const { zodSchema: sch, refs: propRefs } = convertToZod(
-          SchemaSchema.parse(v),
+      case "allOf": {
+        const leftPart = convertToZod(
+          SchemaSchema.parse(schema.allOf[0]),
           prefix,
         );
-        propRefs.forEach((r) => allRefs.add(r));
-        let propStr = sch;
-        if (!required.has(k)) {
-          propStr += ".optional()";
+        const rightPart = convertToZod(
+          SchemaSchema.parse(schema.allOf[1]),
+          prefix,
+        );
+        const allRefs = new Set([...leftPart.refs, ...rightPart.refs]);
+        return {
+          zodSchema: `z.intersection(${leftPart.zodSchema}, ${rightPart.zodSchema})`,
+          refs: Array.from(allRefs),
+        } as const;
+      }
+      case "anyOf": {
+        const refNames: string[] = [];
+        const allRefs = new Set<string>();
+        for (const [_, refYaml] of Object.entries(
+          schema.discriminator.mapping,
+        )) {
+          const name = refYaml.split("/").pop()!.replace(".yaml", "");
+          refNames.push(prefix + name);
+          if (!prefix) allRefs.add(name);
         }
-        zodProps[k] = propStr;
+        return {
+          zodSchema: `z.discriminatedUnion("${
+            schema.discriminator.propertyName
+          }", [${refNames.join(", ")}])`,
+          refs: Array.from(allRefs),
+        } as const;
       }
-      const entries = Object.entries(zodProps);
-      const inner =
-        entries.length === 1
-          ? `{ "${entries[0]![0]}": ${entries[0]![1]} }`
-          : "{\n" +
-            entries.map(([k, v]) => `  "${k}": ${v},`).join("\n") +
-            "\n}";
-      return {
-        zodSchema: `z.object(${inner})`,
-        refs: Array.from(allRefs),
-      } as const;
-    }
-    case "array": {
-      const items = schema.items;
-      if (!items) {
-        return { zodSchema: "z.array(z.unknown())", refs: [] } as const;
+      case "null": {
+        return { zodSchema: "z.null()", refs: [] } as const;
       }
-      const { zodSchema: itemSchema, refs: itemRefs } = convertToZod(
-        SchemaSchema.parse(items),
-        prefix,
-      );
-      let zodSchemaStr: string;
-      if (
-        schema.minItems !== undefined &&
-        schema.maxItems !== undefined &&
-        schema.minItems === schema.maxItems &&
-        schema.minItems <= 10
-      ) {
-        const n = schema.minItems;
-        const tupleItems = Array(n).fill(itemSchema).join(", ");
-        zodSchemaStr = `z.tuple([${tupleItems}])`;
-      } else {
-        let inner = `z.array(${itemSchema})`;
+      case "string": {
+        if (schema.enum) {
+          const literals = JSON.stringify(schema.enum);
+          return { zodSchema: `z.literal(${literals})`, refs: [] } as const;
+        }
+        if (schema.format === "uri") {
+          return { zodSchema: "z.url()", refs: [] } as const;
+        }
+        if (schema.format === "date-time") {
+          return { zodSchema: "z.iso.datetime()", refs: [] } as const;
+        }
+        let schemaStr = "z.string()";
+        if (schema.minLength !== undefined) {
+          schemaStr += `.min(${schema.minLength})`;
+        }
+        if (schema.maxLength !== undefined) {
+          schemaStr += `.max(${schema.maxLength})`;
+        }
+        return { zodSchema: schemaStr, refs: [] } as const;
+      }
+      case "string:nullable": {
+        return { zodSchema: "z.string().nullable()", refs: [] } as const;
+      }
+      case "enum:number": {
+        const literals = schema.enum.map((v) => JSON.stringify(v)).join(", ");
+        return { zodSchema: `z.literal([${literals}])`, refs: [] } as const;
+      }
+      case "integer": {
+        let schemaStr = "z.int()";
+        if (schema.minimum !== undefined && schema.maximum !== undefined) {
+          const diff = schema.maximum - schema.minimum;
+          if (diff <= 10) {
+            const values: number[] = [];
+            for (let i = schema.minimum; i <= schema.maximum; i++) {
+              values.push(i);
+            }
+            const literals = values.join(", ");
+            return { zodSchema: `z.literal([${literals}])`, refs: [] } as const;
+          }
+        }
+        if (schema.minimum !== undefined) {
+          schemaStr += `.min(${schema.minimum})`;
+        }
+        if (schema.maximum !== undefined) {
+          schemaStr += `.max(${schema.maximum})`;
+        }
+        return { zodSchema: schemaStr, refs: [] } as const;
+      }
+      case "integer:nullable": {
+        return { zodSchema: "z.int().nullable()", refs: [] } as const;
+      }
+      case "number": {
+        let schemaStr = "z.number()";
+        if (schema.minimum !== undefined) {
+          schemaStr += `.min(${schema.minimum})`;
+        }
+        if (schema.maximum !== undefined) {
+          schemaStr += `.max(${schema.maximum})`;
+        }
+        return { zodSchema: schemaStr, refs: [] } as const;
+      }
+      case "boolean": {
+        return { zodSchema: "z.boolean()", refs: [] } as const;
+      }
+      case "additionalProperties": {
+        const { zodSchema: valueSchemaStr, refs } = convertToZod(
+          SchemaSchema.parse(schema.additionalProperties),
+          prefix,
+        );
+        return {
+          zodSchema: `z.record(z.string(), ${valueSchemaStr})`,
+          refs,
+        } as const;
+      }
+      case "object": {
+        const props = schema.properties || {};
+        const required = new Set(schema.required || []);
+        const zodProps: Record<string, string> = {};
+        const allRefs = new Set<string>();
+        for (const [k, v] of Object.entries(props)) {
+          const { zodSchema: sch, refs: propRefs } = convertToZod(
+            SchemaSchema.parse(v),
+            prefix,
+          );
+          propRefs.forEach((r) => allRefs.add(r));
+          let propStr = sch;
+          if (!required.has(k)) {
+            propStr += ".optional()";
+          }
+          zodProps[k] = propStr;
+        }
+        const entries = Object.entries(zodProps);
+        const inner =
+          entries.length === 1
+            ? `{ "${entries[0]![0]}": ${entries[0]![1]} }`
+            : "{\n" +
+              entries.map(([k, v]) => `  "${k}": ${v},`).join("\n") +
+              "\n}";
+        return {
+          zodSchema: `z.object(${inner})`,
+          refs: Array.from(allRefs),
+        } as const;
+      }
+      case "array": {
+        const items = schema.items;
+        if (!items) {
+          return { zodSchema: "z.array(z.unknown())", refs: [] } as const;
+        }
+        const { zodSchema: itemSchema, refs: itemRefs } = convertToZod(
+          SchemaSchema.parse(items),
+          prefix,
+        );
+        let zodSchemaStr: string;
         if (
           schema.minItems !== undefined &&
           schema.maxItems !== undefined &&
-          schema.minItems === schema.maxItems
+          schema.minItems === schema.maxItems &&
+          schema.minItems <= 10
         ) {
-          inner += `.length(${schema.minItems})`;
+          const n = schema.minItems;
+          const tupleItems = Array(n).fill(itemSchema).join(", ");
+          zodSchemaStr = `z.tuple([${tupleItems}])`;
         } else {
-          if (schema.minItems !== undefined) {
-            inner += `.min(${schema.minItems})`;
+          let inner = `z.array(${itemSchema})`;
+          if (
+            schema.minItems !== undefined &&
+            schema.maxItems !== undefined &&
+            schema.minItems === schema.maxItems
+          ) {
+            inner += `.length(${schema.minItems})`;
+          } else {
+            if (schema.minItems !== undefined) {
+              inner += `.min(${schema.minItems})`;
+            }
+            if (schema.maxItems !== undefined) {
+              inner += `.max(${schema.maxItems})`;
+            }
           }
-          if (schema.maxItems !== undefined) {
-            inner += `.max(${schema.maxItems})`;
-          }
+          zodSchemaStr = inner;
         }
-        zodSchemaStr = inner;
+        return { zodSchema: zodSchemaStr, refs: itemRefs } as const;
       }
-      return { zodSchema: zodSchemaStr, refs: itemRefs } as const;
+      case "unknown": {
+        return { zodSchema: "z.unknown()", refs: [] } as const;
+      }
     }
+  } catch (e) {
+    if (e instanceof z.ZodError) {
+      console.error(`Error while converting ${schema.__schema}`);
+      console.error(z.prettifyError(e));
+    }
+    throw e;
   }
 
   assertNever(schema);
