@@ -1,9 +1,8 @@
 import * as z from "zod";
 
 const SchemaUnparsed = z.unknown().brand("SchemaUnparsed");
-type SchemaUnparsed = z.infer<typeof SchemaUnparsed>;
 
-export const Primitive = z.union([z.string(), z.number(), z.boolean()]);
+const Primitive = z.union([z.string(), z.number(), z.boolean()]);
 
 const BaseSchema = z.object({
   // `const` can only be on `string`, `number` and `boolean`
@@ -24,7 +23,7 @@ const StringYamlRef = z
   .templateLiteral([z.string(), ".yaml"])
   .brand("StringYamlRef");
 
-export const SchemaSchemaRef = BaseSchema.extend({
+const SchemaSchemaRef = BaseSchema.extend({
   type: z.literal("object").optional(),
   $ref: StringYamlRef,
 })
@@ -133,7 +132,7 @@ const SchemaSchemaNullableRefToPrimitive = z
   }))
   .brand("notverified:SchemaSchemaNullableRefToPrimitive");
 
-export const QueryParamSchemaSchema = z.union([
+const QueryParamSchemaSchema = z.union([
   SchemaSchemaPrimitive,
   SchemaSchemaArrayOfPrimitive,
   SchemaSchemaRefToPrimitive,
@@ -452,5 +451,11 @@ function assertNever(schema: never): never {
   throw new Error(`Unknown schema: ${JSON.stringify(schema)}`);
 }
 
-export { SchemaSchema, convertToZod, assertNever };
-export type { Schema, SchemaUnparsed, ConvertResult };
+export {
+  QueryParamSchemaSchema,
+  SchemaSchemaRef,
+  SchemaSchema,
+  convertToZod,
+  assertNever,
+};
+export type { Schema };

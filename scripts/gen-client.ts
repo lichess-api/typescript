@@ -630,7 +630,7 @@ function processOperation(
   if (operation.__id === "__parameters") {
     const parameters = operation.parameters;
     return {
-      methodCode: "/* --- Shared path params for methods below --- */",
+      methodCode: "",
       parameters,
       __type: "__parameters",
     } as const;
@@ -676,15 +676,23 @@ function processOperation(
   const requestCode = (() => {
     const bodyArg = requestBodySchema ? (", body" as const) : ("" as const);
 
-    const bodyComment = requestBodySchema
+    const bodyAssignment = requestBodySchema
       ? ("const body = params.body;\n" as const)
       : ("" as const);
 
+    const baseUrlArg = options?.baseUrl
+      ? (", baseUrl" as const)
+      : ("" as const);
+
+    const baseUrlAssignment = options?.baseUrl
+      ? (`const baseUrl = "${options.baseUrl}";\n` as const)
+      : ("" as const);
+
     if (!hasQueryParams) {
-      return `${bodyComment}const { response, status } = await this.requestor.${operation.__method}({ path${bodyArg} });` as const;
+      return `${bodyAssignment}${baseUrlAssignment}const { response, status } = await this.requestor.${operation.__method}({ path${bodyArg}${baseUrlArg} });` as const;
     }
 
-    const queryComment =
+    const queryAssignment =
       hasOnlyQueryParams && !requestBodySchema
         ? ("const query = params;\n" as const)
         : hasQueryParams
@@ -701,28 +709,28 @@ function processOperation(
 
     const queryArg = hasQueryParams ? ", query" : "";
 
-    return `${queryComment}${bodyComment}const { response, status } = await this.requestor.${operation.__method}({ path${queryArg}${bodyArg} });` as const;
+    return `${queryAssignment}${bodyAssignment}${baseUrlAssignment}const { response, status } = await this.requestor.${operation.__method}({ path${queryArg}${bodyArg}${baseUrlArg} });` as const;
   })();
 
   const paramsComment = (() => {
-    const bodyParamsComment = requestBodySchema
+    const bodyParamsAssignment = requestBodySchema
       ? (` & ${extractBodyTypes(requestBodySchema)}` as const)
       : ("" as const);
 
     if (hasQueryAndPathParams) {
       const pathParamsTypes = extractPathParams(pathParams);
       const queryParamsTypes = extractQueryParams(queryParams);
-      return `params: ${pathParamsTypes} & ${queryParamsTypes}${bodyParamsComment}` as const;
+      return `params: ${pathParamsTypes} & ${queryParamsTypes}${bodyParamsAssignment}` as const;
     }
 
     if (hasPathParams) {
       const pathParamsTypes = extractPathParams(pathParams);
-      return `params: ${pathParamsTypes}${bodyParamsComment}` as const;
+      return `params: ${pathParamsTypes}${bodyParamsAssignment}` as const;
     }
 
     if (hasQueryParams) {
       const queryParamsTypes = extractQueryParams(queryParams);
-      return `params: ${queryParamsTypes}${bodyParamsComment}` as const;
+      return `params: ${queryParamsTypes}${bodyParamsAssignment}` as const;
     }
 
     if (requestBodySchema) {
@@ -804,11 +812,10 @@ import * as schemas from "~/schemas";
 
 import { Requestor } from "./requestor";
 
-export const BASE_URL = "${API_URL}";
-type BASE_URL = typeof BASE_URL;
+const BASE_URL = "${API_URL}";
 
 export class Lichess {
-  private readonly requestor: Requestor<BASE_URL>;
+  private readonly requestor: Requestor;
 
   constructor(options: { token: string | null }) {
     const { token } = options;

@@ -6,11 +6,10 @@ import * as schemas from "~/schemas";
 
 import { Requestor } from "./requestor";
 
-export const BASE_URL = "https://lichess.org";
-type BASE_URL = typeof BASE_URL;
+const BASE_URL = "https://lichess.org";
 
 export class Lichess {
-  private readonly requestor: Requestor<BASE_URL>;
+  private readonly requestor: Requestor;
 
   constructor(options: { token: string | null }) {
     const { token } = options;
@@ -1277,8 +1276,6 @@ export class Lichess {
     }
   }
 
-  /* --- Shared path params for methods below --- */
-
   /**
    * Get info about an Arena tournament
    */
@@ -1878,8 +1875,6 @@ export class Lichess {
       }
     }
   }
-
-  /* --- Shared path params for methods below --- */
 
   /**
    * Get info about a Swiss tournament
@@ -3593,8 +3588,6 @@ export class Lichess {
     }
   }
 
-  /* --- Shared path params for methods below --- */
-
   /**
    * Fetch the game chat
    */
@@ -4734,8 +4727,6 @@ export class Lichess {
     }
   }
 
-  /* --- Shared path params for methods below --- */
-
   /**
    * Get external engine
    */
@@ -4797,7 +4788,6 @@ export class Lichess {
   }
 
   /* --- Base URL for methods below: https://engine.lichess.ovh --- */
-  /* --- Shared path params for methods below --- */
 
   /**
    * Analyse with external engine
@@ -4812,7 +4802,12 @@ export class Lichess {
   ) {
     const path = `/api/external-engine/${params.id}/analyse` as const;
     const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
+    const baseUrl = "https://engine.lichess.ovh";
+    const { response, status } = await this.requestor.post({
+      path,
+      body,
+      baseUrl,
+    });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -4845,7 +4840,12 @@ export class Lichess {
   async apiExternalEngineAcquire(params: { body: { providerSecret: string } }) {
     const path = "/api/external-engine/work" as const;
     const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
+    const baseUrl = "https://engine.lichess.ovh";
+    const { response, status } = await this.requestor.post({
+      path,
+      body,
+      baseUrl,
+    });
     switch (status) {
       case 200: {
         const schema = z.object({
@@ -4867,7 +4867,6 @@ export class Lichess {
   }
 
   /* --- Base URL for methods below: https://engine.lichess.ovh --- */
-  /* --- Shared path params for methods below --- */
 
   /**
    * Answer analysis request
@@ -4875,7 +4874,12 @@ export class Lichess {
   async apiExternalEngineSubmit(params: { id: string } & { body: string }) {
     const path = `/api/external-engine/work/${params.id}` as const;
     const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
+    const baseUrl = "https://engine.lichess.ovh";
+    const { response, status } = await this.requestor.post({
+      path,
+      body,
+      baseUrl,
+    });
     switch (status) {
       case 200: {
         return { status, response } as const;
@@ -5011,7 +5015,12 @@ export class Lichess {
   }) {
     const path = "/masters" as const;
     const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
+    const baseUrl = "https://explorer.lichess.ovh";
+    const { response, status } = await this.requestor.get({
+      path,
+      query,
+      baseUrl,
+    });
     switch (status) {
       case 200: {
         const schema = schemas.OpeningExplorerMasters;
@@ -5045,7 +5054,12 @@ export class Lichess {
   }) {
     const path = "/lichess" as const;
     const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
+    const baseUrl = "https://explorer.lichess.ovh";
+    const { response, status } = await this.requestor.get({
+      path,
+      query,
+      baseUrl,
+    });
     switch (status) {
       case 200: {
         const schema = schemas.OpeningExplorerLichess;
@@ -5079,7 +5093,12 @@ export class Lichess {
   }) {
     const path = "/player" as const;
     const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
+    const baseUrl = "https://explorer.lichess.ovh";
+    const { response, status } = await this.requestor.get({
+      path,
+      query,
+      baseUrl,
+    });
     switch (status) {
       case 200: {
         const schema = schemas.OpeningExplorerPlayer;
@@ -5099,7 +5118,8 @@ export class Lichess {
    */
   async openingExplorerMasterGame(params: { gameId: string }) {
     const path = `/master/pgn/${params.gameId}` as const;
-    const { response, status } = await this.requestor.get({ path });
+    const baseUrl = "https://explorer.lichess.ovh";
+    const { response, status } = await this.requestor.get({ path, baseUrl });
     switch (status) {
       case 200: {
         /* chess-pgn */
@@ -5119,7 +5139,12 @@ export class Lichess {
   async tablebaseStandard(params: { fen: string; dtc?: string }) {
     const path = "/standard" as const;
     const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
+    const baseUrl = "https://tablebase.lichess.ovh";
+    const { response, status } = await this.requestor.get({
+      path,
+      query,
+      baseUrl,
+    });
     switch (status) {
       case 200: {
         const schema = schemas.TablebaseJson;
@@ -5141,7 +5166,12 @@ export class Lichess {
   async tablebaseAtomic(params: { fen: string }) {
     const path = "/atomic" as const;
     const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
+    const baseUrl = "https://tablebase.lichess.ovh";
+    const { response, status } = await this.requestor.get({
+      path,
+      query,
+      baseUrl,
+    });
     switch (status) {
       case 200: {
         const schema = schemas.TablebaseJson;
@@ -5163,7 +5193,12 @@ export class Lichess {
   async antichessAtomic(params: { fen: string }) {
     const path = "/antichess" as const;
     const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
+    const baseUrl = "https://tablebase.lichess.ovh";
+    const { response, status } = await this.requestor.get({
+      path,
+      query,
+      baseUrl,
+    });
     switch (status) {
       case 200: {
         const schema = schemas.TablebaseJson;
