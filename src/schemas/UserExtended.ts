@@ -15,6 +15,7 @@ const UserExtended = z.intersection(
     followable: z.boolean().optional(),
     following: z.boolean().optional(),
     blocking: z.boolean().optional(),
+    fideId: z.number().optional(),
   }),
 );
 

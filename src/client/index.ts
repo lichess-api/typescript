@@ -99,6 +99,7 @@ export class Lichess {
       trophies?: boolean;
       profile?: boolean;
       rank?: boolean;
+      fideId?: boolean;
     },
   ) {
     const path = `/api/user/${params.username}` as const;
@@ -106,6 +107,7 @@ export class Lichess {
       trophies: params.trophies,
       profile: params.profile,
       rank: params.rank,
+      fideId: params.fideId,
     } as const;
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
@@ -648,8 +650,10 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */
-        return { status, response } as const;
+        const schema = z.union([schemas.GamePgn, schemas.GameJson]);
+        const json: unknown = await response.clone().json();
+        const data = schema.parse(json);
+        return { status, response, data } as const;
       }
       default: {
         throw new Error("Unexpected status code");
