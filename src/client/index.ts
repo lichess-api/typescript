@@ -610,8 +610,10 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */
-        return { status, response } as const;
+        const schema = z.union([schemas.GamePgn, schemas.GameJson]);
+        const json: unknown = await response.clone().json();
+        const data = schema.parse(json);
+        return { status, response, data } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -718,8 +720,10 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */
-        return { status, response } as const;
+        const schema = z.union([schemas.GamePgn, schemas.GameJson]);
+        const json: unknown = await response.clone().json();
+        const data = schema.parse(json);
+        return { status, response, data } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -763,8 +767,10 @@ export class Lichess {
     });
     switch (status) {
       case 200: {
-        /* mixed */
-        return { status, response } as const;
+        const schema = z.union([schemas.GamePgn, schemas.GameJson]);
+        const json: unknown = await response.clone().json();
+        const data = schema.parse(json);
+        return { status, response, data } as const;
       }
       default: {
         throw new Error("Unexpected status code");
@@ -975,8 +981,10 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path, query });
     switch (status) {
       case 200: {
-        /* mixed */
-        return { status, response } as const;
+        const schema = z.union([schemas.GamePgn, schemas.GameJson]);
+        const json: unknown = await response.clone().json();
+        const data = schema.parse(json);
+        return { status, response, data } as const;
       }
       default: {
         throw new Error("Unexpected status code");
