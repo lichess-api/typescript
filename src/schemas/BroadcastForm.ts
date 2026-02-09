@@ -1,13 +1,14 @@
 import * as z from "zod";
 
 import { BroadcastTiebreakExtendedCode } from "./BroadcastTiebreakExtendedCode";
+import { FideTimeControl } from "./FideTimeControl";
 
 const BroadcastForm = z.object({
   name: z.string().min(3).max(80),
   "info.format": z.string().max(80).optional(),
   "info.location": z.string().max(80).optional(),
   "info.tc": z.string().max(80).optional(),
-  "info.fideTc": z.literal(["standard", "rapid", "blitz"]).optional(),
+  "info.fideTc": FideTimeControl.optional(),
   "info.timeZone": z.string().optional(),
   "info.players": z.string().max(120).optional(),
   "info.website": z.url().optional(),

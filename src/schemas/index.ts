@@ -59,6 +59,7 @@ export { ExternalEngineWork } from "./ExternalEngineWork";
 export { ExternalEngineWorkCommon } from "./ExternalEngineWorkCommon";
 export { FIDEPlayer } from "./FIDEPlayer";
 export { FIDEPlayerPhoto } from "./FIDEPlayerPhoto";
+export { FideTimeControl } from "./FideTimeControl";
 export { Flair } from "./Flair";
 export { FromPositionFEN } from "./FromPositionFEN";
 export { GameChat } from "./GameChat";
