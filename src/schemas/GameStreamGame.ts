@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { GameColor } from "./GameColor";
 import { GameStatusId } from "./GameStatusId";
@@ -9,37 +9,37 @@ import { VariantKey } from "./VariantKey";
 
 const GameStreamGame = z.object({
   id: z.string(),
-  rated: z.boolean().optional(),
-  variant: VariantKey.optional(),
-  speed: Speed.optional(),
-  perf: PerfType.optional(),
-  createdAt: z.int().optional(),
-  status: GameStatusId.optional(),
-  statusName: GameStatusName.optional(),
-  clock: z
-    .object({
-      initial: z.int().optional(),
-      increment: z.int().optional(),
-      totalTime: z.int().optional(),
-    })
-    .optional(),
-  players: z
-    .object({
-      white: z
-        .object({
-          userId: z.string().optional(),
-          rating: z.int().optional(),
-        })
-        .optional(),
-      black: z
-        .object({
-          userId: z.string().optional(),
-          rating: z.int().optional(),
-        })
-        .optional(),
-    })
-    .optional(),
-  winner: GameColor.optional(),
+  rated: z.optional(z.boolean()),
+  variant: z.optional(VariantKey),
+  speed: z.optional(Speed),
+  perf: z.optional(PerfType),
+  createdAt: z.optional(z.int()),
+  status: z.optional(GameStatusId),
+  statusName: z.optional(GameStatusName),
+  clock: z.optional(
+    z.object({
+      initial: z.optional(z.int()),
+      increment: z.optional(z.int()),
+      totalTime: z.optional(z.int()),
+    }),
+  ),
+  players: z.optional(
+    z.object({
+      white: z.optional(
+        z.object({
+          userId: z.optional(z.string()),
+          rating: z.optional(z.int()),
+        }),
+      ),
+      black: z.optional(
+        z.object({
+          userId: z.optional(z.string()),
+          rating: z.optional(z.int()),
+        }),
+      ),
+    }),
+  ),
+  winner: z.optional(GameColor),
 });
 
 type GameStreamGame = z.infer<typeof GameStreamGame>;

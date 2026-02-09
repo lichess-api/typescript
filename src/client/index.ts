@@ -1,8 +1,8 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
-import { ndjsonStream } from "~/lib/ndjson";
+import { ndjsonStream } from "#lib/ndjson";
 
-import * as schemas from "~/schemas";
+import * as schemas from "#schemas";
 
 import { Requestor } from "./requestor";
 
@@ -34,13 +34,13 @@ export class Lichess {
           z.object({
             id: z.string(),
             name: z.string(),
-            flair: schemas.Flair.optional(),
-            title: schemas.Title.optional(),
-            online: z.boolean().optional(),
-            playing: z.boolean().optional(),
-            streaming: z.boolean().optional(),
-            patron: schemas.Patron.optional(),
-            patronColor: schemas.PatronColor.optional(),
+            flair: z.optional(schemas.Flair),
+            title: z.optional(schemas.Title),
+            online: z.optional(z.boolean()),
+            playing: z.optional(z.boolean()),
+            streaming: z.optional(z.boolean()),
+            patron: z.optional(schemas.Patron),
+            patronColor: z.optional(schemas.PatronColor),
           }),
         );
         const json: unknown = await response.clone().json();
@@ -334,7 +334,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       case 404: {
-        const schema = z.object({ error: z.string().optional() });
+        const schema = z.object({ error: z.optional(z.string()) });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
@@ -485,7 +485,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        const schema = z.object({ email: z.string().optional() });
+        const schema = z.object({ email: z.optional(z.string()) });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
@@ -505,8 +505,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.object({
-          prefs: schemas.UserPreferences.optional(),
-          language: z.string().optional(),
+          prefs: z.optional(schemas.UserPreferences),
+          language: z.optional(z.string()),
         });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
@@ -526,7 +526,7 @@ export class Lichess {
     const { response, status } = await this.requestor.get({ path });
     switch (status) {
       case 200: {
-        const schema = z.object({ kid: z.boolean().optional() });
+        const schema = z.object({ kid: z.optional(z.boolean()) });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
@@ -861,7 +861,7 @@ export class Lichess {
               color: schemas.GameColor,
               lastMove: z.string(),
               source: schemas.GameSource,
-              status: schemas.GameStatusName.optional(),
+              status: z.optional(schemas.GameStatusName),
               variant: schemas.Variant,
               speed: schemas.Speed,
               perf: schemas.PerfType,
@@ -870,16 +870,16 @@ export class Lichess {
               opponent: z.object({
                 id: z.string(),
                 username: z.string(),
-                rating: z.int().optional(),
-                ratingDiff: z.int().optional(),
-                ai: z.int().optional(),
+                rating: z.optional(z.int()),
+                ratingDiff: z.optional(z.int()),
+                ai: z.optional(z.int()),
               }),
               isMyTurn: z.boolean(),
               secondsLeft: z.int(),
-              tournamentId: z.string().optional(),
-              swissId: z.string().optional(),
-              winner: schemas.GameColor.optional(),
-              ratingDiff: z.int().optional(),
+              tournamentId: z.optional(z.string()),
+              swissId: z.optional(z.string()),
+              winner: z.optional(schemas.GameColor),
+              ratingDiff: z.optional(z.int()),
             }),
           ),
         });
@@ -906,7 +906,7 @@ export class Lichess {
         return { status, stream } as const;
       }
       case 429: {
-        const schema = z.object({ error: z.string().optional() });
+        const schema = z.object({ error: z.optional(z.string()) });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
@@ -927,8 +927,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.object({
-          id: z.string().optional(),
-          url: z.url().optional(),
+          id: z.optional(z.string()),
+          url: z.optional(z.url()),
         });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
@@ -1656,11 +1656,11 @@ export class Lichess {
           rating: z.int(),
           username: z.string(),
           performance: z.int(),
-          title: schemas.Title.optional(),
-          team: z.string().optional(),
-          flair: schemas.Flair.optional(),
-          patronColor: schemas.PatronColor.optional(),
-          sheet: schemas.ArenaSheet.optional(),
+          title: z.optional(schemas.Title),
+          team: z.optional(z.string()),
+          flair: z.optional(schemas.Flair),
+          patronColor: z.optional(schemas.PatronColor),
+          sheet: z.optional(schemas.ArenaSheet),
         });
         const stream = ndjsonStream({ response, schema });
         return { status, stream } as const;
@@ -1689,7 +1689,7 @@ export class Lichess {
               players: z.array(
                 z.object({
                   user: schemas.LightUser,
-                  score: z.int().optional(),
+                  score: z.optional(z.int()),
                 }),
               ),
             }),
@@ -2216,13 +2216,13 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.object({
-          absent: z.boolean().optional(),
+          absent: z.optional(z.boolean()),
           rank: z.int(),
           points: z.number(),
           tieBreak: z.int(),
           rating: z.int(),
           username: z.string(),
-          title: schemas.Title.optional(),
+          title: z.optional(schemas.Title),
           performance: z.int(),
         });
         const stream = ndjsonStream({ response, schema });
@@ -2534,8 +2534,8 @@ export class Lichess {
           maxPerPage: z.int(),
           currentPageResults: z.array(schemas.BroadcastByUser),
           nbResults: z.int(),
-          previousPage: z.int().nullable(),
-          nextPage: z.int().nullable(),
+          previousPage: z.nullable(z.int()),
+          nextPage: z.nullable(z.int()),
           nbPages: z.int(),
         });
         const json: unknown = await response.clone().json();
@@ -2561,8 +2561,8 @@ export class Lichess {
           currentPage: z.int(),
           maxPerPage: z.int(),
           currentPageResults: z.array(schemas.BroadcastWithLastRound),
-          previousPage: z.int().nullable(),
-          nextPage: z.int().nullable(),
+          previousPage: z.nullable(z.int()),
+          nextPage: z.nullable(z.int()),
         });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
@@ -2813,7 +2813,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       case 400: {
-        const schema = z.object({ error: z.string().optional() });
+        const schema = z.object({ error: z.optional(z.string()) });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
@@ -2943,10 +2943,10 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.object({
-          pending: z.array(schemas.Simul).optional(),
-          created: z.array(schemas.Simul).optional(),
-          started: z.array(schemas.Simul).optional(),
-          finished: z.array(schemas.Simul).optional(),
+          pending: z.optional(z.array(schemas.Simul)),
+          created: z.optional(z.array(schemas.Simul)),
+          started: z.optional(z.array(schemas.Simul)),
+          finished: z.optional(z.array(schemas.Simul)),
         });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
@@ -3046,11 +3046,11 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.object({
-          joinedTeamAt: z.int().optional(),
+          joinedTeamAt: z.optional(z.int()),
           id: z.string(),
           name: z.string(),
-          title: schemas.Title.optional(),
-          patronColor: schemas.PatronColor.optional(),
+          title: z.optional(schemas.Title),
+          patronColor: z.optional(schemas.PatronColor),
         });
         const stream = ndjsonStream({ response, schema });
         return { status, stream } as const;
@@ -3257,23 +3257,23 @@ export class Lichess {
           z.intersection(
             schemas.LightUser,
             z.object({
-              stream: z
-                .object({
-                  service: z.literal(["twitch", "youtube"]).optional(),
-                  status: z.string().optional(),
-                  lang: z.string().optional(),
-                })
-                .optional(),
-              streamer: z
-                .object({
-                  name: z.string().optional(),
-                  headline: z.string().optional(),
-                  description: z.string().optional(),
-                  twitch: z.url().optional(),
-                  youtube: z.url().optional(),
-                  image: z.url().optional(),
-                })
-                .optional(),
+              stream: z.optional(
+                z.object({
+                  service: z.optional(z.literal(["twitch", "youtube"])),
+                  status: z.optional(z.string()),
+                  lang: z.optional(z.string()),
+                }),
+              ),
+              streamer: z.optional(
+                z.object({
+                  name: z.optional(z.string()),
+                  headline: z.optional(z.string()),
+                  description: z.optional(z.string()),
+                  twitch: z.optional(z.url()),
+                  youtube: z.optional(z.url()),
+                  image: z.optional(z.url()),
+                }),
+              ),
             }),
           ),
         );
@@ -3333,7 +3333,7 @@ export class Lichess {
       case 200: {
         const schema = z.union([
           z.array(z.string()),
-          z.object({ result: z.array(schemas.LightUserOnline).optional() }),
+          z.object({ result: z.optional(z.array(schemas.LightUserOnline)) }),
         ]);
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
@@ -4144,8 +4144,8 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.object({
-          in: z.array(schemas.ChallengeJson).optional(),
-          out: z.array(schemas.ChallengeJson).optional(),
+          in: z.optional(z.array(schemas.ChallengeJson)),
+          out: z.optional(z.array(schemas.ChallengeJson)),
         });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
@@ -4322,18 +4322,22 @@ export class Lichess {
     switch (status) {
       case 201: {
         const schema = z.object({
-          id: z.string().min(8).max(8).optional(),
-          variant: schemas.Variant.optional(),
-          speed: schemas.Speed.optional(),
-          perf: schemas.PerfType.optional(),
-          rated: z.boolean().optional(),
-          fen: z.string().optional(),
-          turns: z.int().optional(),
-          source: schemas.GameSource.optional(),
-          status: schemas.GameStatus.optional(),
-          createdAt: z.int().optional(),
-          player: schemas.GameColor.optional(),
-          fullId: z.string().min(12).max(12).optional(),
+          id: z.optional(
+            z.string().check(z.minLength(8)).check(z.maxLength(8)),
+          ),
+          variant: z.optional(schemas.Variant),
+          speed: z.optional(schemas.Speed),
+          perf: z.optional(schemas.PerfType),
+          rated: z.optional(z.boolean()),
+          fen: z.optional(z.string()),
+          turns: z.optional(z.int()),
+          source: z.optional(schemas.GameSource),
+          status: z.optional(schemas.GameStatus),
+          createdAt: z.optional(z.int()),
+          player: z.optional(schemas.GameColor),
+          fullId: z.optional(
+            z.string().check(z.minLength(12)).check(z.maxLength(12)),
+          ),
         });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
@@ -4687,7 +4691,7 @@ export class Lichess {
         return { status, response, data } as const;
       }
       case 404: {
-        const schema = z.object({ error: z.string().optional() });
+        const schema = z.object({ error: z.optional(z.string()) });
         const json: unknown = await response.clone().json();
         const data = schema.parse(json);
         return { status, response, data } as const;
@@ -4823,14 +4827,14 @@ export class Lichess {
     switch (status) {
       case 200: {
         const schema = z.object({
-          time: z.int().min(0),
-          depth: z.int().min(0),
-          nodes: z.int().min(0),
+          time: z.int().check(z.minimum(0)),
+          depth: z.int().check(z.minimum(0)),
+          nodes: z.int().check(z.minimum(0)),
           pvs: z.array(
             z.object({
-              depth: z.int().min(0),
-              cp: z.int().optional(),
-              mate: z.int().optional(),
+              depth: z.int().check(z.minimum(0)),
+              cp: z.optional(z.int()),
+              mate: z.optional(z.int()),
               moves: z.array(z.string()),
             }),
           ),
@@ -4995,9 +4999,9 @@ export class Lichess {
           z.string(),
           z.union([
             z.object({
-              userId: z.string().optional(),
-              scopes: z.string().optional(),
-              expires: z.int().nullable().optional(),
+              userId: z.optional(z.string()),
+              scopes: z.optional(z.string()),
+              expires: z.optional(z.nullable(z.int())),
             }),
             z.null(),
           ]),

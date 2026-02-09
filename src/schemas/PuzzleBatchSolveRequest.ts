@@ -1,15 +1,15 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const PuzzleBatchSolveRequest = z.object({
-  solutions: z
-    .array(
+  solutions: z.optional(
+    z.array(
       z.object({
-        id: z.string().optional(),
-        win: z.boolean().optional(),
-        rated: z.boolean().optional(),
+        id: z.optional(z.string()),
+        win: z.optional(z.boolean()),
+        rated: z.optional(z.boolean()),
       }),
-    )
-    .optional(),
+    ),
+  ),
 });
 
 type PuzzleBatchSolveRequest = z.infer<typeof PuzzleBatchSolveRequest>;

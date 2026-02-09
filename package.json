@@ -2,7 +2,7 @@
   "name": "@lichess/api",
   "version": "0.0.2",
   "type": "module",
-  "author": "GameRoMan",
+  "author": "gameroman",
   "license": "MIT",
   "scripts": {
     "gen:schemas": "bun ./scripts/gen-schemas",
@@ -14,6 +14,14 @@
     "format": "biome check --write --linter-enabled=false",
     "build": "bunx --bun tsdown",
     "prepublishOnly": "bun run build"
+  },
+  "keywords": [
+    "api",
+    "lichess"
+  ],
+  "imports": {
+    "#lib/*": "./src/lib/*.ts",
+    "#schemas": "./src/schemas/index.ts"
   },
   "repository": {
     "type": "git",

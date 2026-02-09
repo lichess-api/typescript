@@ -1,12 +1,12 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const UserPreferences = z.object({
-  dark: z.boolean().optional(),
-  transp: z.boolean().optional(),
-  bgImg: z.url().optional(),
-  is3d: z.boolean().optional(),
-  theme: z
-    .literal([
+  dark: z.optional(z.boolean()),
+  transp: z.optional(z.boolean()),
+  bgImg: z.optional(z.url()),
+  is3d: z.optional(z.boolean()),
+  theme: z.optional(
+    z.literal([
       "blue",
       "blue2",
       "blue3",
@@ -31,10 +31,10 @@ const UserPreferences = z.object({
       "purple-diag",
       "pink",
       "ic",
-    ])
-    .optional(),
-  pieceSet: z
-    .literal([
+    ]),
+  ),
+  pieceSet: z.optional(
+    z.literal([
       "cburnett",
       "merida",
       "alpha",
@@ -61,10 +61,10 @@ const UserPreferences = z.object({
       "icpieces",
       "shapes",
       "letter",
-    ])
-    .optional(),
-  theme3d: z
-    .literal([
+    ]),
+  ),
+  theme3d: z.optional(
+    z.literal([
       "Black-White-Aluminium",
       "Brushed-Aluminium",
       "China-Blue",
@@ -80,10 +80,10 @@ const UserPreferences = z.object({
       "Wax",
       "Jade",
       "Woodi",
-    ])
-    .optional(),
-  pieceSet3d: z
-    .literal([
+    ]),
+  ),
+  pieceSet3d: z.optional(
+    z.literal([
       "Basic",
       "Wood",
       "Metal",
@@ -95,10 +95,10 @@ const UserPreferences = z.object({
       "Experimental",
       "Staunton",
       "CubesAndPi",
-    ])
-    .optional(),
-  soundSet: z
-    .literal([
+    ]),
+  ),
+  soundSet: z.optional(
+    z.literal([
       "silent",
       "standard",
       "piano",
@@ -108,38 +108,38 @@ const UserPreferences = z.object({
       "robot",
       "music",
       "speech",
-    ])
-    .optional(),
-  blindfold: z.int().optional(),
-  autoQueen: z.int().optional(),
-  autoThreefold: z.int().optional(),
-  takeback: z.int().optional(),
-  moretime: z.int().optional(),
-  clockTenths: z.int().optional(),
-  clockBar: z.boolean().optional(),
-  clockSound: z.boolean().optional(),
-  premove: z.boolean().optional(),
-  animation: z.int().optional(),
-  pieceNotation: z.int().optional(),
-  captured: z.boolean().optional(),
-  follow: z.boolean().optional(),
-  highlight: z.boolean().optional(),
-  destination: z.boolean().optional(),
-  coords: z.int().optional(),
-  replay: z.int().optional(),
-  challenge: z.int().optional(),
-  message: z.int().optional(),
-  submitMove: z.int().optional(),
-  confirmResign: z.int().optional(),
-  insightShare: z.int().optional(),
-  keyboardMove: z.int().optional(),
-  voiceMove: z.boolean().optional(),
-  zen: z.int().optional(),
-  ratings: z.int().optional(),
-  moveEvent: z.int().optional(),
-  rookCastle: z.int().optional(),
-  flairs: z.boolean().optional(),
-  sayGG: z.literal([0, 1, 2]).optional(),
+    ]),
+  ),
+  blindfold: z.optional(z.int()),
+  autoQueen: z.optional(z.int()),
+  autoThreefold: z.optional(z.int()),
+  takeback: z.optional(z.int()),
+  moretime: z.optional(z.int()),
+  clockTenths: z.optional(z.int()),
+  clockBar: z.optional(z.boolean()),
+  clockSound: z.optional(z.boolean()),
+  premove: z.optional(z.boolean()),
+  animation: z.optional(z.int()),
+  pieceNotation: z.optional(z.int()),
+  captured: z.optional(z.boolean()),
+  follow: z.optional(z.boolean()),
+  highlight: z.optional(z.boolean()),
+  destination: z.optional(z.boolean()),
+  coords: z.optional(z.int()),
+  replay: z.optional(z.int()),
+  challenge: z.optional(z.int()),
+  message: z.optional(z.int()),
+  submitMove: z.optional(z.int()),
+  confirmResign: z.optional(z.int()),
+  insightShare: z.optional(z.int()),
+  keyboardMove: z.optional(z.int()),
+  voiceMove: z.optional(z.boolean()),
+  zen: z.optional(z.int()),
+  ratings: z.optional(z.int()),
+  moveEvent: z.optional(z.int()),
+  rookCastle: z.optional(z.int()),
+  flairs: z.optional(z.boolean()),
+  sayGG: z.optional(z.literal([0, 1, 2])),
 });
 
 type UserPreferences = z.infer<typeof UserPreferences>;

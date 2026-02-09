@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { LightUser } from "./LightUser";
 
@@ -7,26 +7,28 @@ const BroadcastTour = z.object({
   name: z.string(),
   slug: z.string(),
   createdAt: z.int(),
-  dates: z.array(z.int()).min(1).max(2).optional(),
-  info: z
-    .object({
-      website: z.url().optional(),
-      players: z.string().optional(),
-      location: z.string().optional(),
-      tc: z.string().optional(),
-      fideTc: z.literal(["standard", "rapid", "blitz"]).optional(),
-      timeZone: z.string().optional(),
-      standings: z.url().optional(),
-      format: z.string().optional(),
-    })
-    .optional(),
-  tier: z.int().optional(),
-  image: z.url().optional(),
-  description: z.string().optional(),
-  leaderboard: z.boolean().optional(),
-  teamTable: z.boolean().optional(),
+  dates: z.optional(
+    z.array(z.int()).check(z.minLength(1)).check(z.maxLength(2)),
+  ),
+  info: z.optional(
+    z.object({
+      website: z.optional(z.url()),
+      players: z.optional(z.string()),
+      location: z.optional(z.string()),
+      tc: z.optional(z.string()),
+      fideTc: z.optional(z.literal(["standard", "rapid", "blitz"])),
+      timeZone: z.optional(z.string()),
+      standings: z.optional(z.url()),
+      format: z.optional(z.string()),
+    }),
+  ),
+  tier: z.optional(z.int()),
+  image: z.optional(z.url()),
+  description: z.optional(z.string()),
+  leaderboard: z.optional(z.boolean()),
+  teamTable: z.optional(z.boolean()),
   url: z.url(),
-  communityOwner: LightUser.optional(),
+  communityOwner: z.optional(LightUser),
 });
 
 type BroadcastTour = z.infer<typeof BroadcastTour>;

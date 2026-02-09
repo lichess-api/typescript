@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { BroadcastGroup } from "./BroadcastGroup";
 import { BroadcastPhotos } from "./BroadcastPhotos";
@@ -12,8 +12,8 @@ const BroadcastRound = z.object({
   tour: BroadcastTour,
   study: BroadcastRoundStudyInfo,
   games: z.array(BroadcastRoundGame),
-  group: BroadcastGroup.optional(),
-  isSubscribed: z.boolean().optional(),
+  group: z.optional(BroadcastGroup),
+  isSubscribed: z.optional(z.boolean()),
   photos: BroadcastPhotos,
 });
 

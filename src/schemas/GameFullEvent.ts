@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { GameEventPlayer } from "./GameEventPlayer";
 import { GameStateEvent } from "./GameStateEvent";
@@ -9,22 +9,22 @@ const GameFullEvent = z.object({
   type: z.literal("gameFull"),
   id: z.string(),
   variant: Variant,
-  clock: z
-    .object({
-      initial: z.int().optional(),
-      increment: z.int().optional(),
-    })
-    .optional(),
+  clock: z.optional(
+    z.object({
+      initial: z.optional(z.int()),
+      increment: z.optional(z.int()),
+    }),
+  ),
   speed: Speed,
-  perf: z.object({ name: z.string().optional() }),
+  perf: z.object({ name: z.optional(z.string()) }),
   rated: z.boolean(),
   createdAt: z.int(),
   white: GameEventPlayer,
   black: GameEventPlayer,
   initialFen: z.string(),
   state: GameStateEvent,
-  daysPerTurn: z.int().optional(),
-  tournamentId: z.string().optional(),
+  daysPerTurn: z.optional(z.int()),
+  tournamentId: z.optional(z.string()),
 });
 
 type GameFullEvent = z.infer<typeof GameFullEvent>;

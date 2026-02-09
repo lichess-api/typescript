@@ -1,12 +1,12 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { LightUser } from "./LightUser";
 
 const UserNote = z.object({
-  from: LightUser.optional(),
-  to: LightUser.optional(),
-  text: z.string().optional(),
-  date: z.int().optional(),
+  from: z.optional(LightUser),
+  to: z.optional(LightUser),
+  text: z.optional(z.string()),
+  date: z.optional(z.int()),
 });
 
 type UserNote = z.infer<typeof UserNote>;

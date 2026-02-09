@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Flair } from "./Flair";
 import { Patron } from "./Patron";
@@ -11,18 +11,18 @@ import { Title } from "./Title";
 const User = z.object({
   id: z.string(),
   username: z.string(),
-  perfs: Perfs.optional(),
-  title: Title.optional(),
-  flair: Flair.optional(),
-  createdAt: z.int().optional(),
-  disabled: z.boolean().optional(),
-  tosViolation: z.boolean().optional(),
-  profile: Profile.optional(),
-  seenAt: z.int().optional(),
-  playTime: PlayTime.optional(),
-  patron: Patron.optional(),
-  patronColor: PatronColor.optional(),
-  verified: z.boolean().optional(),
+  perfs: z.optional(Perfs),
+  title: z.optional(Title),
+  flair: z.optional(Flair),
+  createdAt: z.optional(z.int()),
+  disabled: z.optional(z.boolean()),
+  tosViolation: z.optional(z.boolean()),
+  profile: z.optional(Profile),
+  seenAt: z.optional(z.int()),
+  playTime: z.optional(PlayTime),
+  patron: z.optional(Patron),
+  patronColor: z.optional(PatronColor),
+  verified: z.optional(z.boolean()),
 });
 
 type User = z.infer<typeof User>;

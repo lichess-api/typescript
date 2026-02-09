@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const TablebaseMove = z.object({
   uci: z.string(),
@@ -15,18 +15,18 @@ const TablebaseMove = z.object({
     "syzygy-win",
     "win",
   ]),
-  dtz: z.int().nullable().optional(),
-  precise_dtz: z.int().nullable().optional(),
-  dtc: z.int().nullable().optional(),
-  dtm: z.int().nullable().optional(),
-  dtw: z.int().nullable().optional(),
-  zeroing: z.boolean().optional(),
-  conversion: z.boolean().optional(),
-  checkmate: z.boolean().optional(),
-  stalemate: z.boolean().optional(),
-  variant_win: z.boolean().optional(),
-  variant_loss: z.boolean().optional(),
-  insufficient_material: z.boolean().optional(),
+  dtz: z.optional(z.nullable(z.int())),
+  precise_dtz: z.optional(z.nullable(z.int())),
+  dtc: z.optional(z.nullable(z.int())),
+  dtm: z.optional(z.nullable(z.int())),
+  dtw: z.optional(z.nullable(z.int())),
+  zeroing: z.optional(z.boolean()),
+  conversion: z.optional(z.boolean()),
+  checkmate: z.optional(z.boolean()),
+  stalemate: z.optional(z.boolean()),
+  variant_win: z.optional(z.boolean()),
+  variant_loss: z.optional(z.boolean()),
+  insufficient_material: z.optional(z.boolean()),
 });
 
 type TablebaseMove = z.infer<typeof TablebaseMove>;

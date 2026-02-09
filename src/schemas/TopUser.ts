@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Patron } from "./Patron";
 import { PatronColor } from "./PatronColor";
@@ -7,19 +7,19 @@ import { Title } from "./Title";
 const TopUser = z.object({
   id: z.string(),
   username: z.string(),
-  perfs: z
-    .record(
+  perfs: z.optional(
+    z.record(
       z.string(),
       z.object({
         rating: z.int(),
         progress: z.int(),
       }),
-    )
-    .optional(),
-  title: Title.optional(),
-  patron: Patron.optional(),
-  patronColor: PatronColor.optional(),
-  online: z.boolean().optional(),
+    ),
+  ),
+  title: z.optional(Title),
+  patron: z.optional(Patron),
+  patronColor: z.optional(PatronColor),
+  online: z.optional(z.boolean()),
 });
 
 type TopUser = z.infer<typeof TopUser>;

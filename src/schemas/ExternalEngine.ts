@@ -1,16 +1,16 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { UciVariant } from "./UciVariant";
 
 const ExternalEngine = z.object({
   id: z.string(),
-  name: z.string().min(3).max(200),
+  name: z.string().check(z.minLength(3)).check(z.maxLength(200)),
   clientSecret: z.string(),
   userId: z.string(),
-  maxThreads: z.int().min(1).max(65536),
-  maxHash: z.int().min(1).max(1048576),
+  maxThreads: z.int().check(z.minimum(1)).check(z.maximum(65536)),
+  maxHash: z.int().check(z.minimum(1)).check(z.maximum(1048576)),
   variants: z.array(UciVariant),
-  providerData: z.string().nullable().optional(),
+  providerData: z.optional(z.nullable(z.string())),
 });
 
 type ExternalEngine = z.infer<typeof ExternalEngine>;

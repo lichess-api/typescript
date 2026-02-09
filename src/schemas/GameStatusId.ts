@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const GameStatusId = z.literal([
   10, 20, 25, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 60,

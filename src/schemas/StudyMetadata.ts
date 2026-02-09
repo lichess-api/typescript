@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const StudyMetadata = z.object({
   id: z.string(),

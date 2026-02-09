@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const PuzzleRacer = z.object({
   id: z.string(),

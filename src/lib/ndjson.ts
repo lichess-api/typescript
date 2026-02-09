@@ -1,11 +1,11 @@
-import type * as z from "zod";
+import type * as z from "zod/mini";
 
 async function* ndjsonStream<T>({
   response,
   schema,
 }: {
   response: Response;
-  schema: z.ZodType<T>;
+  schema: z.ZodMiniType<T>;
 }): AsyncGenerator<T, void, undefined> {
   if (!response.body) {
     throw new Error("Response has no body");

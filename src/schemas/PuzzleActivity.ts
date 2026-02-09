@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const PuzzleActivity = z.object({
   date: z.int(),

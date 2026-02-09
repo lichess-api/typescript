@@ -303,15 +303,15 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
         }
         let schemaStr = "z.string()";
         if (schema.minLength !== undefined) {
-          schemaStr += `.min(${schema.minLength})`;
+          schemaStr += `.check(z.minLength(${schema.minLength}))`;
         }
         if (schema.maxLength !== undefined) {
-          schemaStr += `.max(${schema.maxLength})`;
+          schemaStr += `.check(z.maxLength(${schema.maxLength}))`;
         }
         return { zodSchema: schemaStr, refs: [] } as const;
       }
       case "string:nullable": {
-        return { zodSchema: "z.string().nullable()", refs: [] } as const;
+        return { zodSchema: "z.nullable(z.string())", refs: [] } as const;
       }
       case "enum:number": {
         const literals = schema.enum.map((v) => JSON.stringify(v)).join(", ");
@@ -331,23 +331,23 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
           }
         }
         if (schema.minimum !== undefined) {
-          schemaStr += `.min(${schema.minimum})`;
+          schemaStr += `.check(z.minimum(${schema.minimum}))`;
         }
         if (schema.maximum !== undefined) {
-          schemaStr += `.max(${schema.maximum})`;
+          schemaStr += `.check(z.maximum(${schema.maximum}))`;
         }
         return { zodSchema: schemaStr, refs: [] } as const;
       }
       case "integer:nullable": {
-        return { zodSchema: "z.int().nullable()", refs: [] } as const;
+        return { zodSchema: "z.nullable(z.int())", refs: [] } as const;
       }
       case "number": {
         let schemaStr = "z.number()";
         if (schema.minimum !== undefined) {
-          schemaStr += `.min(${schema.minimum})`;
+          schemaStr += `.check(z.minimum(${schema.minimum}))`;
         }
         if (schema.maximum !== undefined) {
-          schemaStr += `.max(${schema.maximum})`;
+          schemaStr += `.check(z.maximum(${schema.maximum}))`;
         }
         return { zodSchema: schemaStr, refs: [] } as const;
       }
@@ -377,7 +377,7 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
           propRefs.forEach((r) => allRefs.add(r));
           let propStr = sch;
           if (!required.has(k)) {
-            propStr += ".optional()";
+            propStr = `z.optional(${propStr})`;
           }
           zodProps[k] = propStr;
         }
@@ -422,10 +422,10 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
             inner += `.length(${schema.minItems})`;
           } else {
             if (schema.minItems !== undefined) {
-              inner += `.min(${schema.minItems})`;
+              inner += `.check(z.minLength(${schema.minItems}))`;
             }
             if (schema.maxItems !== undefined) {
-              inner += `.max(${schema.maxItems})`;
+              inner += `.check(z.maxLength(${schema.maxItems}))`;
             }
           }
           zodSchemaStr = inner;

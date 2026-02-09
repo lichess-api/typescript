@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { TvFeedFeatured } from "./TvFeedFeatured";
 import { TvFeedFen } from "./TvFeedFen";

@@ -1,27 +1,29 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { BroadcastTiebreakExtendedCode } from "./BroadcastTiebreakExtendedCode";
 import { FideTimeControl } from "./FideTimeControl";
 
 const BroadcastForm = z.object({
-  name: z.string().min(3).max(80),
-  "info.format": z.string().max(80).optional(),
-  "info.location": z.string().max(80).optional(),
-  "info.tc": z.string().max(80).optional(),
-  "info.fideTc": FideTimeControl.optional(),
-  "info.timeZone": z.string().optional(),
-  "info.players": z.string().max(120).optional(),
-  "info.website": z.url().optional(),
-  "info.standings": z.url().optional(),
-  markdown: z.string().max(20000).optional(),
-  showScores: z.boolean().optional(),
-  showRatingDiffs: z.boolean().optional(),
-  teamTable: z.boolean().optional(),
-  visibility: z.literal(["public", "unlisted", "private"]).optional(),
-  players: z.string().optional(),
-  teams: z.string().optional(),
-  tier: z.literal([3, 4, 5]).optional(),
-  "tiebreaks[]": z.array(BroadcastTiebreakExtendedCode).max(5).optional(),
+  name: z.string().check(z.minLength(3)).check(z.maxLength(80)),
+  "info.format": z.optional(z.string().check(z.maxLength(80))),
+  "info.location": z.optional(z.string().check(z.maxLength(80))),
+  "info.tc": z.optional(z.string().check(z.maxLength(80))),
+  "info.fideTc": z.optional(FideTimeControl),
+  "info.timeZone": z.optional(z.string()),
+  "info.players": z.optional(z.string().check(z.maxLength(120))),
+  "info.website": z.optional(z.url()),
+  "info.standings": z.optional(z.url()),
+  markdown: z.optional(z.string().check(z.maxLength(20000))),
+  showScores: z.optional(z.boolean()),
+  showRatingDiffs: z.optional(z.boolean()),
+  teamTable: z.optional(z.boolean()),
+  visibility: z.optional(z.literal(["public", "unlisted", "private"])),
+  players: z.optional(z.string()),
+  teams: z.optional(z.string()),
+  tier: z.optional(z.literal([3, 4, 5])),
+  "tiebreaks[]": z.optional(
+    z.array(BroadcastTiebreakExtendedCode).check(z.maxLength(5)),
+  ),
 });
 
 type BroadcastForm = z.infer<typeof BroadcastForm>;

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { BroadcastCustomScoring } from "./BroadcastCustomScoring";
 
@@ -8,14 +8,14 @@ const BroadcastRoundInfo = z.object({
   slug: z.string(),
   createdAt: z.int(),
   rated: z.boolean(),
-  ongoing: z.boolean().optional(),
-  startsAt: z.int().optional(),
-  startsAfterPrevious: z.boolean().optional(),
-  finishedAt: z.int().optional(),
-  finished: z.boolean().optional(),
+  ongoing: z.optional(z.boolean()),
+  startsAt: z.optional(z.int()),
+  startsAfterPrevious: z.optional(z.boolean()),
+  finishedAt: z.optional(z.int()),
+  finished: z.optional(z.boolean()),
   url: z.url(),
-  delay: z.int().optional(),
-  customScoring: BroadcastCustomScoring.optional(),
+  delay: z.optional(z.int()),
+  customScoring: z.optional(BroadcastCustomScoring),
 });
 
 type BroadcastRoundInfo = z.infer<typeof BroadcastRoundInfo>;

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const SwissStatus = z.literal(["created", "started", "finished"]);
 

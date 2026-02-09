@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Flair } from "./Flair";
 import { Patron } from "./Patron";
@@ -8,10 +8,10 @@ import { Title } from "./Title";
 const LightUser = z.object({
   id: z.string(),
   name: z.string(),
-  flair: Flair.optional(),
-  title: Title.optional(),
-  patron: Patron.optional(),
-  patronColor: PatronColor.optional(),
+  flair: z.optional(Flair),
+  title: z.optional(Title),
+  patron: z.optional(Patron),
+  patronColor: z.optional(PatronColor),
 });
 
 type LightUser = z.infer<typeof LightUser>;

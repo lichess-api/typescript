@@ -804,11 +804,11 @@ async function processSchema(schema: OpenApiSchema): Promise<void> {
 
   const API_URL = schema.servers[0].url;
 
-  const clientCodeTs = `import * as z from "zod";
+  const clientCodeTs = `import * as z from "zod/mini";
 
-import { ndjsonStream } from "~/lib/ndjson";
+import { ndjsonStream } from "#lib/ndjson";
 
-import * as schemas from "~/schemas";
+import * as schemas from "#schemas";
 
 import { Requestor } from "./requestor";
 

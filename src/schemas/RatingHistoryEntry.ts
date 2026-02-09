@@ -1,8 +1,8 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const RatingHistoryEntry = z.object({
-  name: z.string().optional(),
-  points: z.array(z.tuple([z.int(), z.int(), z.int(), z.int()])).optional(),
+  name: z.optional(z.string()),
+  points: z.optional(z.array(z.tuple([z.int(), z.int(), z.int(), z.int()]))),
 });
 
 type RatingHistoryEntry = z.infer<typeof RatingHistoryEntry>;

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { OpeningExplorerLichessGame } from "./OpeningExplorerLichessGame";
 import { OpeningExplorerOpening } from "./OpeningExplorerOpening";
@@ -23,21 +23,21 @@ const OpeningExplorerLichess = z.object({
   topGames: z.array(
     z.intersection(z.object({ uci: z.string() }), OpeningExplorerLichessGame),
   ),
-  recentGames: z
-    .array(
+  recentGames: z.optional(
+    z.array(
       z.intersection(z.object({ uci: z.string() }), OpeningExplorerLichessGame),
-    )
-    .optional(),
-  history: z
-    .array(
+    ),
+  ),
+  history: z.optional(
+    z.array(
       z.object({
         month: z.string(),
         white: z.int(),
         draws: z.int(),
         black: z.int(),
       }),
-    )
-    .optional(),
+    ),
+  ),
 });
 
 type OpeningExplorerLichess = z.infer<typeof OpeningExplorerLichess>;

@@ -1,9 +1,9 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const PuzzleGlicko = z.object({
-  rating: z.number().optional(),
-  deviation: z.number().optional(),
-  provisional: z.boolean().optional(),
+  rating: z.optional(z.number()),
+  deviation: z.optional(z.number()),
+  provisional: z.optional(z.boolean()),
 });
 
 type PuzzleGlicko = z.infer<typeof PuzzleGlicko>;

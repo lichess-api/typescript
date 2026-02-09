@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const Crosstable = z.object({
   users: z.record(z.string(), z.number()),

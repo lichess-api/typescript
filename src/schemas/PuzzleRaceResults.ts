@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Patron } from "./Patron";
 import { PatronColor } from "./PatronColor";
@@ -10,10 +10,10 @@ const PuzzleRaceResults = z.object({
     z.object({
       name: z.string(),
       score: z.int(),
-      id: z.string().optional(),
-      flair: z.string().optional(),
-      patron: Patron.optional(),
-      patronColor: PatronColor.optional(),
+      id: z.optional(z.string()),
+      flair: z.optional(z.string()),
+      patron: z.optional(Patron),
+      patronColor: z.optional(PatronColor),
     }),
   ),
   puzzles: z.array(

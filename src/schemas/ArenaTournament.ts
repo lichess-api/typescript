@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { ArenaPerf } from "./ArenaPerf";
 import { ArenaPosition } from "./ArenaPosition";
@@ -22,30 +22,30 @@ const ArenaTournament = z.object({
   finishesAt: z.int(),
   status: ArenaStatus,
   perf: ArenaPerf,
-  secondsToStart: z.int().optional(),
-  hasMaxRating: z.boolean().optional(),
-  maxRating: ArenaRatingObj.optional(),
-  minRating: ArenaRatingObj.optional(),
-  minRatedGames: z.object({ nb: z.int().optional() }).optional(),
-  botsAllowed: z.boolean().optional(),
-  minAccountAgeInDays: z.int().optional(),
-  onlyTitled: z.boolean().optional(),
-  teamMember: z.string().optional(),
-  private: z.boolean().optional(),
-  position: ArenaPosition.optional(),
-  schedule: z
-    .object({
-      freq: z.string().optional(),
-      speed: z.string().optional(),
-    })
-    .optional(),
-  teamBattle: z
-    .object({
-      teams: z.array(z.string()).optional(),
-      nbLeaders: z.int().optional(),
-    })
-    .optional(),
-  winner: LightUser.optional(),
+  secondsToStart: z.optional(z.int()),
+  hasMaxRating: z.optional(z.boolean()),
+  maxRating: z.optional(ArenaRatingObj),
+  minRating: z.optional(ArenaRatingObj),
+  minRatedGames: z.optional(z.object({ nb: z.optional(z.int()) })),
+  botsAllowed: z.optional(z.boolean()),
+  minAccountAgeInDays: z.optional(z.int()),
+  onlyTitled: z.optional(z.boolean()),
+  teamMember: z.optional(z.string()),
+  private: z.optional(z.boolean()),
+  position: z.optional(ArenaPosition),
+  schedule: z.optional(
+    z.object({
+      freq: z.optional(z.string()),
+      speed: z.optional(z.string()),
+    }),
+  ),
+  teamBattle: z.optional(
+    z.object({
+      teams: z.optional(z.array(z.string())),
+      nbLeaders: z.optional(z.int()),
+    }),
+  ),
+  winner: z.optional(LightUser),
 });
 
 type ArenaTournament = z.infer<typeof ArenaTournament>;

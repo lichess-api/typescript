@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { BroadcastCustomPoints } from "./BroadcastCustomPoints";
 import { BroadcastPlayerWithFed } from "./BroadcastPlayerWithFed";
@@ -10,10 +10,10 @@ const BroadcastGameEntry = z.object({
   id: z.string(),
   opponent: BroadcastPlayerWithFed,
   color: GameColor,
-  points: z.literal(["1", "1/2", "0"]).optional(),
-  customPoints: BroadcastCustomPoints.optional(),
-  ratingDiff: z.int().optional(),
-  fideTC: FideTimeControl.optional(),
+  points: z.optional(z.literal(["1", "1/2", "0"])),
+  customPoints: z.optional(BroadcastCustomPoints),
+  ratingDiff: z.optional(z.int()),
+  fideTC: z.optional(FideTimeControl),
 });
 
 type BroadcastGameEntry = z.infer<typeof BroadcastGameEntry>;

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const GameOpening = z.object({
   eco: z.string(),

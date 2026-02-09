@@ -1,12 +1,12 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { BroadcastRoundInfo } from "./BroadcastRoundInfo";
 import { BroadcastTour } from "./BroadcastTour";
 
 const BroadcastWithLastRound = z.object({
-  group: z.string().optional(),
-  tour: BroadcastTour.optional(),
-  round: BroadcastRoundInfo.optional(),
+  group: z.optional(z.string()),
+  tour: z.optional(BroadcastTour),
+  round: z.optional(BroadcastRoundInfo),
 });
 
 type BroadcastWithLastRound = z.infer<typeof BroadcastWithLastRound>;

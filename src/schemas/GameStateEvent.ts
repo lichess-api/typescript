@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { GameColor } from "./GameColor";
 import { GameStatusName } from "./GameStatusName";
@@ -11,17 +11,17 @@ const GameStateEvent = z.object({
   winc: z.int(),
   binc: z.int(),
   status: GameStatusName,
-  winner: GameColor.optional(),
-  wdraw: z.boolean().optional(),
-  bdraw: z.boolean().optional(),
-  wtakeback: z.boolean().optional(),
-  btakeback: z.boolean().optional(),
-  expiration: z
-    .object({
+  winner: z.optional(GameColor),
+  wdraw: z.optional(z.boolean()),
+  bdraw: z.optional(z.boolean()),
+  wtakeback: z.optional(z.boolean()),
+  btakeback: z.optional(z.boolean()),
+  expiration: z.optional(
+    z.object({
       idleMillis: z.int(),
       millisToMove: z.int(),
-    })
-    .optional(),
+    }),
+  ),
 });
 
 type GameStateEvent = z.infer<typeof GameStateEvent>;

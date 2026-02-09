@@ -1,15 +1,15 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const Count = z.object({
   all: z.int(),
   rated: z.int(),
-  ai: z.int().optional(),
+  ai: z.optional(z.int()),
   draw: z.int(),
-  drawH: z.int().optional(),
+  drawH: z.optional(z.int()),
   loss: z.int(),
-  lossH: z.int().optional(),
+  lossH: z.optional(z.int()),
   win: z.int(),
-  winH: z.int().optional(),
+  winH: z.optional(z.int()),
   bookmark: z.int(),
   playing: z.int(),
   import: z.int(),

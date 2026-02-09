@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { BroadcastRoundInfo } from "./BroadcastRoundInfo";
 import { BroadcastRoundStudyInfo } from "./BroadcastRoundStudyInfo";

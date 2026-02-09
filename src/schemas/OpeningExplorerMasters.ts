@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { OpeningExplorerMastersGame } from "./OpeningExplorerMastersGame";
 import { OpeningExplorerOpening } from "./OpeningExplorerOpening";

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Flair } from "./Flair";
 import { PuzzleModePerf } from "./PuzzleModePerf";
@@ -11,31 +11,31 @@ const UserActivity = z.object({
     start: z.int(),
     end: z.int(),
   }),
-  games: z
-    .object({
-      chess960: UserActivityScore.optional(),
-      atomic: UserActivityScore.optional(),
-      racingKings: UserActivityScore.optional(),
-      ultraBullet: UserActivityScore.optional(),
-      blitz: UserActivityScore.optional(),
-      kingOfTheHill: UserActivityScore.optional(),
-      bullet: UserActivityScore.optional(),
-      correspondence: UserActivityScore.optional(),
-      horde: UserActivityScore.optional(),
-      puzzle: UserActivityScore.optional(),
-      classical: UserActivityScore.optional(),
-      rapid: UserActivityScore.optional(),
-    })
-    .optional(),
-  puzzles: z.object({ score: UserActivityScore.optional() }).optional(),
-  storm: PuzzleModePerf.optional(),
-  racer: PuzzleModePerf.optional(),
-  streak: PuzzleModePerf.optional(),
-  tournaments: z
-    .object({
-      nb: z.int().optional(),
-      best: z
-        .array(
+  games: z.optional(
+    z.object({
+      chess960: z.optional(UserActivityScore),
+      atomic: z.optional(UserActivityScore),
+      racingKings: z.optional(UserActivityScore),
+      ultraBullet: z.optional(UserActivityScore),
+      blitz: z.optional(UserActivityScore),
+      kingOfTheHill: z.optional(UserActivityScore),
+      bullet: z.optional(UserActivityScore),
+      correspondence: z.optional(UserActivityScore),
+      horde: z.optional(UserActivityScore),
+      puzzle: z.optional(UserActivityScore),
+      classical: z.optional(UserActivityScore),
+      rapid: z.optional(UserActivityScore),
+    }),
+  ),
+  puzzles: z.optional(z.object({ score: z.optional(UserActivityScore) })),
+  storm: z.optional(PuzzleModePerf),
+  racer: z.optional(PuzzleModePerf),
+  streak: z.optional(PuzzleModePerf),
+  tournaments: z.optional(
+    z.object({
+      nb: z.optional(z.int()),
+      best: z.optional(
+        z.array(
           z.object({
             tournament: z.object({
               id: z.string(),
@@ -46,59 +46,59 @@ const UserActivity = z.object({
             rank: z.int(),
             rankPercent: z.int(),
           }),
-        )
-        .optional(),
-    })
-    .optional(),
-  practice: z
-    .array(
+        ),
+      ),
+    }),
+  ),
+  practice: z.optional(
+    z.array(
       z.object({
         url: z.string(),
         name: z.string(),
         nbPositions: z.int(),
       }),
-    )
-    .optional(),
-  simuls: z.array(z.string()).optional(),
-  correspondenceMoves: z
-    .object({
+    ),
+  ),
+  simuls: z.optional(z.array(z.string())),
+  correspondenceMoves: z.optional(
+    z.object({
       nb: z.int(),
       games: z.array(UserActivityCorrespondenceGame),
-    })
-    .optional(),
-  correspondenceEnds: z
-    .object({
+    }),
+  ),
+  correspondenceEnds: z.optional(
+    z.object({
       correspondence: z.object({
         score: UserActivityScore,
         games: z.array(UserActivityCorrespondenceGame),
       }),
-    })
-    .optional(),
-  follows: z
-    .object({
-      in: UserActivityFollowList.optional(),
-      out: UserActivityFollowList.optional(),
-    })
-    .optional(),
-  studies: z
-    .array(
+    }),
+  ),
+  follows: z.optional(
+    z.object({
+      in: z.optional(UserActivityFollowList),
+      out: z.optional(UserActivityFollowList),
+    }),
+  ),
+  studies: z.optional(
+    z.array(
       z.object({
         id: z.string(),
         name: z.string(),
       }),
-    )
-    .optional(),
-  teams: z
-    .array(
+    ),
+  ),
+  teams: z.optional(
+    z.array(
       z.object({
         url: z.url(),
         name: z.string(),
-        flair: Flair.optional(),
+        flair: z.optional(Flair),
       }),
-    )
-    .optional(),
-  posts: z
-    .array(
+    ),
+  ),
+  posts: z.optional(
+    z.array(
       z.object({
         topicUrl: z.string(),
         topicName: z.string(),
@@ -109,10 +109,10 @@ const UserActivity = z.object({
           }),
         ),
       }),
-    )
-    .optional(),
-  patron: z.object({ months: z.int() }).optional(),
-  stream: z.boolean().optional(),
+    ),
+  ),
+  patron: z.optional(z.object({ months: z.int() })),
+  stream: z.optional(z.boolean()),
 });
 
 type UserActivity = z.infer<typeof UserActivity>;

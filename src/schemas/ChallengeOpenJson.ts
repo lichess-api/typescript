@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { ChallengeColor } from "./ChallengeColor";
 import { ChallengeStatus } from "./ChallengeStatus";
@@ -18,15 +18,15 @@ const ChallengeOpenJson = z.object({
   speed: Speed,
   timeControl: TimeControl,
   color: ChallengeColor,
-  finalColor: GameColor.optional(),
+  finalColor: z.optional(GameColor),
   perf: z.object({
-    icon: z.string().optional(),
-    name: z.string().optional(),
+    icon: z.optional(z.string()),
+    name: z.optional(z.string()),
   }),
-  initialFen: z.string().optional(),
+  initialFen: z.optional(z.string()),
   urlWhite: z.url(),
   urlBlack: z.url(),
-  open: z.object({ userIds: z.tuple([z.string(), z.string()]).optional() }),
+  open: z.object({ userIds: z.optional(z.tuple([z.string(), z.string()])) }),
 });
 
 type ChallengeOpenJson = z.infer<typeof ChallengeOpenJson>;

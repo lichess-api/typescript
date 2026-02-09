@@ -1,12 +1,12 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const Perf = z.object({
   games: z.int(),
   rating: z.int(),
   rd: z.int(),
   prog: z.int(),
-  prov: z.boolean().optional(),
-  rank: z.int().optional(),
+  prov: z.optional(z.boolean()),
+  rank: z.optional(z.int()),
 });
 
 type Perf = z.infer<typeof Perf>;
