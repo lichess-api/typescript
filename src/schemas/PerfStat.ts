@@ -1,37 +1,37 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { LightUser } from "./LightUser";
 
 const PerfStat = z.object({
   user: z.object({ name: z.string() }),
   perf: z.object({
-    glicko: z
-      .object({
-        rating: z.number().optional(),
-        deviation: z.number().optional(),
-        provisional: z.boolean().optional(),
-      })
-      .optional(),
-    nb: z.int().optional(),
-    progress: z.int().optional(),
+    glicko: z.optional(
+      z.object({
+        rating: z.optional(z.number()),
+        deviation: z.optional(z.number()),
+        provisional: z.optional(z.boolean()),
+      }),
+    ),
+    nb: z.optional(z.int()),
+    progress: z.optional(z.int()),
   }),
-  rank: z.int().nullable(),
+  rank: z.nullable(z.int()),
   percentile: z.number(),
   stat: z.object({
-    highest: z
-      .object({
+    highest: z.optional(
+      z.object({
         int: z.int(),
         at: z.iso.datetime(),
         gameId: z.string(),
-      })
-      .optional(),
-    lowest: z
-      .object({
+      }),
+    ),
+    lowest: z.optional(
+      z.object({
         int: z.int(),
         at: z.iso.datetime(),
         gameId: z.string(),
-      })
-      .optional(),
+      }),
+    ),
     bestWins: z.object({
       results: z.array(
         z.object({
@@ -68,65 +68,65 @@ const PerfStat = z.object({
       win: z.object({
         cur: z.object({
           v: z.int(),
-          from: z
-            .object({
+          from: z.optional(
+            z.object({
               at: z.iso.datetime(),
               gameId: z.string(),
-            })
-            .optional(),
-          to: z
-            .object({
+            }),
+          ),
+          to: z.optional(
+            z.object({
               at: z.iso.datetime(),
               gameId: z.string(),
-            })
-            .optional(),
+            }),
+          ),
         }),
         max: z.object({
           v: z.int(),
-          from: z
-            .object({
+          from: z.optional(
+            z.object({
               at: z.iso.datetime(),
               gameId: z.string(),
-            })
-            .optional(),
-          to: z
-            .object({
+            }),
+          ),
+          to: z.optional(
+            z.object({
               at: z.iso.datetime(),
               gameId: z.string(),
-            })
-            .optional(),
+            }),
+          ),
         }),
       }),
       loss: z.object({
         cur: z.object({
           v: z.int(),
-          from: z
-            .object({
+          from: z.optional(
+            z.object({
               at: z.iso.datetime(),
               gameId: z.string(),
-            })
-            .optional(),
-          to: z
-            .object({
+            }),
+          ),
+          to: z.optional(
+            z.object({
               at: z.iso.datetime(),
               gameId: z.string(),
-            })
-            .optional(),
+            }),
+          ),
         }),
         max: z.object({
           v: z.int(),
-          from: z
-            .object({
+          from: z.optional(
+            z.object({
               at: z.string(),
               gameId: z.string(),
-            })
-            .optional(),
-          to: z
-            .object({
+            }),
+          ),
+          to: z.optional(
+            z.object({
               at: z.string(),
               gameId: z.string(),
-            })
-            .optional(),
+            }),
+          ),
         }),
       }),
     }),
@@ -135,39 +135,39 @@ const PerfStat = z.object({
         cur: z.object({ v: z.int() }),
         max: z.object({
           v: z.int(),
-          from: z
-            .object({
+          from: z.optional(
+            z.object({
               at: z.iso.datetime(),
               gameId: z.string(),
-            })
-            .optional(),
-          to: z
-            .object({
+            }),
+          ),
+          to: z.optional(
+            z.object({
               at: z.iso.datetime(),
               gameId: z.string(),
-            })
-            .optional(),
+            }),
+          ),
         }),
       }),
       time: z.object({
         cur: z.object({ v: z.int() }),
         max: z.object({
           v: z.int(),
-          from: z
-            .object({
+          from: z.optional(
+            z.object({
               at: z.iso.datetime(),
               gameId: z.string(),
-            })
-            .optional(),
-          to: z
-            .object({
+            }),
+          ),
+          to: z.optional(
+            z.object({
               at: z.iso.datetime(),
               gameId: z.string(),
-            })
-            .optional(),
+            }),
+          ),
         }),
       }),
-      lastDate: z.iso.datetime().optional(),
+      lastDate: z.optional(z.iso.datetime()),
     }),
   }),
 });

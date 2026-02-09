@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const ArenaStatus = z.literal([10, 20, 30]);
 

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const CloudEval = z.object({
   depth: z.int(),

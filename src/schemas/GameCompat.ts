@@ -1,8 +1,8 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const GameCompat = z.object({
-  bot: z.boolean().optional(),
-  board: z.boolean().optional(),
+  bot: z.optional(z.boolean()),
+  board: z.optional(z.boolean()),
 });
 
 type GameCompat = z.infer<typeof GameCompat>;

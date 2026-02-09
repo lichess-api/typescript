@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Flair } from "./Flair";
 import { Patron } from "./Patron";
@@ -44,10 +44,10 @@ const Timeline = z.object({
     z.object({
       id: z.string(),
       name: z.string(),
-      title: Title.optional(),
-      flair: Flair.optional(),
-      patron: Patron.optional(),
-      patronColor: PatronColor.optional(),
+      title: z.optional(Title),
+      flair: z.optional(Flair),
+      patron: z.optional(Patron),
+      patronColor: z.optional(PatronColor),
     }),
   ),
 });

@@ -1,27 +1,27 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const StudyImportPgnChapters = z.object({
-  chapters: z
-    .array(
+  chapters: z.optional(
+    z.array(
       z.object({
-        id: z.string().optional(),
-        name: z.string().optional(),
-        players: z
-          .tuple([
+        id: z.optional(z.string()),
+        name: z.optional(z.string()),
+        players: z.optional(
+          z.tuple([
             z.object({
-              name: z.string().nullable().optional(),
-              rating: z.int().optional(),
+              name: z.optional(z.nullable(z.string())),
+              rating: z.optional(z.int()),
             }),
             z.object({
-              name: z.string().nullable().optional(),
-              rating: z.int().optional(),
+              name: z.optional(z.nullable(z.string())),
+              rating: z.optional(z.int()),
             }),
-          ])
-          .optional(),
-        status: z.string().optional(),
+          ]),
+        ),
+        status: z.optional(z.string()),
       }),
-    )
-    .optional(),
+    ),
+  ),
 });
 
 type StudyImportPgnChapters = z.infer<typeof StudyImportPgnChapters>;

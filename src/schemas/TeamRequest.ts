@@ -1,10 +1,10 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const TeamRequest = z.object({
   teamId: z.string(),
   userId: z.string(),
   date: z.int(),
-  message: z.string().optional(),
+  message: z.optional(z.string()),
 });
 
 type TeamRequest = z.infer<typeof TeamRequest>;

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { BroadcastGameEntry } from "./BroadcastGameEntry";
 import { BroadcastPlayerEntry } from "./BroadcastPlayerEntry";
@@ -6,19 +6,19 @@ import { BroadcastPlayerEntry } from "./BroadcastPlayerEntry";
 const BroadcastPlayerEntryWithFideAndGames = z.intersection(
   BroadcastPlayerEntry,
   z.object({
-    fide: z
-      .object({
-        year: z.int().optional(),
-        ratings: z
-          .object({
-            standard: z.int().optional(),
-            rapid: z.int().optional(),
-            blitz: z.int().optional(),
-          })
-          .optional(),
-      })
-      .optional(),
-    games: z.array(BroadcastGameEntry).optional(),
+    fide: z.optional(
+      z.object({
+        year: z.optional(z.int()),
+        ratings: z.optional(
+          z.object({
+            standard: z.optional(z.int()),
+            rapid: z.optional(z.int()),
+            blitz: z.optional(z.int()),
+          }),
+        ),
+      }),
+    ),
+    games: z.optional(z.array(BroadcastGameEntry)),
   }),
 );
 

@@ -36,7 +36,7 @@ async function processFile(filePath: string) {
     ? (`\n${refImports}\n` as const)
     : ("" as const);
 
-  const tsCode = `import * as z from "zod";
+  const tsCode = `import * as z from "zod/mini";
 ${spacedRefImports}
 const ${fileName} = ${zodSchema};
 

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Flair } from "./Flair";
 import { GameColor } from "./GameColor";
@@ -19,23 +19,23 @@ const PuzzleAndGame = z.object({
     players: z.tuple([
       z.object({
         color: GameColor,
-        flair: Flair.optional(),
+        flair: z.optional(Flair),
         id: z.string(),
         name: z.string(),
-        patron: Patron.optional(),
-        patronColor: PatronColor.optional(),
+        patron: z.optional(Patron),
+        patronColor: z.optional(PatronColor),
         rating: z.int(),
-        title: Title.optional(),
+        title: z.optional(Title),
       }),
       z.object({
         color: GameColor,
-        flair: Flair.optional(),
+        flair: z.optional(Flair),
         id: z.string(),
         name: z.string(),
-        patron: Patron.optional(),
-        patronColor: PatronColor.optional(),
+        patron: z.optional(Patron),
+        patronColor: z.optional(PatronColor),
         rating: z.int(),
-        title: Title.optional(),
+        title: z.optional(Title),
       }),
     ]),
     rated: z.boolean(),

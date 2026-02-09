@@ -1,8 +1,8 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const ArenaSheet = z.object({
   scores: z.string(),
-  fire: z.boolean().optional(),
+  fire: z.optional(z.boolean()),
 });
 
 type ArenaSheet = z.infer<typeof ArenaSheet>;

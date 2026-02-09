@@ -1,9 +1,9 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const OpponentGoneEvent = z.object({
   type: z.literal("opponentGone"),
   gone: z.boolean(),
-  claimWinInSeconds: z.int().optional(),
+  claimWinInSeconds: z.optional(z.int()),
 });
 
 type OpponentGoneEvent = z.infer<typeof OpponentGoneEvent>;

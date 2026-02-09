@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { ArenaRatingObj } from "./ArenaRatingObj";
 import { ArenaSheet } from "./ArenaSheet";
@@ -12,152 +12,152 @@ import { Verdicts } from "./Verdicts";
 const ArenaTournamentFull = z.object({
   id: z.string(),
   fullName: z.string(),
-  rated: z.boolean().optional(),
-  spotlight: z.object({ headline: z.string().optional() }).optional(),
-  berserkable: z.boolean().optional(),
-  onlyTitled: z.boolean().optional(),
+  rated: z.optional(z.boolean()),
+  spotlight: z.optional(z.object({ headline: z.optional(z.string()) })),
+  berserkable: z.optional(z.boolean()),
+  onlyTitled: z.optional(z.boolean()),
   clock: Clock,
-  minutes: z.int().optional(),
-  createdBy: z.string().optional(),
-  system: z.string().optional(),
-  secondsToStart: z.int().optional(),
-  secondsToFinish: z.int().optional(),
-  isFinished: z.boolean().optional(),
-  isRecentlyFinished: z.boolean().optional(),
-  pairingsClosed: z.boolean().optional(),
-  startsAt: z.string().optional(),
+  minutes: z.optional(z.int()),
+  createdBy: z.optional(z.string()),
+  system: z.optional(z.string()),
+  secondsToStart: z.optional(z.int()),
+  secondsToFinish: z.optional(z.int()),
+  isFinished: z.optional(z.boolean()),
+  isRecentlyFinished: z.optional(z.boolean()),
+  pairingsClosed: z.optional(z.boolean()),
+  startsAt: z.optional(z.string()),
   nbPlayers: z.int(),
-  verdicts: Verdicts.optional(),
-  quote: z
-    .object({
-      text: z.string().optional(),
-      author: z.string().optional(),
-    })
-    .optional(),
-  greatPlayer: z
-    .object({
-      name: z.string().optional(),
-      url: z.url().optional(),
-    })
-    .optional(),
-  allowList: z.array(z.string()).optional(),
-  hasMaxRating: z.boolean().optional(),
-  maxRating: ArenaRatingObj.optional(),
-  minRating: ArenaRatingObj.optional(),
-  minRatedGames: z.object({ nb: z.int().optional() }).optional(),
-  botsAllowed: z.boolean().optional(),
-  minAccountAgeInDays: z.int().optional(),
-  perf: z
-    .object({
+  verdicts: z.optional(Verdicts),
+  quote: z.optional(
+    z.object({
+      text: z.optional(z.string()),
+      author: z.optional(z.string()),
+    }),
+  ),
+  greatPlayer: z.optional(
+    z.object({
+      name: z.optional(z.string()),
+      url: z.optional(z.url()),
+    }),
+  ),
+  allowList: z.optional(z.array(z.string())),
+  hasMaxRating: z.optional(z.boolean()),
+  maxRating: z.optional(ArenaRatingObj),
+  minRating: z.optional(ArenaRatingObj),
+  minRatedGames: z.optional(z.object({ nb: z.optional(z.int()) })),
+  botsAllowed: z.optional(z.boolean()),
+  minAccountAgeInDays: z.optional(z.int()),
+  perf: z.optional(
+    z.object({
       icon: z.string(),
       key: z.string(),
       name: z.string(),
-    })
-    .optional(),
-  schedule: z
-    .object({
+    }),
+  ),
+  schedule: z.optional(
+    z.object({
       freq: z.string(),
       speed: z.string(),
-    })
-    .optional(),
-  description: z.string().optional(),
-  variant: z.string().optional(),
-  duels: z
-    .array(
+    }),
+  ),
+  description: z.optional(z.string()),
+  variant: z.optional(z.string()),
+  duels: z.optional(
+    z.array(
       z.object({
-        id: z.string().optional(),
-        p: z
-          .tuple([
+        id: z.optional(z.string()),
+        p: z.optional(
+          z.tuple([
             z.object({
-              n: z.string().optional(),
-              r: z.int().optional(),
-              k: z.int().optional(),
+              n: z.optional(z.string()),
+              r: z.optional(z.int()),
+              k: z.optional(z.int()),
             }),
             z.object({
-              n: z.string().optional(),
-              r: z.int().optional(),
-              k: z.int().optional(),
+              n: z.optional(z.string()),
+              r: z.optional(z.int()),
+              k: z.optional(z.int()),
             }),
-          ])
-          .optional(),
+          ]),
+        ),
       }),
-    )
-    .optional(),
-  standing: z
-    .object({
-      page: z.int().optional(),
-      players: z
-        .array(
+    ),
+  ),
+  standing: z.optional(
+    z.object({
+      page: z.optional(z.int()),
+      players: z.optional(
+        z.array(
           z.object({
-            name: z.string().optional(),
-            title: Title.optional(),
-            patron: Patron.optional(),
-            patronColor: PatronColor.optional(),
-            flair: Flair.optional(),
-            rank: z.int().optional(),
-            rating: z.int().optional(),
-            score: z.int().optional(),
-            sheet: ArenaSheet.optional(),
+            name: z.optional(z.string()),
+            title: z.optional(Title),
+            patron: z.optional(Patron),
+            patronColor: z.optional(PatronColor),
+            flair: z.optional(Flair),
+            rank: z.optional(z.int()),
+            rating: z.optional(z.int()),
+            score: z.optional(z.int()),
+            sheet: z.optional(ArenaSheet),
           }),
-        )
-        .optional(),
-    })
-    .optional(),
-  featured: z
-    .object({
-      id: z.string().optional(),
-      fen: z.string().optional(),
-      orientation: z.string().optional(),
-      color: z.string().optional(),
-      lastMove: z.string().optional(),
-      white: z
-        .object({
-          name: z.string().optional(),
-          id: z.string().optional(),
-          rank: z.int().optional(),
-          rating: z.int().optional(),
-        })
-        .optional(),
-      black: z
-        .object({
-          name: z.string().optional(),
-          id: z.string().optional(),
-          rank: z.int().optional(),
-          rating: z.int().optional(),
-        })
-        .optional(),
-      c: z
-        .object({
-          white: z.int().optional(),
-          black: z.int().optional(),
-        })
-        .optional(),
-    })
-    .optional(),
-  podium: z
-    .array(
+        ),
+      ),
+    }),
+  ),
+  featured: z.optional(
+    z.object({
+      id: z.optional(z.string()),
+      fen: z.optional(z.string()),
+      orientation: z.optional(z.string()),
+      color: z.optional(z.string()),
+      lastMove: z.optional(z.string()),
+      white: z.optional(
+        z.object({
+          name: z.optional(z.string()),
+          id: z.optional(z.string()),
+          rank: z.optional(z.int()),
+          rating: z.optional(z.int()),
+        }),
+      ),
+      black: z.optional(
+        z.object({
+          name: z.optional(z.string()),
+          id: z.optional(z.string()),
+          rank: z.optional(z.int()),
+          rating: z.optional(z.int()),
+        }),
+      ),
+      c: z.optional(
+        z.object({
+          white: z.optional(z.int()),
+          black: z.optional(z.int()),
+        }),
+      ),
+    }),
+  ),
+  podium: z.optional(
+    z.array(
       z.object({
-        name: z.string().optional(),
-        title: Title.optional(),
-        patron: Patron.optional(),
-        patronColor: PatronColor.optional(),
-        flair: Flair.optional(),
-        rank: z.int().optional(),
-        rating: z.int().optional(),
-        score: z.int().optional(),
-        nb: z
-          .object({
-            game: z.int().optional(),
-            berserk: z.int().optional(),
-            win: z.int().optional(),
-          })
-          .optional(),
-        performance: z.int().optional(),
+        name: z.optional(z.string()),
+        title: z.optional(Title),
+        patron: z.optional(Patron),
+        patronColor: z.optional(PatronColor),
+        flair: z.optional(Flair),
+        rank: z.optional(z.int()),
+        rating: z.optional(z.int()),
+        score: z.optional(z.int()),
+        nb: z.optional(
+          z.object({
+            game: z.optional(z.int()),
+            berserk: z.optional(z.int()),
+            win: z.optional(z.int()),
+          }),
+        ),
+        performance: z.optional(z.int()),
       }),
-    )
-    .optional(),
-  stats: z
-    .object({
+    ),
+  ),
+  stats: z.optional(
+    z.object({
       games: z.int(),
       moves: z.int(),
       whiteWins: z.int(),
@@ -165,9 +165,9 @@ const ArenaTournamentFull = z.object({
       draws: z.int(),
       berserks: z.int(),
       averageRating: z.int(),
-    })
-    .optional(),
-  myUsername: z.string().optional(),
+    }),
+  ),
+  myUsername: z.optional(z.string()),
 });
 
 type ArenaTournamentFull = z.infer<typeof ArenaTournamentFull>;

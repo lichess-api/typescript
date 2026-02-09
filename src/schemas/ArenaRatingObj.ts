@@ -1,9 +1,9 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { PerfType } from "./PerfType";
 
 const ArenaRatingObj = z.object({
-  perf: PerfType.optional(),
+  perf: z.optional(PerfType),
   rating: z.int(),
 });
 

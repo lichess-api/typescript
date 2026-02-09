@@ -1,11 +1,11 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const BroadcastPhotos = z.record(
   z.string(),
   z.object({
     small: z.string(),
     medium: z.string(),
-    credit: z.string().optional(),
+    credit: z.optional(z.string()),
   }),
 );
 

@@ -1,8 +1,8 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const UserStreamer = z.object({
-  twitch: z.object({ channel: z.url().optional() }).optional(),
-  youtube: z.object({ channel: z.url().optional() }).optional(),
+  twitch: z.optional(z.object({ channel: z.optional(z.url()) })),
+  youtube: z.optional(z.object({ channel: z.optional(z.url()) })),
 });
 
 type UserStreamer = z.infer<typeof UserStreamer>;

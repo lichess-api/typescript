@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { TeamRequest } from "./TeamRequest";
 import { User } from "./User";

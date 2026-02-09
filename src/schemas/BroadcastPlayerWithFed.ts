@@ -1,14 +1,14 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Title } from "./Title";
 
 const BroadcastPlayerWithFed = z.object({
   name: z.string(),
-  title: Title.optional(),
-  rating: z.int().optional(),
-  fideId: z.int().optional(),
-  team: z.string().optional(),
-  fed: z.string().optional(),
+  title: z.optional(Title),
+  rating: z.optional(z.int()),
+  fideId: z.optional(z.int()),
+  team: z.optional(z.string()),
+  fed: z.optional(z.string()),
 });
 
 type BroadcastPlayerWithFed = z.infer<typeof BroadcastPlayerWithFed>;

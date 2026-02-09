@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Flair } from "./Flair";
 import { LightUser } from "./LightUser";
@@ -6,14 +6,14 @@ import { LightUser } from "./LightUser";
 const Team = z.object({
   id: z.string(),
   name: z.string(),
-  description: z.string().optional(),
-  flair: Flair.optional(),
-  leader: LightUser.optional(),
-  leaders: z.array(LightUser).optional(),
-  nbMembers: z.int().optional(),
-  open: z.boolean().optional(),
-  joined: z.boolean().optional(),
-  requested: z.boolean().optional(),
+  description: z.optional(z.string()),
+  flair: z.optional(Flair),
+  leader: z.optional(LightUser),
+  leaders: z.optional(z.array(LightUser)),
+  nbMembers: z.optional(z.int()),
+  open: z.optional(z.boolean()),
+  joined: z.optional(z.boolean()),
+  requested: z.optional(z.boolean()),
 });
 
 type Team = z.infer<typeof Team>;

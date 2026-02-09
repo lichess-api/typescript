@@ -1,17 +1,17 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const TimeControl = z.union([
   z.object({
-    type: z.literal("clock").optional(),
-    limit: z.int().optional(),
-    increment: z.int().optional(),
-    show: z.string().optional(),
+    type: z.optional(z.literal("clock")),
+    limit: z.optional(z.int()),
+    increment: z.optional(z.int()),
+    show: z.optional(z.string()),
   }),
   z.object({
-    type: z.literal("correspondence").optional(),
-    daysPerTurn: z.int().optional(),
+    type: z.optional(z.literal("correspondence")),
+    daysPerTurn: z.optional(z.int()),
   }),
-  z.object({ type: z.literal("unlimited").optional() }),
+  z.object({ type: z.optional(z.literal("unlimited")) }),
 ]);
 
 type TimeControl = z.infer<typeof TimeControl>;

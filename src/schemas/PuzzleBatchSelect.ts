@@ -1,11 +1,11 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { PuzzleAndGame } from "./PuzzleAndGame";
 import { PuzzleGlicko } from "./PuzzleGlicko";
 
 const PuzzleBatchSelect = z.object({
-  puzzles: z.array(PuzzleAndGame).optional(),
-  glicko: PuzzleGlicko.optional(),
+  puzzles: z.optional(z.array(PuzzleAndGame)),
+  glicko: z.optional(PuzzleGlicko),
 });
 
 type PuzzleBatchSelect = z.infer<typeof PuzzleBatchSelect>;

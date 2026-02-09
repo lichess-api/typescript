@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Count } from "./Count";
 import { User } from "./User";
@@ -8,14 +8,14 @@ const UserExtended = z.intersection(
   User,
   z.object({
     url: z.url(),
-    playing: z.url().optional(),
-    count: Count.optional(),
-    streaming: z.boolean().optional(),
-    streamer: UserStreamer.optional(),
-    followable: z.boolean().optional(),
-    following: z.boolean().optional(),
-    blocking: z.boolean().optional(),
-    fideId: z.number().optional(),
+    playing: z.optional(z.url()),
+    count: z.optional(Count),
+    streaming: z.optional(z.boolean()),
+    streamer: z.optional(UserStreamer),
+    followable: z.optional(z.boolean()),
+    following: z.optional(z.boolean()),
+    blocking: z.optional(z.boolean()),
+    fideId: z.optional(z.number()),
   }),
 );
 

@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { GameColor } from "./GameColor";
 import { GameMoveAnalysis } from "./GameMoveAnalysis";
@@ -17,31 +17,31 @@ const GameJson = z.object({
   createdAt: z.int(),
   lastMoveAt: z.int(),
   status: GameStatusName,
-  source: z.string().optional(),
+  source: z.optional(z.string()),
   players: GamePlayers,
-  initialFen: z.string().optional(),
-  winner: GameColor.optional(),
-  opening: GameOpening.optional(),
-  moves: z.string().optional(),
-  pgn: z.string().optional(),
-  daysPerTurn: z.int().optional(),
-  analysis: z.array(GameMoveAnalysis).optional(),
-  tournament: z.string().optional(),
-  swiss: z.string().optional(),
-  clock: z
-    .object({
+  initialFen: z.optional(z.string()),
+  winner: z.optional(GameColor),
+  opening: z.optional(GameOpening),
+  moves: z.optional(z.string()),
+  pgn: z.optional(z.string()),
+  daysPerTurn: z.optional(z.int()),
+  analysis: z.optional(z.array(GameMoveAnalysis)),
+  tournament: z.optional(z.string()),
+  swiss: z.optional(z.string()),
+  clock: z.optional(
+    z.object({
       initial: z.int(),
       increment: z.int(),
       totalTime: z.int(),
-    })
-    .optional(),
-  clocks: z.array(z.int()).optional(),
-  division: z
-    .object({
-      middle: z.int().optional(),
-      end: z.int().optional(),
-    })
-    .optional(),
+    }),
+  ),
+  clocks: z.optional(z.array(z.int())),
+  division: z.optional(
+    z.object({
+      middle: z.optional(z.int()),
+      end: z.optional(z.int()),
+    }),
+  ),
 });
 
 type GameJson = z.infer<typeof GameJson>;

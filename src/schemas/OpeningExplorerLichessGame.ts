@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { GameColor } from "./GameColor";
 import { OpeningExplorerGamePlayer } from "./OpeningExplorerGamePlayer";
@@ -7,11 +7,11 @@ import { Speed } from "./Speed";
 const OpeningExplorerLichessGame = z.object({
   id: z.string(),
   winner: z.union([GameColor, z.null()]),
-  speed: Speed.optional(),
+  speed: z.optional(Speed),
   white: OpeningExplorerGamePlayer,
   black: OpeningExplorerGamePlayer,
   year: z.number(),
-  month: z.string().nullable(),
+  month: z.nullable(z.string()),
 });
 
 type OpeningExplorerLichessGame = z.infer<typeof OpeningExplorerLichessGame>;

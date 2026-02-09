@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { GameColor } from "./GameColor";
 import { VariantKey } from "./VariantKey";
@@ -7,10 +7,10 @@ const UserActivityCorrespondenceGame = z.object({
   id: z.string(),
   color: GameColor,
   url: z.url(),
-  variant: VariantKey.optional(),
-  speed: z.literal("correspondence").optional(),
-  perf: z.literal("correspondence").optional(),
-  rated: z.boolean().optional(),
+  variant: z.optional(VariantKey),
+  speed: z.optional(z.literal("correspondence")),
+  perf: z.optional(z.literal("correspondence")),
+  rated: z.optional(z.boolean()),
   opponent: z.union([
     z.object({ aiLevel: z.int() }),
     z.object({

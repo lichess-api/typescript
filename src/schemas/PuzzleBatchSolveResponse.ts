@@ -1,20 +1,20 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { PuzzleAndGame } from "./PuzzleAndGame";
 import { PuzzleGlicko } from "./PuzzleGlicko";
 
 const PuzzleBatchSolveResponse = z.object({
-  puzzles: z.array(PuzzleAndGame).optional(),
-  glicko: PuzzleGlicko.optional(),
-  rounds: z
-    .array(
+  puzzles: z.optional(z.array(PuzzleAndGame)),
+  glicko: z.optional(PuzzleGlicko),
+  rounds: z.optional(
+    z.array(
       z.object({
-        id: z.string().optional(),
-        win: z.boolean().optional(),
-        ratingDiff: z.int().optional(),
+        id: z.optional(z.string()),
+        win: z.optional(z.boolean()),
+        ratingDiff: z.optional(z.int()),
       }),
-    )
-    .optional(),
+    ),
+  ),
 });
 
 type PuzzleBatchSolveResponse = z.infer<typeof PuzzleBatchSolveResponse>;

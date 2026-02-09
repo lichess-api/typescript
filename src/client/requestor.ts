@@ -1,5 +1,3 @@
-import { addQueryParams } from "~/utils";
-
 type QueryParams = Record<
   string,
   string | number | boolean | string[] | number[] | null | undefined
@@ -13,6 +11,19 @@ type RequestHandlerParams<TQueryParams extends QueryParams, TBody> = {
 };
 
 type RequestMethod = "GET" | "POST" | "HEAD" | "PUT" | "DELETE";
+
+function addQueryParams(url: URL, params: Record<string, unknown>): void {
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null) return;
+
+    if (Array.isArray(value)) {
+      url.searchParams.set(key, value.join(","));
+      return;
+    }
+
+    url.searchParams.set(key, String(value));
+  });
+}
 
 export class Requestor {
   readonly #headers: { readonly Authorization: `Bearer ${string}` } | undefined;

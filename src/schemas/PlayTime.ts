@@ -1,9 +1,9 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const PlayTime = z.object({
   total: z.int(),
   tv: z.int(),
-  human: z.int().optional(),
+  human: z.optional(z.int()),
 });
 
 type PlayTime = z.infer<typeof PlayTime>;

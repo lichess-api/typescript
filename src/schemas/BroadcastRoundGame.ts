@@ -1,27 +1,27 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Title } from "./Title";
 
 const BroadcastRoundGame = z.object({
   id: z.string(),
   name: z.string(),
-  fen: z.string().optional(),
-  players: z
-    .array(
+  fen: z.optional(z.string()),
+  players: z.optional(
+    z.array(
       z.object({
-        name: z.string().optional(),
-        title: Title.optional(),
-        rating: z.int().optional(),
-        fideId: z.int().optional(),
-        fed: z.string().optional(),
-        clock: z.int().optional(),
+        name: z.optional(z.string()),
+        title: z.optional(Title),
+        rating: z.optional(z.int()),
+        fideId: z.optional(z.int()),
+        fed: z.optional(z.string()),
+        clock: z.optional(z.int()),
       }),
-    )
-    .optional(),
-  lastMove: z.string().optional(),
-  check: z.literal(["+", "#"]).optional(),
-  thinkTime: z.int().optional(),
-  status: z.literal(["*", "1-0", "0-1", "½-½"]).optional(),
+    ),
+  ),
+  lastMove: z.optional(z.string()),
+  check: z.optional(z.literal(["+", "#"])),
+  thinkTime: z.optional(z.int()),
+  status: z.optional(z.literal(["*", "1-0", "0-1", "½-½"])),
 });
 
 type BroadcastRoundGame = z.infer<typeof BroadcastRoundGame>;

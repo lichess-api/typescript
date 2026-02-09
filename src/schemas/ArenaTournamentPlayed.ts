@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { ArenaTournament } from "./ArenaTournament";
 import { ArenaTournamentPlayer } from "./ArenaTournamentPlayer";

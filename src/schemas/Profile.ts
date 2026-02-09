@@ -1,17 +1,17 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const Profile = z.object({
-  flag: z.string().optional(),
-  location: z.string().optional(),
-  bio: z.string().optional(),
-  realName: z.string().optional(),
-  fideRating: z.int().optional(),
-  uscfRating: z.int().optional(),
-  ecfRating: z.int().optional(),
-  cfcRating: z.int().optional(),
-  rcfRating: z.int().optional(),
-  dsbRating: z.int().optional(),
-  links: z.string().optional(),
+  flag: z.optional(z.string()),
+  location: z.optional(z.string()),
+  bio: z.optional(z.string()),
+  realName: z.optional(z.string()),
+  fideRating: z.optional(z.int()),
+  uscfRating: z.optional(z.int()),
+  ecfRating: z.optional(z.int()),
+  cfcRating: z.optional(z.int()),
+  rcfRating: z.optional(z.int()),
+  dsbRating: z.optional(z.int()),
+  links: z.optional(z.string()),
 });
 
 type Profile = z.infer<typeof Profile>;

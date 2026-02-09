@@ -1,14 +1,14 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { Title } from "./Title";
 
 const GameEventPlayer = z.object({
-  aiLevel: z.int().optional(),
+  aiLevel: z.optional(z.int()),
   id: z.string(),
   name: z.string(),
-  title: z.union([Title, z.null()]).optional(),
-  rating: z.int().optional(),
-  provisional: z.boolean().optional(),
+  title: z.optional(z.union([Title, z.null()])),
+  rating: z.optional(z.int()),
+  provisional: z.optional(z.boolean()),
 });
 
 type GameEventPlayer = z.infer<typeof GameEventPlayer>;

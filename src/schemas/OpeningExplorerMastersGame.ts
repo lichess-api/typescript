@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { GameColor } from "./GameColor";
 import { OpeningExplorerGamePlayer } from "./OpeningExplorerGamePlayer";
@@ -9,7 +9,7 @@ const OpeningExplorerMastersGame = z.object({
   white: OpeningExplorerGamePlayer,
   black: OpeningExplorerGamePlayer,
   year: z.int(),
-  month: z.string().optional(),
+  month: z.optional(z.string()),
 });
 
 type OpeningExplorerMastersGame = z.infer<typeof OpeningExplorerMastersGame>;

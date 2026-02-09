@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const TimelineEntryPlanRenew = z.object({
   type: z.literal(["plan-renew"]),

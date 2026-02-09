@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { ChallengeColor } from "./ChallengeColor";
 import { ChallengeStatus } from "./ChallengeStatus";
@@ -19,14 +19,14 @@ const ChallengeJson = z.object({
   speed: Speed,
   timeControl: TimeControl,
   color: ChallengeColor,
-  finalColor: GameColor.optional(),
+  finalColor: z.optional(GameColor),
   perf: z.object({
     icon: z.string(),
     name: z.string(),
   }),
-  direction: z.literal(["in", "out"]).optional(),
-  initialFen: z.string().optional(),
-  rematchOf: z.string().optional(),
+  direction: z.optional(z.literal(["in", "out"])),
+  initialFen: z.optional(z.string()),
+  rematchOf: z.optional(z.string()),
 });
 
 type ChallengeJson = z.infer<typeof ChallengeJson>;

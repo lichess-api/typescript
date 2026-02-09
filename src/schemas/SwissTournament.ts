@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 import { SwissStatus } from "./SwissStatus";
 import { Verdicts } from "./Verdicts";
@@ -18,8 +18,8 @@ const SwissTournament = z.object({
   nbPlayers: z.number(),
   nbOngoing: z.number(),
   status: SwissStatus,
-  stats: z
-    .object({
+  stats: z.optional(
+    z.object({
       games: z.number(),
       whiteWins: z.number(),
       blackWins: z.number(),
@@ -27,16 +27,16 @@ const SwissTournament = z.object({
       byes: z.number(),
       absences: z.number(),
       averageRating: z.number(),
-    })
-    .optional(),
+    }),
+  ),
   rated: z.boolean(),
   verdicts: Verdicts,
-  nextRound: z
-    .object({
-      at: z.iso.datetime().optional(),
-      in: z.int().optional(),
-    })
-    .optional(),
+  nextRound: z.optional(
+    z.object({
+      at: z.optional(z.iso.datetime()),
+      in: z.optional(z.int()),
+    }),
+  ),
 });
 
 type SwissTournament = z.infer<typeof SwissTournament>;

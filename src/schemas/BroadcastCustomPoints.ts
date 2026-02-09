@@ -1,6 +1,9 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
-const BroadcastCustomPoints = z.number().min(0).max(10);
+const BroadcastCustomPoints = z
+  .number()
+  .check(z.minimum(0))
+  .check(z.maximum(10));
 
 type BroadcastCustomPoints = z.infer<typeof BroadcastCustomPoints>;
 

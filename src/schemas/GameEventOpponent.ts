@@ -1,11 +1,11 @@
-import * as z from "zod";
+import * as z from "zod/mini";
 
 const GameEventOpponent = z.union([
   z.object({
     id: z.string(),
     username: z.string(),
     rating: z.int(),
-    ratingDiff: z.int().optional(),
+    ratingDiff: z.optional(z.int()),
   }),
   z.object({
     id: z.null(),
