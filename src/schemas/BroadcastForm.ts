@@ -8,7 +8,7 @@ const BroadcastForm = z.object({
   "info.format": z.optional(z.string().check(z.maxLength(80))),
   "info.location": z.optional(z.string().check(z.maxLength(80))),
   "info.tc": z.optional(z.string().check(z.maxLength(80))),
-  "info.fideTc": z.optional(FideTimeControl),
+  "info.fideTC": z.optional(FideTimeControl),
   "info.timeZone": z.optional(z.string()),
   "info.players": z.optional(z.string().check(z.maxLength(120))),
   "info.website": z.optional(z.url()),

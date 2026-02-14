@@ -2668,6 +2668,29 @@ export class Lichess {
   }
 
   /**
+   * Get the team leaderboard of a broadcast
+   */
+  async broadcastTeamLeaderboardGet(params: { broadcastTournamentId: string }) {
+    const path =
+      `/broadcast/${params.broadcastTournamentId}/teams/standings` as const;
+    const { response, status } = await this.requestor.get({ path });
+    switch (status) {
+      case 200: {
+        const schema = z.array(schemas.BroadcastTeamLeaderboardEntry);
+        const json: unknown = await response.clone().json();
+        const data = schema.parse(json);
+        return { status, response, data } as const;
+      }
+      case 404: {
+        return { status, response } as const;
+      }
+      default: {
+        throw new Error("Unexpected status code");
+      }
+    }
+  }
+
+  /**
    * Update your broadcast tournament
    */
   async broadcastTourUpdate(

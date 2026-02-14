@@ -1,6 +1,6 @@
 openapi: "3.1.0"
 info:
-  version: 2.0.116
+  version: 2.0.119
   title: Lichess.org API reference
   contact:
     name: "Lichess.org API"
@@ -499,6 +499,9 @@ paths:
 
   /broadcast/{broadcastTournamentId}/players/{playerId}:
     $ref: "./tags/broadcasts/broadcast-broadcastTournamentId-players-playerId.yaml"
+
+  /broadcast/{broadcastTournamentId}/teams/standings:
+    $ref: "./tags/broadcasts/broadcast-broadcastTournamentId-teams-standings.yaml"
 
   /broadcast/{broadcastTournamentId}/edit:
     $ref: "./tags/broadcasts/broadcast-broadcastTournamentId-edit.yaml"

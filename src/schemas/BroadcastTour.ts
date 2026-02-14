@@ -1,5 +1,6 @@
 import * as z from "zod/mini";
 
+import { FideTimeControl } from "./FideTimeControl";
 import { LightUser } from "./LightUser";
 
 const BroadcastTour = z.object({
@@ -16,7 +17,7 @@ const BroadcastTour = z.object({
       players: z.optional(z.string()),
       location: z.optional(z.string()),
       tc: z.optional(z.string()),
-      fideTc: z.optional(z.literal(["standard", "rapid", "blitz"])),
+      fideTC: z.optional(FideTimeControl),
       timeZone: z.optional(z.string()),
       standings: z.optional(z.url()),
       format: z.optional(z.string()),
@@ -25,7 +26,6 @@ const BroadcastTour = z.object({
   tier: z.optional(z.int()),
   image: z.optional(z.url()),
   description: z.optional(z.string()),
-  leaderboard: z.optional(z.boolean()),
   teamTable: z.optional(z.boolean()),
   url: z.url(),
   communityOwner: z.optional(LightUser),
