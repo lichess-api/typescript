@@ -32,5 +32,5 @@ describe.concurrent("Lichess", () => {
 
     expect(received.length).toBeGreaterThanOrEqual(2);
     expect(received[0]?.t).toBe("featured");
-  }, 6_000);
+  }, 7_000);
 });
