@@ -1,6 +1,9 @@
 import * as z from "zod";
 
-const SchemaUnparsed = z.unknown().brand("SchemaUnparsed");
+const SchemaUnparsed = z
+  .record(z.string(), z.unknown())
+  .brand("SchemaUnparsed");
+type Unparsed = z.infer<typeof SchemaUnparsed>;
 
 const Primitive = z.union([z.string(), z.number(), z.boolean()]);
 
@@ -10,6 +13,9 @@ const BaseSchema = z.object({
 
   // `default` can only be on `string`, `number` and `boolean`
   default: Primitive.nullish(),
+
+  // `example` can be on any schema
+  example: z.unknown(),
 
   // `description` and `deprecated` can be on any schema
   description: z.string().optional(),
@@ -191,7 +197,10 @@ const SchemaSchemaOneOf = BaseSchema.extend({ oneOf: z.array(SchemaUnparsed) })
 
 const SchemaSchemaAllOf = BaseSchema.extend({
   type: z.literal("object").optional(),
-  allOf: z.tuple([SchemaUnparsed, SchemaUnparsed]),
+  allOf: z.union([
+    z.tuple([SchemaUnparsed]),
+    z.tuple([SchemaUnparsed, SchemaUnparsed]),
+  ]),
 })
   .strict()
   .transform((s) => ({ ...s, __schema: "allOf" as const }));
@@ -225,6 +234,10 @@ const SchemaSchema = z.union([
 
 type Schema = z.infer<typeof SchemaSchema>;
 
+function parseUnparsed(schema: Unparsed) {
+  return SchemaSchema.parse(schema satisfies Unparsed);
+}
+
 type ConvertResult = { readonly zodSchema: string; readonly refs: string[] };
 
 function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
@@ -245,7 +258,7 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
       }
       case "oneOf": {
         const subResults = schema.oneOf.map((item) =>
-          convertToZod(SchemaSchema.parse(item), prefix),
+          convertToZod(parseUnparsed(item), prefix),
         );
         const zodSchemas = subResults.map((r) => r.zodSchema);
         const allRefs = new Set<string>();
@@ -256,14 +269,14 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
         } as const;
       }
       case "allOf": {
-        const leftPart = convertToZod(
-          SchemaSchema.parse(schema.allOf[0]),
-          prefix,
-        );
-        const rightPart = convertToZod(
-          SchemaSchema.parse(schema.allOf[1]),
-          prefix,
-        );
+        const leftPart = convertToZod(parseUnparsed(schema.allOf[0]), prefix);
+        if (!schema.allOf[1]) {
+          return {
+            zodSchema: leftPart.zodSchema,
+            refs: leftPart.refs,
+          } as const;
+        }
+        const rightPart = convertToZod(parseUnparsed(schema.allOf[1]), prefix);
         const allRefs = new Set([...leftPart.refs, ...rightPart.refs]);
         return {
           zodSchema: `z.intersection(${leftPart.zodSchema}, ${rightPart.zodSchema})`,
@@ -356,7 +369,7 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
       }
       case "additionalProperties": {
         const { zodSchema: valueSchemaStr, refs } = convertToZod(
-          SchemaSchema.parse(schema.additionalProperties),
+          parseUnparsed(schema.additionalProperties),
           prefix,
         );
         return {
@@ -371,7 +384,7 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
         const allRefs = new Set<string>();
         for (const [k, v] of Object.entries(props)) {
           const { zodSchema: sch, refs: propRefs } = convertToZod(
-            SchemaSchema.parse(v),
+            parseUnparsed(v),
             prefix,
           );
           propRefs.forEach((r) => allRefs.add(r));
@@ -399,7 +412,7 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
           return { zodSchema: "z.array(z.unknown())", refs: [] } as const;
         }
         const { zodSchema: itemSchema, refs: itemRefs } = convertToZod(
-          SchemaSchema.parse(items),
+          parseUnparsed(items),
           prefix,
         );
         let zodSchemaStr: string;
@@ -438,7 +451,9 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
     }
   } catch (e) {
     if (e instanceof z.ZodError) {
-      console.error(`Error while converting ${schema.__schema}`);
+      console.error(`Error while converting '${schema.__schema}'`);
+      console.error(schema);
+      console.error(JSON.stringify(schema, null, 2));
       console.error(z.prettifyError(e));
     }
     throw e;
