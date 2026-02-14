@@ -36,10 +36,9 @@ properties:
       tc:
         type: string
         description: "Time control"
-      fideTc:
-        type: string
-        enum: [standard, rapid, blitz]
+      fideTC:
         description: "FIDE rating category"
+        $ref: "./FideTimeControl.yaml"
       timeZone:
         type: string
         description: |
@@ -61,8 +60,6 @@ properties:
   description:
     type: string
     description: "Full tournament description in markdown format, or in HTML if the html=1 query parameter is set."
-  leaderboard:
-    type: boolean
   teamTable:
     type: boolean
   url:
