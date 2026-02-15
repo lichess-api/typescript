@@ -170,7 +170,6 @@ const ResponseContent = z.union([
   ResponseContentMixed,
   ResponseContentNoContent,
 ]);
-type ResponseCaseContent = z.infer<typeof ResponseContent>;
 
 const ResponseSchemaHeaders = z.strictObject({
   "Access-Control-Allow-Origin": z.strictObject({
@@ -194,7 +193,6 @@ const ResponseSchema = z.strictObject({
   headers: ResponseSchemaHeaders.optional(),
   content: ResponseContent,
 });
-type ResponseCase = z.infer<typeof ResponseSchema>;
 
 const SchemaSchemaBooleanLike = z
   .strictObject({
@@ -337,77 +335,42 @@ type TagSchema = z.infer<typeof TagSchemaSchema>;
 
 type Operation = NonNullable<TagSchema[keyof TagSchema]>;
 
-function processResponseCaseContent(content: ResponseCaseContent) {
-  switch (content.__content_type) {
-    case "nocontent": {
-      const caseBody = "return { status, response } as const;" as const;
-      return { caseBody } as const;
-    }
-    case "json": {
-      const { zodSchema } = convertToZod(content.schema, "schemas.");
-      const caseBody = `const schema = ${zodSchema};
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;` as const;
-      return { caseBody } as const;
-    }
-    case "ndjson": {
-      const { zodSchema } = convertToZod(content.schema, "schemas.");
-      const caseBody = `const schema = ${zodSchema};
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;` as const;
-      return { caseBody } as const;
-    }
-    case "chess-pgn": {
-      const caseBody = `/* chess-pgn */
-        return { status, response } as const;` as const;
-      return { caseBody } as const;
-    }
-    case "mixed": {
-      const caseBody = `/* mixed */
-        return { status, response } as const;` as const;
-      return { caseBody } as const;
-    }
-  }
-
-  assertNever(content);
-}
-
-function processResponseCase({
-  statusStr,
-  resp,
-}: {
-  statusStr: string;
-  resp: ResponseCase;
-}) {
-  const status = Number(statusStr);
-  const { caseBody } = processResponseCaseContent(resp.content);
-
-  const responseCase = `case ${status}: {
-        ${caseBody}
-      }` as const;
-  return responseCase;
-}
-
 function processMethod({
   method,
 }: {
   method: Exclude<Operation, { __id: "__parameters" | "__servers" }>;
 }) {
-  const responseCasesLines: string[] = [];
+  const handlers: Record<number, string> = {};
 
   for (const [statusStr, resp] of Object.entries(method.responses)) {
-    const responseCaseLine = processResponseCase({ statusStr, resp });
-    responseCasesLines.push(responseCaseLine);
+    const status = Number(statusStr);
+    const content = resp.content;
+    switch (content.__content_type) {
+      case "nocontent":
+      case "mixed":
+      case "chess-pgn": {
+        handlers[status] = `{ kind: "${resp.content.__content_type}" }`;
+        break;
+      }
+      case "json": {
+        const { zodSchema } = convertToZod(content.schema, "schemas.");
+        handlers[status] = `{ kind: "json", schema: ${zodSchema} }`;
+        break;
+      }
+      case "ndjson": {
+        const { zodSchema } = convertToZod(content.schema, "schemas.");
+        handlers[status] = `{ kind: "ndjson", schema: ${zodSchema} }`;
+        break;
+      }
+    }
   }
-  const responseCases = responseCasesLines.join("\n");
 
   switch (method.__method) {
     case "get":
     case "head":
     case "delete": {
       return {
-        responseCases,
+        handlers,
         requestBody: undefined,
         requestBodySchema: null,
       } as const;
@@ -416,7 +379,7 @@ function processMethod({
     case "put": {
       const requestBody = method.requestBody;
       if (!requestBody) {
-        return { responseCases, requestBody, requestBodySchema: null } as const;
+        return { handlers, requestBody, requestBodySchema: null } as const;
       }
       const requestBodyType = requestBody.content.__type;
       const requestBodySchema = (() => {
@@ -434,7 +397,7 @@ function processMethod({
         }
         assertNever(requestBodyType);
       })();
-      return { responseCases, requestBody, requestBodySchema } as const;
+      return { handlers, requestBody, requestBodySchema } as const;
     }
   }
 
@@ -629,134 +592,94 @@ function processOperation(
 ) {
   if (operation.__id === "__parameters") {
     const parameters = operation.parameters;
-    return {
-      methodCode: "",
-      parameters,
-      __type: "__parameters",
-    } as const;
+    return { parameters, __type: "__parameters" } as const;
   }
 
   if (operation.__id === "__servers") {
     const baseUrl = operation.url;
-    return {
-      methodCode: `/* --- Base URL for methods below: ${baseUrl} --- */`,
-      baseUrl,
-      __type: "__servers",
-    } as const;
+    return { baseUrl, __type: "__servers" } as const;
   }
-  const stringifiedProcessedPath = (() => {
-    const { processedPath, hasPathParams } = processRawPath(rawApiPath);
-    return hasPathParams
-      ? (`\`${processedPath}\`` as const)
-      : (`"${processedPath}"` as const);
-  })();
 
-  // JSDoc
-  const jsdoc = toJsdoc(`${operation.summary}`);
+  const { processedPath, hasPathParams } = processRawPath(rawApiPath);
+  const pathLiteral = hasPathParams
+    ? `\`${processedPath}\``
+    : `"${processedPath}"`;
 
-  const { responseCases, requestBodySchema } = processMethod({
-    method: operation,
-  });
+  const jsdoc = toJsdoc(operation.summary);
 
-  // Parameters
-  const {
-    hasQueryParams,
-    hasQueryAndPathParams,
-    hasOnlyQueryParams,
-    hasPathParams,
-    queryParams,
-    pathParams,
-  } = processParams(
+  const { handlers, requestBodySchema } = processMethod({ method: operation });
+
+  const paramsObj = processParams(
     (operation.parameters ?? []).concat(options?.sharedPathParams ?? []),
   );
 
-  const pathAssignment =
-    `const path = ${stringifiedProcessedPath} as const;` as const;
+  let paramsDecl = "";
+  if (paramsObj.hasAnyParams || requestBodySchema) {
+    const typeParts: string[] = [];
 
-  const requestCode = (() => {
-    const bodyArg = requestBodySchema ? (", body" as const) : ("" as const);
-
-    const bodyAssignment = requestBodySchema
-      ? ("const body = params.body;\n" as const)
-      : ("" as const);
-
-    const baseUrlArg = options?.baseUrl
-      ? (", baseUrl" as const)
-      : ("" as const);
-
-    const baseUrlAssignment = options?.baseUrl
-      ? (`const baseUrl = "${options.baseUrl}";\n` as const)
-      : ("" as const);
-
-    if (!hasQueryParams) {
-      return `${bodyAssignment}${baseUrlAssignment}const { response, status } = await this.requestor.${operation.__method}({ path${bodyArg}${baseUrlArg} });` as const;
+    if (paramsObj.hasPathParams) {
+      typeParts.push(extractPathParams(paramsObj.pathParams));
+    }
+    if (paramsObj.hasQueryParams) {
+      typeParts.push(extractQueryParams(paramsObj.queryParams));
+    }
+    if (requestBodySchema) {
+      typeParts.push(extractBodyTypes(requestBodySchema));
     }
 
-    const queryAssignment =
-      hasOnlyQueryParams && !requestBodySchema
-        ? ("const query = params;\n" as const)
-        : hasQueryParams
-          ? ((queryParams) => {
-              const extractedQueryParams = queryParams.map((queryParam) => {
-                return `${queryParam.name}: params.${queryParam.name},` as const;
-              });
-
-              return `const query = { ${extractedQueryParams.join(
-                "",
-              )} } as const;\n` as const;
-            })(queryParams)
-          : ("" as const);
-
-    const queryArg = hasQueryParams ? ", query" : "";
-
-    return `${queryAssignment}${bodyAssignment}${baseUrlAssignment}const { response, status } = await this.requestor.${operation.__method}({ path${queryArg}${bodyArg}${baseUrlArg} });` as const;
-  })();
-
-  const paramsComment = (() => {
-    const bodyParamsAssignment = requestBodySchema
-      ? (` & ${extractBodyTypes(requestBodySchema)}` as const)
-      : ("" as const);
-
-    if (hasQueryAndPathParams) {
-      const pathParamsTypes = extractPathParams(pathParams);
-      const queryParamsTypes = extractQueryParams(queryParams);
-      return `params: ${pathParamsTypes} & ${queryParamsTypes}${bodyParamsAssignment}` as const;
+    if (typeParts.length === 0) {
+      paramsDecl = "";
+    } else {
+      const combinedType =
+        typeParts.length === 1 ? typeParts[0] : `(${typeParts.join(" & ")})`;
+      paramsDecl = `params: ${combinedType}`;
     }
+  }
 
-    if (hasPathParams) {
-      const pathParamsTypes = extractPathParams(pathParams);
-      return `params: ${pathParamsTypes}${bodyParamsAssignment}` as const;
-    }
+  let requestObjCode = "{ path }";
 
-    if (hasQueryParams) {
-      const queryParamsTypes = extractQueryParams(queryParams);
-      return `params: ${queryParamsTypes}${bodyParamsAssignment}` as const;
+  if (paramsObj.hasAnyParams || requestBodySchema) {
+    const requestPieces: string[] = ["path"];
+
+    if (paramsObj.hasOnlyQueryParams && !requestBodySchema) {
+      requestPieces.push("query: params");
+    } else if (paramsObj.hasQueryParams) {
+      const queryFields = paramsObj.queryParams
+        .map((p) => `${p.name}: params.${p.name}`)
+        .join(", ");
+      requestPieces.push(`query: { ${queryFields} }`);
     }
 
     if (requestBodySchema) {
-      return `params: ${extractBodyTypes(requestBodySchema)}` as const;
+      requestPieces.push("body: params.body");
     }
 
-    return "" as const;
-  })();
-
-  const switchCode = `switch (status) {
-      ${responseCases}
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }` as const;
-
-  const fullContent = `
-  ${jsdoc}
-  async ${operation.operationId}(${paramsComment}) {
-    ${pathAssignment}
-    ${requestCode}
-    ${switchCode}
+    requestObjCode = `${requestPieces.join(", ")}`;
   }
-` as const;
 
-  return { methodCode: fullContent, __type: "__methodCode" } as const;
+  let baseUrlLine = "";
+  let baseUrlArg = "";
+  if (options?.baseUrl) {
+    baseUrlLine = `    const baseUrl = "${options.baseUrl}";\n`;
+    baseUrlArg = ", baseUrl";
+  }
+
+  const handlersCode = Object.entries(handlers)
+    .map(([status, def]) => `  ${status}: ${def}`)
+    .join(",\n");
+
+  const fullMethod = `
+  ${jsdoc}
+  async ${operation.operationId}(${paramsDecl}) {
+    const path = ${pathLiteral} as const;
+${baseUrlLine}\
+    return await this.requestor.${operation.__method}(
+      { ${requestObjCode}${baseUrlArg} },
+      { ${handlersCode} }
+    );
+  };`;
+
+  return { methodCode: fullMethod, __type: "__methodCode" } as const;
 }
 
 function processTag(tagSchema: TagSchema, rawApiPath: string) {
@@ -771,11 +694,11 @@ function processTag(tagSchema: TagSchema, rawApiPath: string) {
     });
     if (processedOperation.__type === "__parameters") {
       sharedPathParams = processedOperation.parameters;
-    }
-    if (processedOperation.__type === "__servers") {
+    } else if (processedOperation.__type === "__servers") {
       baseUrl = processedOperation.baseUrl;
+    } else {
+      methodsCode.push(processedOperation.methodCode);
     }
-    methodsCode.push(processedOperation.methodCode);
   }
   return methodsCode;
 }
@@ -805,8 +728,6 @@ async function processSchema(schema: OpenApiSchema): Promise<void> {
   const API_URL = schema.servers[0].url;
 
   const clientCodeTs = `import * as z from "zod/mini";
-
-import { ndjsonStream } from "#lib/ndjson";
 
 import * as schemas from "#schemas";
 
