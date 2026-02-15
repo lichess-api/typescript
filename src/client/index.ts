@@ -1,7 +1,5 @@
 import * as z from "zod/mini";
 
-import { ndjsonStream } from "#lib/ndjson";
-
 import * as schemas from "#schemas";
 
 import { Requestor } from "./requestor";
@@ -26,31 +24,27 @@ export class Lichess {
     withGameMetas?: boolean;
   }) {
     const path = "/api/users/status" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.array(
-          z.object({
-            id: z.string(),
-            name: z.string(),
-            flair: z.optional(schemas.Flair),
-            title: z.optional(schemas.Title),
-            online: z.optional(z.boolean()),
-            playing: z.optional(z.boolean()),
-            streaming: z.optional(z.boolean()),
-            patron: z.optional(schemas.Patron),
-            patronColor: z.optional(schemas.PatronColor),
-          }),
-        );
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      {
+        200: {
+          kind: "json",
+          schema: z.array(
+            z.object({
+              id: z.string(),
+              name: z.string(),
+              flair: z.optional(schemas.Flair),
+              title: z.optional(schemas.Title),
+              online: z.optional(z.boolean()),
+              playing: z.optional(z.boolean()),
+              streaming: z.optional(z.boolean()),
+              patron: z.optional(schemas.Patron),
+              patronColor: z.optional(schemas.PatronColor),
+            }),
+          ),
+        },
+      },
+    );
   }
 
   /**
@@ -58,18 +52,10 @@ export class Lichess {
    */
   async player() {
     const path = "/api/player" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Top10s;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.Top10s } },
+    );
   }
 
   /**
@@ -77,18 +63,10 @@ export class Lichess {
    */
   async playerTopNbPerfType(params: { nb: number; perfType: string }) {
     const path = `/api/player/top/${params.nb}/${params.perfType}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Leaderboard;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.Leaderboard } },
+    );
   }
 
   /**
@@ -103,24 +81,18 @@ export class Lichess {
     },
   ) {
     const path = `/api/user/${params.username}` as const;
-    const query = {
-      trophies: params.trophies,
-      profile: params.profile,
-      rank: params.rank,
-      fideId: params.fideId,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.UserExtended;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          trophies: params.trophies,
+          profile: params.profile,
+          rank: params.rank,
+          fideId: params.fideId,
+        },
+      },
+      { 200: { kind: "json", schema: schemas.UserExtended } },
+    );
   }
 
   /**
@@ -128,18 +100,10 @@ export class Lichess {
    */
   async apiUserRatingHistory(params: { username: string }) {
     const path = `/api/user/${params.username}/rating-history` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.RatingHistory;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.RatingHistory } },
+    );
   }
 
   /**
@@ -147,18 +111,10 @@ export class Lichess {
    */
   async apiUserPerf(params: { username: string; perf: schemas.PerfType }) {
     const path = `/api/user/${params.username}/perf/${params.perf}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PerfStat;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.PerfStat } },
+    );
   }
 
   /**
@@ -166,18 +122,10 @@ export class Lichess {
    */
   async apiUserActivity(params: { username: string }) {
     const path = `/api/user/${params.username}/activity` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.array(schemas.UserActivity);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: z.array(schemas.UserActivity) } },
+    );
   }
 
   /**
@@ -185,18 +133,10 @@ export class Lichess {
    */
   async apiPuzzleDaily() {
     const path = "/api/puzzle/daily" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleAndGame;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.PuzzleAndGame } },
+    );
   }
 
   /**
@@ -204,18 +144,10 @@ export class Lichess {
    */
   async apiPuzzleId(params: { id: string }) {
     const path = `/api/puzzle/${params.id}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleAndGame;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.PuzzleAndGame } },
+    );
   }
 
   /**
@@ -227,19 +159,10 @@ export class Lichess {
     color?: string;
   }) {
     const path = "/api/puzzle/next" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleAndGame;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "json", schema: schemas.PuzzleAndGame } },
+    );
   }
 
   /**
@@ -253,23 +176,17 @@ export class Lichess {
     },
   ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
-    const query = {
-      difficulty: params.difficulty,
-      nb: params.nb,
-      color: params.color,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleBatchSelect;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          difficulty: params.difficulty,
+          nb: params.nb,
+          color: params.color,
+        },
+      },
+      { 200: { kind: "json", schema: schemas.PuzzleBatchSelect } },
+    );
   }
 
   /**
@@ -281,24 +198,10 @@ export class Lichess {
     },
   ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
-    const query = { nb: params.nb } as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({
-      path,
-      query,
-      body,
-    });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleBatchSolveResponse;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, query: { nb: params.nb }, body: params.body },
+      { 200: { kind: "json", schema: schemas.PuzzleBatchSolveResponse } },
+    );
   }
 
   /**
@@ -306,18 +209,10 @@ export class Lichess {
    */
   async apiPuzzleActivity(params: { max?: number; before?: number }) {
     const path = "/api/puzzle/activity" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleActivity;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "ndjson", schema: schemas.PuzzleActivity } },
+    );
   }
 
   /**
@@ -325,24 +220,16 @@ export class Lichess {
    */
   async apiPuzzleReplay(params: { days: number; theme: string }) {
     const path = `/api/puzzle/replay/${params.days}/${params.theme}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleReplay;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        const schema = z.object({ error: z.optional(z.string()) });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.PuzzleReplay },
+        404: {
+          kind: "json",
+          schema: z.object({ error: z.optional(z.string()) }),
+        },
+      },
+    );
   }
 
   /**
@@ -350,18 +237,10 @@ export class Lichess {
    */
   async apiPuzzleDashboard(params: { days: number }) {
     const path = `/api/puzzle/dashboard/${params.days}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleDashboard;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.PuzzleDashboard } },
+    );
   }
 
   /**
@@ -369,19 +248,10 @@ export class Lichess {
    */
   async apiStormDashboard(params: { username: string } & { days?: number }) {
     const path = `/api/storm/dashboard/${params.username}` as const;
-    const query = { days: params.days } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleStormDashboard;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: { days: params.days } },
+      { 200: { kind: "json", schema: schemas.PuzzleStormDashboard } },
+    );
   }
 
   /**
@@ -389,18 +259,10 @@ export class Lichess {
    */
   async racerPost() {
     const path = "/api/racer" as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleRacer;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.PuzzleRacer } },
+    );
   }
 
   /**
@@ -408,24 +270,13 @@ export class Lichess {
    */
   async racerGet(params: { id: string }) {
     const path = `/api/racer/${params.id}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.PuzzleRaceResults;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        const schema = schemas.NotFound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.PuzzleRaceResults },
+        404: { kind: "json", schema: schemas.NotFound },
+      },
+    );
   }
 
   /**
@@ -438,24 +289,14 @@ export class Lichess {
     } & { body: string },
   ) {
     const path = "/api/users" as const;
-    const query = { profile: params.profile, rank: params.rank } as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({
-      path,
-      query,
-      body,
-    });
-    switch (status) {
-      case 200: {
-        const schema = z.array(schemas.User);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      {
+        path,
+        query: { profile: params.profile, rank: params.rank },
+        body: params.body,
+      },
+      { 200: { kind: "json", schema: z.array(schemas.User) } },
+    );
   }
 
   /**
@@ -463,18 +304,10 @@ export class Lichess {
    */
   async accountMe() {
     const path = "/api/account" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.UserExtended;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.UserExtended } },
+    );
   }
 
   /**
@@ -482,18 +315,15 @@ export class Lichess {
    */
   async accountEmail() {
     const path = "/api/account/email" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.object({ email: z.optional(z.string()) });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({ email: z.optional(z.string()) }),
+        },
+      },
+    );
   }
 
   /**
@@ -501,21 +331,18 @@ export class Lichess {
    */
   async account() {
     const path = "/api/account/preferences" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          prefs: z.optional(schemas.UserPreferences),
-          language: z.optional(z.string()),
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            prefs: z.optional(schemas.UserPreferences),
+            language: z.optional(z.string()),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -523,18 +350,15 @@ export class Lichess {
    */
   async accountKid() {
     const path = "/api/account/kid" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.object({ kid: z.optional(z.boolean()) });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({ kid: z.optional(z.boolean()) }),
+        },
+      },
+    );
   }
 
   /**
@@ -542,19 +366,10 @@ export class Lichess {
    */
   async accountKidPost(params: { v: boolean }) {
     const path = "/api/account/kid" as const;
-    const query = params;
-    const { response, status } = await this.requestor.post({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, query: params },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -562,19 +377,10 @@ export class Lichess {
    */
   async timeline(params: { since?: number; nb?: number }) {
     const path = "/api/timeline" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Timeline;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "json", schema: schemas.Timeline } },
+    );
   }
 
   /**
@@ -595,30 +401,29 @@ export class Lichess {
     },
   ) {
     const path = `/game/export/${params.gameId}` as const;
-    const query = {
-      moves: params.moves,
-      pgnInJson: params.pgnInJson,
-      tags: params.tags,
-      clocks: params.clocks,
-      evals: params.evals,
-      accuracy: params.accuracy,
-      opening: params.opening,
-      division: params.division,
-      literate: params.literate,
-      withBookmarked: params.withBookmarked,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.union([schemas.GamePgn, schemas.GameJson]);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          moves: params.moves,
+          pgnInJson: params.pgnInJson,
+          tags: params.tags,
+          clocks: params.clocks,
+          evals: params.evals,
+          accuracy: params.accuracy,
+          opening: params.opening,
+          division: params.division,
+          literate: params.literate,
+          withBookmarked: params.withBookmarked,
+        },
+      },
+      {
+        200: {
+          kind: "json",
+          schema: z.union([schemas.GamePgn, schemas.GameJson]),
+        },
+      },
+    );
   }
 
   /**
@@ -638,29 +443,28 @@ export class Lichess {
     },
   ) {
     const path = `/api/user/${params.username}/current-game` as const;
-    const query = {
-      moves: params.moves,
-      pgnInJson: params.pgnInJson,
-      tags: params.tags,
-      clocks: params.clocks,
-      evals: params.evals,
-      accuracy: params.accuracy,
-      opening: params.opening,
-      division: params.division,
-      literate: params.literate,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.union([schemas.GamePgn, schemas.GameJson]);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          moves: params.moves,
+          pgnInJson: params.pgnInJson,
+          tags: params.tags,
+          clocks: params.clocks,
+          evals: params.evals,
+          accuracy: params.accuracy,
+          opening: params.opening,
+          division: params.division,
+          literate: params.literate,
+        },
+      },
+      {
+        200: {
+          kind: "json",
+          schema: z.union([schemas.GamePgn, schemas.GameJson]),
+        },
+      },
+    );
   }
 
   /**
@@ -693,42 +497,41 @@ export class Lichess {
     },
   ) {
     const path = `/api/games/user/${params.username}` as const;
-    const query = {
-      since: params.since,
-      until: params.until,
-      max: params.max,
-      vs: params.vs,
-      rated: params.rated,
-      perfType: params.perfType,
-      color: params.color,
-      analysed: params.analysed,
-      moves: params.moves,
-      pgnInJson: params.pgnInJson,
-      tags: params.tags,
-      clocks: params.clocks,
-      evals: params.evals,
-      accuracy: params.accuracy,
-      opening: params.opening,
-      division: params.division,
-      ongoing: params.ongoing,
-      finished: params.finished,
-      literate: params.literate,
-      lastFen: params.lastFen,
-      withBookmarked: params.withBookmarked,
-      sort: params.sort,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.union([schemas.GamePgn, schemas.GameJson]);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          since: params.since,
+          until: params.until,
+          max: params.max,
+          vs: params.vs,
+          rated: params.rated,
+          perfType: params.perfType,
+          color: params.color,
+          analysed: params.analysed,
+          moves: params.moves,
+          pgnInJson: params.pgnInJson,
+          tags: params.tags,
+          clocks: params.clocks,
+          evals: params.evals,
+          accuracy: params.accuracy,
+          opening: params.opening,
+          division: params.division,
+          ongoing: params.ongoing,
+          finished: params.finished,
+          literate: params.literate,
+          lastFen: params.lastFen,
+          withBookmarked: params.withBookmarked,
+          sort: params.sort,
+        },
+      },
+      {
+        200: {
+          kind: "json",
+          schema: z.union([schemas.GamePgn, schemas.GameJson]),
+        },
+      },
+    );
   }
 
   /**
@@ -748,34 +551,29 @@ export class Lichess {
     } & { body: string },
   ) {
     const path = "/api/games/export/_ids" as const;
-    const query = {
-      moves: params.moves,
-      pgnInJson: params.pgnInJson,
-      tags: params.tags,
-      clocks: params.clocks,
-      evals: params.evals,
-      accuracy: params.accuracy,
-      opening: params.opening,
-      division: params.division,
-      literate: params.literate,
-    } as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({
-      path,
-      query,
-      body,
-    });
-    switch (status) {
-      case 200: {
-        const schema = z.union([schemas.GamePgn, schemas.GameJson]);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      {
+        path,
+        query: {
+          moves: params.moves,
+          pgnInJson: params.pgnInJson,
+          tags: params.tags,
+          clocks: params.clocks,
+          evals: params.evals,
+          accuracy: params.accuracy,
+          opening: params.opening,
+          division: params.division,
+          literate: params.literate,
+        },
+        body: params.body,
+      },
+      {
+        200: {
+          kind: "json",
+          schema: z.union([schemas.GamePgn, schemas.GameJson]),
+        },
+      },
+    );
   }
 
   /**
@@ -785,23 +583,14 @@ export class Lichess {
     params: { withCurrentGames?: boolean } & { body: string },
   ) {
     const path = "/api/stream/games-by-users" as const;
-    const query = { withCurrentGames: params.withCurrentGames } as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({
-      path,
-      query,
-      body,
-    });
-    switch (status) {
-      case 200: {
-        const schema = schemas.GameStream;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      {
+        path,
+        query: { withCurrentGames: params.withCurrentGames },
+        body: params.body,
+      },
+      { 200: { kind: "ndjson", schema: schemas.GameStream } },
+    );
   }
 
   /**
@@ -809,18 +598,10 @@ export class Lichess {
    */
   async gamesByIds(params: { streamId: string } & { body: string }) {
     const path = `/api/stream/games/${params.streamId}` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.GameStream;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      { 200: { kind: "ndjson", schema: schemas.GameStream } },
+    );
   }
 
   /**
@@ -828,19 +609,10 @@ export class Lichess {
    */
   async gamesByIdsAdd(params: { streamId: string } & { body: string }) {
     const path = `/api/stream/games/${params.streamId}/add` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -848,49 +620,45 @@ export class Lichess {
    */
   async apiAccountPlaying(params: { nb?: number }) {
     const path = "/api/account/playing" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          nowPlaying: z.array(
-            z.object({
-              fullId: z.string(),
-              gameId: z.string(),
-              fen: z.string(),
-              color: schemas.GameColor,
-              lastMove: z.string(),
-              source: schemas.GameSource,
-              status: z.optional(schemas.GameStatusName),
-              variant: schemas.Variant,
-              speed: schemas.Speed,
-              perf: schemas.PerfType,
-              rated: z.boolean(),
-              hasMoved: z.boolean(),
-              opponent: z.object({
-                id: z.string(),
-                username: z.string(),
-                rating: z.optional(z.int()),
+    return await this.requestor.get(
+      { path, query: params },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            nowPlaying: z.array(
+              z.object({
+                fullId: z.string(),
+                gameId: z.string(),
+                fen: z.string(),
+                color: schemas.GameColor,
+                lastMove: z.string(),
+                source: schemas.GameSource,
+                status: z.optional(schemas.GameStatusName),
+                variant: schemas.Variant,
+                speed: schemas.Speed,
+                perf: schemas.PerfType,
+                rated: z.boolean(),
+                hasMoved: z.boolean(),
+                opponent: z.object({
+                  id: z.string(),
+                  username: z.string(),
+                  rating: z.optional(z.int()),
+                  ratingDiff: z.optional(z.int()),
+                  ai: z.optional(z.int()),
+                }),
+                isMyTurn: z.boolean(),
+                secondsLeft: z.int(),
+                tournamentId: z.optional(z.string()),
+                swissId: z.optional(z.string()),
+                winner: z.optional(schemas.GameColor),
                 ratingDiff: z.optional(z.int()),
-                ai: z.optional(z.int()),
               }),
-              isMyTurn: z.boolean(),
-              secondsLeft: z.int(),
-              tournamentId: z.optional(z.string()),
-              swissId: z.optional(z.string()),
-              winner: z.optional(schemas.GameColor),
-              ratingDiff: z.optional(z.int()),
-            }),
-          ),
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+            ),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -898,23 +666,16 @@ export class Lichess {
    */
   async streamGame(params: { id: string }) {
     const path = `/api/stream/game/${params.id}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.MoveStream;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      case 429: {
-        const schema = z.object({ error: z.optional(z.string()) });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: { kind: "ndjson", schema: schemas.MoveStream },
+        429: {
+          kind: "json",
+          schema: z.object({ error: z.optional(z.string()) }),
+        },
+      },
+    );
   }
 
   /**
@@ -922,22 +683,18 @@ export class Lichess {
    */
   async gameImport(params: { body: { pgn?: string } }) {
     const path = "/api/import" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          id: z.optional(z.string()),
-          url: z.optional(z.url()),
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            id: z.optional(z.string()),
+            url: z.optional(z.url()),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -945,16 +702,7 @@ export class Lichess {
    */
   async apiImportedGamesUser() {
     const path = "/api/games/export/imports" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        /* chess-pgn */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get({ path }, { 200: { kind: "chess-pgn" } });
   }
 
   /**
@@ -977,19 +725,15 @@ export class Lichess {
     sort?: string;
   }) {
     const path = "/api/games/export/bookmarks" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.union([schemas.GamePgn, schemas.GameJson]);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      {
+        200: {
+          kind: "json",
+          schema: z.union([schemas.GamePgn, schemas.GameJson]),
+        },
+      },
+    );
   }
 
   /**
@@ -997,35 +741,32 @@ export class Lichess {
    */
   async tvChannels() {
     const path = "/api/tv/channels" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          bot: schemas.TvGame,
-          blitz: schemas.TvGame,
-          racingKings: schemas.TvGame,
-          ultraBullet: schemas.TvGame,
-          bullet: schemas.TvGame,
-          classical: schemas.TvGame,
-          threeCheck: schemas.TvGame,
-          antichess: schemas.TvGame,
-          computer: schemas.TvGame,
-          horde: schemas.TvGame,
-          rapid: schemas.TvGame,
-          atomic: schemas.TvGame,
-          crazyhouse: schemas.TvGame,
-          chess960: schemas.TvGame,
-          kingOfTheHill: schemas.TvGame,
-          best: schemas.TvGame,
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            bot: schemas.TvGame,
+            blitz: schemas.TvGame,
+            racingKings: schemas.TvGame,
+            ultraBullet: schemas.TvGame,
+            bullet: schemas.TvGame,
+            classical: schemas.TvGame,
+            threeCheck: schemas.TvGame,
+            antichess: schemas.TvGame,
+            computer: schemas.TvGame,
+            horde: schemas.TvGame,
+            rapid: schemas.TvGame,
+            atomic: schemas.TvGame,
+            crazyhouse: schemas.TvGame,
+            chess960: schemas.TvGame,
+            kingOfTheHill: schemas.TvGame,
+            best: schemas.TvGame,
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -1033,17 +774,10 @@ export class Lichess {
    */
   async tvFeed() {
     const path = "/api/tv/feed" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.TvFeed;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "ndjson", schema: schemas.TvFeed } },
+    );
   }
 
   /**
@@ -1051,17 +785,10 @@ export class Lichess {
    */
   async tvChannelFeed(params: { channel: string }) {
     const path = `/api/tv/${params.channel}/feed` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.TvFeed;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "ndjson", schema: schemas.TvFeed } },
+    );
   }
 
   /**
@@ -1078,24 +805,20 @@ export class Lichess {
     },
   ) {
     const path = `/api/tv/${params.channel}` as const;
-    const query = {
-      nb: params.nb,
-      moves: params.moves,
-      pgnInJson: params.pgnInJson,
-      tags: params.tags,
-      clocks: params.clocks,
-      opening: params.opening,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        /* mixed */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          nb: params.nb,
+          moves: params.moves,
+          pgnInJson: params.pgnInJson,
+          tags: params.tags,
+          clocks: params.clocks,
+          opening: params.opening,
+        },
+      },
+      { 200: { kind: "mixed" } },
+    );
   }
 
   /**
@@ -1103,18 +826,10 @@ export class Lichess {
    */
   async apiTournament() {
     const path = "/api/tournament" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ArenaTournaments;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.ArenaTournaments } },
+    );
   }
 
   /**
@@ -1267,25 +982,13 @@ export class Lichess {
     };
   }) {
     const path = "/api/tournament" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ArenaTournamentFull;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.ArenaTournamentFull },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -1293,19 +996,10 @@ export class Lichess {
    */
   async tournament(params: { id: string } & { page?: number }) {
     const path = `/api/tournament/${params.id}` as const;
-    const query = { page: params.page } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ArenaTournamentFull;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: { page: params.page } },
+      { 200: { kind: "json", schema: schemas.ArenaTournamentFull } },
+    );
   }
 
   /**
@@ -1458,25 +1152,13 @@ export class Lichess {
     },
   ) {
     const path = `/api/tournament/${params.id}` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ArenaTournamentFull;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.ArenaTournamentFull },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -1492,25 +1174,13 @@ export class Lichess {
     },
   ) {
     const path = `/api/tournament/${params.id}/join` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -1518,24 +1188,13 @@ export class Lichess {
    */
   async apiTournamentWithdraw(params: { id: string }) {
     const path = `/api/tournament/${params.id}/withdraw` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -1543,24 +1202,13 @@ export class Lichess {
    */
   async apiTournamentTerminate(params: { id: string }) {
     const path = `/api/tournament/${params.id}/terminate` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -1575,25 +1223,13 @@ export class Lichess {
     },
   ) {
     const path = `/api/tournament/team-battle/${params.id}` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ArenaTournamentFull;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.ArenaTournamentFull },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -1613,27 +1249,23 @@ export class Lichess {
     },
   ) {
     const path = `/api/tournament/${params.id}/games` as const;
-    const query = {
-      player: params.player,
-      moves: params.moves,
-      pgnInJson: params.pgnInJson,
-      tags: params.tags,
-      clocks: params.clocks,
-      evals: params.evals,
-      accuracy: params.accuracy,
-      opening: params.opening,
-      division: params.division,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        /* mixed */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          player: params.player,
+          moves: params.moves,
+          pgnInJson: params.pgnInJson,
+          tags: params.tags,
+          clocks: params.clocks,
+          evals: params.evals,
+          accuracy: params.accuracy,
+          opening: params.opening,
+          division: params.division,
+        },
+      },
+      { 200: { kind: "mixed" } },
+    );
   }
 
   /**
@@ -1646,29 +1278,26 @@ export class Lichess {
     },
   ) {
     const path = `/api/tournament/${params.id}/results` as const;
-    const query = { nb: params.nb, sheet: params.sheet } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          rank: z.int(),
-          score: z.int(),
-          rating: z.int(),
-          username: z.string(),
-          performance: z.int(),
-          title: z.optional(schemas.Title),
-          team: z.optional(z.string()),
-          flair: z.optional(schemas.Flair),
-          patronColor: z.optional(schemas.PatronColor),
-          sheet: z.optional(schemas.ArenaSheet),
-        });
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: { nb: params.nb, sheet: params.sheet } },
+      {
+        200: {
+          kind: "ndjson",
+          schema: z.object({
+            rank: z.int(),
+            score: z.int(),
+            rating: z.int(),
+            username: z.string(),
+            performance: z.int(),
+            title: z.optional(schemas.Title),
+            team: z.optional(z.string()),
+            flair: z.optional(schemas.Flair),
+            patronColor: z.optional(schemas.PatronColor),
+            sheet: z.optional(schemas.ArenaSheet),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -1676,33 +1305,30 @@ export class Lichess {
    */
   async teamsByTournament(params: { id: string }) {
     const path = `/api/tournament/${params.id}/teams` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          id: z.string(),
-          teams: z.array(
-            z.object({
-              rank: z.int(),
-              id: z.string(),
-              score: z.int(),
-              players: z.array(
-                z.object({
-                  user: schemas.LightUser,
-                  score: z.optional(z.int()),
-                }),
-              ),
-            }),
-          ),
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            id: z.string(),
+            teams: z.array(
+              z.object({
+                rank: z.int(),
+                id: z.string(),
+                score: z.int(),
+                players: z.array(
+                  z.object({
+                    user: schemas.LightUser,
+                    score: z.optional(z.int()),
+                  }),
+                ),
+              }),
+            ),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -1715,18 +1341,10 @@ export class Lichess {
     },
   ) {
     const path = `/api/user/${params.username}/tournament/created` as const;
-    const query = { nb: params.nb, status: params.status } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ArenaTournament;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: { nb: params.nb, status: params.status } },
+      { 200: { kind: "ndjson", schema: schemas.ArenaTournament } },
+    );
   }
 
   /**
@@ -1739,18 +1357,10 @@ export class Lichess {
     },
   ) {
     const path = `/api/user/${params.username}/tournament/played` as const;
-    const query = { nb: params.nb, performance: params.performance } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ArenaTournamentPlayed;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: { nb: params.nb, performance: params.performance } },
+      { 200: { kind: "ndjson", schema: schemas.ArenaTournamentPlayed } },
+    );
   }
 
   /**
@@ -1867,25 +1477,13 @@ export class Lichess {
     },
   ) {
     const path = `/api/swiss/new/${params.teamId}` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.SwissTournament;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.SwissTournament },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -1893,18 +1491,10 @@ export class Lichess {
    */
   async swiss(params: { id: string }) {
     const path = `/api/swiss/${params.id}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.SwissTournament;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.SwissTournament } },
+    );
   }
 
   /**
@@ -2021,31 +1611,14 @@ export class Lichess {
     },
   ) {
     const path = `/api/swiss/${params.id}/edit` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.SwissTournament;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 401: {
-        const schema = schemas.SwissUnauthorisedEdit;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.SwissTournament },
+        400: { kind: "json", schema: schemas.Error },
+        401: { kind: "json", schema: schemas.SwissUnauthorisedEdit },
+      },
+    );
   }
 
   /**
@@ -2055,28 +1628,14 @@ export class Lichess {
     params: { id: string } & { body: { date?: number } },
   ) {
     const path = `/api/swiss/${params.id}/schedule-next-round` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 204: {
-        return { status, response } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 401: {
-        const schema = schemas.SwissUnauthorisedEdit;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        204: { kind: "nocontent" },
+        400: { kind: "json", schema: schemas.Error },
+        401: { kind: "json", schema: schemas.SwissUnauthorisedEdit },
+      },
+    );
   }
 
   /**
@@ -2084,25 +1643,13 @@ export class Lichess {
    */
   async apiSwissJoin(params: { id: string } & { body: { password?: string } }) {
     const path = `/api/swiss/${params.id}/join` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -2110,18 +1657,10 @@ export class Lichess {
    */
   async apiSwissWithdraw(params: { id: string }) {
     const path = `/api/swiss/${params.id}/withdraw` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -2129,24 +1668,13 @@ export class Lichess {
    */
   async apiSwissTerminate(params: { id: string }) {
     const path = `/api/swiss/${params.id}/terminate` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -2154,16 +1682,7 @@ export class Lichess {
    */
   async swissTrf(params: { id: string }) {
     const path = `/swiss/${params.id}.trf` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        /* mixed */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get({ path }, { 200: { kind: "mixed" } });
   }
 
   /**
@@ -2183,27 +1702,23 @@ export class Lichess {
     },
   ) {
     const path = `/api/swiss/${params.id}/games` as const;
-    const query = {
-      player: params.player,
-      moves: params.moves,
-      pgnInJson: params.pgnInJson,
-      tags: params.tags,
-      clocks: params.clocks,
-      evals: params.evals,
-      accuracy: params.accuracy,
-      opening: params.opening,
-      division: params.division,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        /* mixed */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          player: params.player,
+          moves: params.moves,
+          pgnInJson: params.pgnInJson,
+          tags: params.tags,
+          clocks: params.clocks,
+          evals: params.evals,
+          accuracy: params.accuracy,
+          opening: params.opening,
+          division: params.division,
+        },
+      },
+      { 200: { kind: "mixed" } },
+    );
   }
 
   /**
@@ -2211,27 +1726,24 @@ export class Lichess {
    */
   async resultsBySwiss(params: { id: string } & { nb?: number }) {
     const path = `/api/swiss/${params.id}/results` as const;
-    const query = { nb: params.nb } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          absent: z.optional(z.boolean()),
-          rank: z.int(),
-          points: z.number(),
-          tieBreak: z.int(),
-          rating: z.int(),
-          username: z.string(),
-          title: z.optional(schemas.Title),
-          performance: z.int(),
-        });
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: { nb: params.nb } },
+      {
+        200: {
+          kind: "ndjson",
+          schema: z.object({
+            absent: z.optional(z.boolean()),
+            rank: z.int(),
+            points: z.number(),
+            tieBreak: z.int(),
+            rating: z.int(),
+            username: z.string(),
+            title: z.optional(schemas.Title),
+            performance: z.int(),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -2246,23 +1758,18 @@ export class Lichess {
     },
   ) {
     const path = `/api/team/${params.teamId}/swiss` as const;
-    const query = {
-      max: params.max,
-      status: params.status,
-      createdBy: params.createdBy,
-      name: params.name,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.SwissTournament;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          max: params.max,
+          status: params.status,
+          createdBy: params.createdBy,
+          name: params.name,
+        },
+      },
+      { 200: { kind: "ndjson", schema: schemas.SwissTournament } },
+    );
   }
 
   /**
@@ -2281,22 +1788,18 @@ export class Lichess {
   ) {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}.pgn` as const;
-    const query = {
-      clocks: params.clocks,
-      comments: params.comments,
-      variations: params.variations,
-      orientation: params.orientation,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        /* chess-pgn */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          clocks: params.clocks,
+          comments: params.comments,
+          variations: params.variations,
+          orientation: params.orientation,
+        },
+      },
+      { 200: { kind: "chess-pgn" } },
+    );
   }
 
   /**
@@ -2311,22 +1814,18 @@ export class Lichess {
     },
   ) {
     const path = `/api/study/${params.studyId}.pgn` as const;
-    const query = {
-      clocks: params.clocks,
-      comments: params.comments,
-      variations: params.variations,
-      orientation: params.orientation,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        /* chess-pgn */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          clocks: params.clocks,
+          comments: params.comments,
+          variations: params.variations,
+          orientation: params.orientation,
+        },
+      },
+      { 200: { kind: "chess-pgn" } },
+    );
   }
 
   /**
@@ -2334,15 +1833,7 @@ export class Lichess {
    */
   async studyAllChaptersHead(params: { studyId: string }) {
     const path = `/api/study/${params.studyId}.pgn` as const;
-    const { response, status } = await this.requestor.head({ path });
-    switch (status) {
-      case 204: {
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.head({ path }, { 204: { kind: "nocontent" } });
   }
 
   /**
@@ -2359,25 +1850,13 @@ export class Lichess {
     },
   ) {
     const path = `/api/study/${params.studyId}/import-pgn` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.StudyImportPgnChapters;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.StudyImportPgnChapters },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -2391,22 +1870,13 @@ export class Lichess {
   ) {
     const path =
       `/api/study/${params.studyId}/${params.chapterId}/tags` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 204: {
-        return { status, response } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        204: { kind: "nocontent" },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -2421,22 +1891,18 @@ export class Lichess {
     },
   ) {
     const path = `/api/study/by/${params.username}/export.pgn` as const;
-    const query = {
-      clocks: params.clocks,
-      comments: params.comments,
-      variations: params.variations,
-      orientation: params.orientation,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        /* chess-pgn */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          clocks: params.clocks,
+          comments: params.comments,
+          variations: params.variations,
+          orientation: params.orientation,
+        },
+      },
+      { 200: { kind: "chess-pgn" } },
+    );
   }
 
   /**
@@ -2444,17 +1910,10 @@ export class Lichess {
    */
   async studyListMetadata(params: { username: string }) {
     const path = `/api/study/by/${params.username}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.StudyMetadata;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "ndjson", schema: schemas.StudyMetadata } },
+    );
   }
 
   /**
@@ -2465,15 +1924,10 @@ export class Lichess {
     chapterId: string;
   }) {
     const path = `/api/study/${params.studyId}/${params.chapterId}` as const;
-    const { response, status } = await this.requestor.delete({ path });
-    switch (status) {
-      case 204: {
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.delete(
+      { path },
+      { 204: { kind: "nocontent" } },
+    );
   }
 
   /**
@@ -2481,18 +1935,10 @@ export class Lichess {
    */
   async broadcastsOfficial(params: { nb?: number; html?: boolean }) {
     const path = "/api/broadcast" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BroadcastWithRounds;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "ndjson", schema: schemas.BroadcastWithRounds } },
+    );
   }
 
   /**
@@ -2500,19 +1946,10 @@ export class Lichess {
    */
   async broadcastsTop(params: { page?: number; html?: boolean }) {
     const path = "/api/broadcast/top" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BroadcastTop;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "json", schema: schemas.BroadcastTop } },
+    );
   }
 
   /**
@@ -2525,27 +1962,23 @@ export class Lichess {
     },
   ) {
     const path = `/api/broadcast/by/${params.username}` as const;
-    const query = { page: params.page, html: params.html } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          currentPage: z.int(),
-          maxPerPage: z.int(),
-          currentPageResults: z.array(schemas.BroadcastByUser),
-          nbResults: z.int(),
-          previousPage: z.nullable(z.int()),
-          nextPage: z.nullable(z.int()),
-          nbPages: z.int(),
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: { page: params.page, html: params.html } },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            currentPage: z.int(),
+            maxPerPage: z.int(),
+            currentPageResults: z.array(schemas.BroadcastByUser),
+            nbResults: z.int(),
+            previousPage: z.nullable(z.int()),
+            nextPage: z.nullable(z.int()),
+            nbPages: z.int(),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -2553,25 +1986,21 @@ export class Lichess {
    */
   async broadcastsSearch(params: { page?: number; q?: string }) {
     const path = "/api/broadcast/search" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          currentPage: z.int(),
-          maxPerPage: z.int(),
-          currentPageResults: z.array(schemas.BroadcastWithLastRound),
-          previousPage: z.nullable(z.int()),
-          nextPage: z.nullable(z.int()),
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            currentPage: z.int(),
+            maxPerPage: z.int(),
+            currentPageResults: z.array(schemas.BroadcastWithLastRound),
+            previousPage: z.nullable(z.int()),
+            nextPage: z.nullable(z.int()),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -2579,25 +2008,13 @@ export class Lichess {
    */
   async broadcastTourCreate(params: { body: schemas.BroadcastForm }) {
     const path = "/broadcast/new" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BroadcastWithRounds;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.BroadcastWithRounds },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -2605,18 +2022,10 @@ export class Lichess {
    */
   async broadcastTourGet(params: { broadcastTournamentId: string }) {
     const path = `/api/broadcast/${params.broadcastTournamentId}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BroadcastWithRounds;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.BroadcastWithRounds } },
+    );
   }
 
   /**
@@ -2624,18 +2033,10 @@ export class Lichess {
    */
   async broadcastPlayersGet(params: { broadcastTournamentId: string }) {
     const path = `/broadcast/${params.broadcastTournamentId}/players` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.array(schemas.BroadcastPlayerEntry);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: z.array(schemas.BroadcastPlayerEntry) } },
+    );
   }
 
   /**
@@ -2647,24 +2048,16 @@ export class Lichess {
   }) {
     const path =
       `/broadcast/${params.broadcastTournamentId}/players/${params.playerId}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BroadcastPlayerEntryWithFideAndGames;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        const schema = schemas.NotFound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: schemas.BroadcastPlayerEntryWithFideAndGames,
+        },
+        404: { kind: "json", schema: schemas.NotFound },
+      },
+    );
   }
 
   /**
@@ -2673,21 +2066,16 @@ export class Lichess {
   async broadcastTeamLeaderboardGet(params: { broadcastTournamentId: string }) {
     const path =
       `/broadcast/${params.broadcastTournamentId}/teams/standings` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.array(schemas.BroadcastTeamLeaderboardEntry);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: z.array(schemas.BroadcastTeamLeaderboardEntry),
+        },
+        404: { kind: "nocontent" },
+      },
+    );
   }
 
   /**
@@ -2697,25 +2085,13 @@ export class Lichess {
     params: { broadcastTournamentId: string } & { body: schemas.BroadcastForm },
   ) {
     const path = `/broadcast/${params.broadcastTournamentId}/edit` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -2727,25 +2103,13 @@ export class Lichess {
     },
   ) {
     const path = `/broadcast/${params.broadcastTournamentId}/new` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BroadcastRoundNew;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.BroadcastRoundNew },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -2758,18 +2122,10 @@ export class Lichess {
   }) {
     const path =
       `/api/broadcast/${params.broadcastTournamentSlug}/${params.broadcastRoundSlug}/${params.broadcastRoundId}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BroadcastRound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.BroadcastRound } },
+    );
   }
 
   /**
@@ -2779,25 +2135,13 @@ export class Lichess {
     params: { broadcastRoundId: string } & { body: schemas.BroadcastRoundForm },
   ) {
     const path = `/broadcast/round/${params.broadcastRoundId}/edit` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BroadcastRound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.BroadcastRound },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -2806,18 +2150,10 @@ export class Lichess {
   async broadcastRoundReset(params: { broadcastRoundId: string }) {
     const path =
       `/api/broadcast/round/${params.broadcastRoundId}/reset` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -2826,25 +2162,16 @@ export class Lichess {
   async broadcastPush(params: { broadcastRoundId: string } & { body: string }) {
     const path =
       `/api/broadcast/round/${params.broadcastRoundId}/push` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BroadcastPgnPush;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = z.object({ error: z.optional(z.string()) });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.BroadcastPgnPush },
+        400: {
+          kind: "json",
+          schema: z.object({ error: z.optional(z.string()) }),
+        },
+      },
+    );
   }
 
   /**
@@ -2853,16 +2180,7 @@ export class Lichess {
   async broadcastStreamRoundPgn(params: { broadcastRoundId: string }) {
     const path =
       `/api/stream/broadcast/round/${params.broadcastRoundId}.pgn` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        /* chess-pgn */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get({ path }, { 200: { kind: "chess-pgn" } });
   }
 
   /**
@@ -2870,16 +2188,7 @@ export class Lichess {
    */
   async broadcastRoundPgn(params: { broadcastRoundId: string }) {
     const path = `/api/broadcast/round/${params.broadcastRoundId}.pgn` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        /* chess-pgn */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get({ path }, { 200: { kind: "chess-pgn" } });
   }
 
   /**
@@ -2887,16 +2196,7 @@ export class Lichess {
    */
   async broadcastAllRoundsPgn(params: { broadcastTournamentId: string }) {
     const path = `/api/broadcast/${params.broadcastTournamentId}.pgn` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        /* chess-pgn */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get({ path }, { 200: { kind: "chess-pgn" } });
   }
 
   /**
@@ -2904,18 +2204,10 @@ export class Lichess {
    */
   async broadcastMyRoundsGet(params: { nb?: number }) {
     const path = "/api/broadcast/my-rounds" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BroadcastMyRound;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "ndjson", schema: schemas.BroadcastMyRound } },
+    );
   }
 
   /**
@@ -2923,18 +2215,10 @@ export class Lichess {
    */
   async fidePlayerGet(params: { playerId: number }) {
     const path = `/api/fide/player/${params.playerId}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.FIDEPlayer;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.FIDEPlayer } },
+    );
   }
 
   /**
@@ -2942,19 +2226,10 @@ export class Lichess {
    */
   async fidePlayerSearch(params: { q: string }) {
     const path = "/api/fide/player" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.array(schemas.FIDEPlayer);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "json", schema: z.array(schemas.FIDEPlayer) } },
+    );
   }
 
   /**
@@ -2962,23 +2237,20 @@ export class Lichess {
    */
   async apiSimul() {
     const path = "/api/simul" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          pending: z.optional(z.array(schemas.Simul)),
-          created: z.optional(z.array(schemas.Simul)),
-          started: z.optional(z.array(schemas.Simul)),
-          finished: z.optional(z.array(schemas.Simul)),
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            pending: z.optional(z.array(schemas.Simul)),
+            created: z.optional(z.array(schemas.Simul)),
+            started: z.optional(z.array(schemas.Simul)),
+            finished: z.optional(z.array(schemas.Simul)),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -2986,18 +2258,10 @@ export class Lichess {
    */
   async teamShow(params: { teamId: string }) {
     const path = `/api/team/${params.teamId}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Team;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.Team } },
+    );
   }
 
   /**
@@ -3005,19 +2269,10 @@ export class Lichess {
    */
   async teamAll(params: { page?: number }) {
     const path = "/api/team/all" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.TeamPaginatorJson;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "json", schema: schemas.TeamPaginatorJson } },
+    );
   }
 
   /**
@@ -3025,18 +2280,10 @@ export class Lichess {
    */
   async teamOfUsername(params: { username: string }) {
     const path = `/api/team/of/${params.username}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.array(schemas.Team);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: z.array(schemas.Team) } },
+    );
   }
 
   /**
@@ -3044,19 +2291,10 @@ export class Lichess {
    */
   async teamSearch(params: { text?: string; page?: number }) {
     const path = "/api/team/search" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.TeamPaginatorJson;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "json", schema: schemas.TeamPaginatorJson } },
+    );
   }
 
   /**
@@ -3064,24 +2302,21 @@ export class Lichess {
    */
   async teamIdUsers(params: { teamId: string } & { full?: boolean }) {
     const path = `/api/team/${params.teamId}/users` as const;
-    const query = { full: params.full } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          joinedTeamAt: z.optional(z.int()),
-          id: z.string(),
-          name: z.string(),
-          title: z.optional(schemas.Title),
-          patronColor: z.optional(schemas.PatronColor),
-        });
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: { full: params.full } },
+      {
+        200: {
+          kind: "ndjson",
+          schema: z.object({
+            joinedTeamAt: z.optional(z.int()),
+            id: z.string(),
+            name: z.string(),
+            title: z.optional(schemas.Title),
+            patronColor: z.optional(schemas.PatronColor),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -3096,23 +2331,18 @@ export class Lichess {
     },
   ) {
     const path = `/api/team/${params.teamId}/arena` as const;
-    const query = {
-      max: params.max,
-      status: params.status,
-      createdBy: params.createdBy,
-      name: params.name,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ArenaTournament;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          max: params.max,
+          status: params.status,
+          createdBy: params.createdBy,
+          name: params.name,
+        },
+      },
+      { 200: { kind: "ndjson", schema: schemas.ArenaTournament } },
+    );
   }
 
   /**
@@ -3127,19 +2357,10 @@ export class Lichess {
     },
   ) {
     const path = `/team/${params.teamId}/join` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -3147,18 +2368,10 @@ export class Lichess {
    */
   async teamIdQuit(params: { teamId: string }) {
     const path = `/team/${params.teamId}/quit` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -3166,19 +2379,10 @@ export class Lichess {
    */
   async teamRequests(params: { teamId: string } & { declined?: boolean }) {
     const path = `/api/team/${params.teamId}/requests` as const;
-    const query = { declined: params.declined } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.array(schemas.TeamRequestWithUser);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: { declined: params.declined } },
+      { 200: { kind: "json", schema: z.array(schemas.TeamRequestWithUser) } },
+    );
   }
 
   /**
@@ -3187,18 +2391,10 @@ export class Lichess {
   async teamRequestAccept(params: { teamId: string; userId: string }) {
     const path =
       `/api/team/${params.teamId}/request/${params.userId}/accept` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -3207,18 +2403,10 @@ export class Lichess {
   async teamRequestDecline(params: { teamId: string; userId: string }) {
     const path =
       `/api/team/${params.teamId}/request/${params.userId}/decline` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -3226,18 +2414,10 @@ export class Lichess {
    */
   async teamIdKickUserId(params: { teamId: string; userId: string }) {
     const path = `/api/team/${params.teamId}/kick/${params.userId}` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -3247,25 +2427,13 @@ export class Lichess {
     params: { teamId: string } & { body: { message?: string } },
   ) {
     const path = `/team/${params.teamId}/pm-all` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3273,41 +2441,38 @@ export class Lichess {
    */
   async streamerLive() {
     const path = "/api/streamer/live" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.array(
-          z.intersection(
-            schemas.LightUser,
-            z.object({
-              stream: z.optional(
-                z.object({
-                  service: z.optional(z.literal(["twitch", "youtube"])),
-                  status: z.optional(z.string()),
-                  lang: z.optional(z.string()),
-                }),
-              ),
-              streamer: z.optional(
-                z.object({
-                  name: z.optional(z.string()),
-                  headline: z.optional(z.string()),
-                  description: z.optional(z.string()),
-                  twitch: z.optional(z.url()),
-                  youtube: z.optional(z.url()),
-                  image: z.optional(z.url()),
-                }),
-              ),
-            }),
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: z.array(
+            z.intersection(
+              schemas.LightUser,
+              z.object({
+                stream: z.optional(
+                  z.object({
+                    service: z.optional(z.literal(["twitch", "youtube"])),
+                    status: z.optional(z.string()),
+                    lang: z.optional(z.string()),
+                  }),
+                ),
+                streamer: z.optional(
+                  z.object({
+                    name: z.optional(z.string()),
+                    headline: z.optional(z.string()),
+                    description: z.optional(z.string()),
+                    twitch: z.optional(z.url()),
+                    youtube: z.optional(z.url()),
+                    image: z.optional(z.url()),
+                  }),
+                ),
+              }),
+            ),
           ),
-        );
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+        },
+      },
+    );
   }
 
   /**
@@ -3320,19 +2485,10 @@ export class Lichess {
     } & { matchup?: boolean },
   ) {
     const path = `/api/crosstable/${params.user1}/${params.user2}` as const;
-    const query = { matchup: params.matchup } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Crosstable;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: { matchup: params.matchup } },
+      { 200: { kind: "json", schema: schemas.Crosstable } },
+    );
   }
 
   /**
@@ -3350,22 +2506,18 @@ export class Lichess {
     teacher?: boolean;
   }) {
     const path = "/api/player/autocomplete" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = z.union([
-          z.array(z.string()),
-          z.object({ result: z.optional(z.array(schemas.LightUserOnline)) }),
-        ]);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      {
+        200: {
+          kind: "json",
+          schema: z.union([
+            z.array(z.string()),
+            z.object({ result: z.optional(z.array(schemas.LightUserOnline)) }),
+          ]),
+        },
+      },
+    );
   }
 
   /**
@@ -3373,18 +2525,10 @@ export class Lichess {
    */
   async readNote(params: { username: string }) {
     const path = `/api/user/${params.username}/note` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.array(schemas.UserNote);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: z.array(schemas.UserNote) } },
+    );
   }
 
   /**
@@ -3392,19 +2536,10 @@ export class Lichess {
    */
   async writeNote(params: { username: string } & { body: { text: string } }) {
     const path = `/api/user/${params.username}/note` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -3412,17 +2547,10 @@ export class Lichess {
    */
   async apiUserFollowing() {
     const path = "/api/rel/following" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.UserExtended;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "ndjson", schema: schemas.UserExtended } },
+    );
   }
 
   /**
@@ -3430,18 +2558,10 @@ export class Lichess {
    */
   async followUser(params: { username: string }) {
     const path = `/api/rel/follow/${params.username}` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -3449,18 +2569,10 @@ export class Lichess {
    */
   async unfollowUser(params: { username: string }) {
     const path = `/api/rel/unfollow/${params.username}` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -3468,18 +2580,10 @@ export class Lichess {
    */
   async blockUser(params: { username: string }) {
     const path = `/api/rel/block/${params.username}` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -3487,18 +2591,10 @@ export class Lichess {
    */
   async unblockUser(params: { username: string }) {
     const path = `/api/rel/unblock/${params.username}` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -3506,23 +2602,21 @@ export class Lichess {
    */
   async apiStreamEvent() {
     const path = "/api/stream/event" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.union([
-          schemas.GameStartEvent,
-          schemas.GameFinishEvent,
-          schemas.ChallengeEvent,
-          schemas.ChallengeCanceledEvent,
-          schemas.ChallengeDeclinedEvent,
-        ]);
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "ndjson",
+          schema: z.union([
+            schemas.GameStartEvent,
+            schemas.GameFinishEvent,
+            schemas.ChallengeEvent,
+            schemas.ChallengeCanceledEvent,
+            schemas.ChallengeDeclinedEvent,
+          ]),
+        },
+      },
+    );
   }
 
   /**
@@ -3543,23 +2637,10 @@ export class Lichess {
     );
   }) {
     const path = "/api/board/seek" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        /* mixed */
-        return { status, response } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      { 200: { kind: "mixed" }, 400: { kind: "json", schema: schemas.Error } },
+    );
   }
 
   /**
@@ -3567,28 +2648,21 @@ export class Lichess {
    */
   async boardGameStream(params: { gameId: string }) {
     const path = `/api/board/game/stream/${params.gameId}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.union([
-          schemas.GameFullEvent,
-          schemas.GameStateEvent,
-          schemas.ChatLineEvent,
-          schemas.OpponentGoneEvent,
-        ]);
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      case 404: {
-        const schema = schemas.NotFound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "ndjson",
+          schema: z.union([
+            schemas.GameFullEvent,
+            schemas.GameStateEvent,
+            schemas.ChatLineEvent,
+            schemas.OpponentGoneEvent,
+          ]),
+        },
+        404: { kind: "json", schema: schemas.NotFound },
+      },
+    );
   }
 
   /**
@@ -3602,25 +2676,13 @@ export class Lichess {
   ) {
     const path =
       `/api/board/game/${params.gameId}/move/${params.move}` as const;
-    const query = { offeringDraw: params.offeringDraw } as const;
-    const { response, status } = await this.requestor.post({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, query: { offeringDraw: params.offeringDraw } },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3628,17 +2690,10 @@ export class Lichess {
    */
   async boardGameChatGet(params: { gameId: string }) {
     const path = `/api/board/game/${params.gameId}/chat` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.GameChat;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "ndjson", schema: schemas.GameChat } },
+    );
   }
 
   /**
@@ -3653,25 +2708,13 @@ export class Lichess {
     },
   ) {
     const path = `/api/board/game/${params.gameId}/chat` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3679,24 +2722,13 @@ export class Lichess {
    */
   async boardGameAbort(params: { gameId: string }) {
     const path = `/api/board/game/${params.gameId}/abort` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3704,24 +2736,13 @@ export class Lichess {
    */
   async boardGameResign(params: { gameId: string }) {
     const path = `/api/board/game/${params.gameId}/resign` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3730,24 +2751,13 @@ export class Lichess {
   async boardGameDraw(params: { gameId: string; accept: boolean }) {
     const path =
       `/api/board/game/${params.gameId}/draw/${params.accept}` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3756,24 +2766,13 @@ export class Lichess {
   async boardGameTakeback(params: { gameId: string; accept: boolean }) {
     const path =
       `/api/board/game/${params.gameId}/takeback/${params.accept}` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3781,24 +2780,13 @@ export class Lichess {
    */
   async boardGameClaimVictory(params: { gameId: string }) {
     const path = `/api/board/game/${params.gameId}/claim-victory` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3806,24 +2794,13 @@ export class Lichess {
    */
   async boardGameClaimDraw(params: { gameId: string }) {
     const path = `/api/board/game/${params.gameId}/claim-draw` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3831,24 +2808,13 @@ export class Lichess {
    */
   async boardGameBerserk(params: { gameId: string }) {
     const path = `/api/board/game/${params.gameId}/berserk` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3856,18 +2822,10 @@ export class Lichess {
    */
   async apiBotOnline(params: { nb?: number }) {
     const path = "/api/bot/online" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.User;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "ndjson", schema: schemas.User } },
+    );
   }
 
   /**
@@ -3875,24 +2833,13 @@ export class Lichess {
    */
   async botAccountUpgrade() {
     const path = "/api/bot/account/upgrade" as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3900,28 +2847,21 @@ export class Lichess {
    */
   async botGameStream(params: { gameId: string }) {
     const path = `/api/bot/game/stream/${params.gameId}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.union([
-          schemas.GameFullEvent,
-          schemas.GameStateEvent,
-          schemas.ChatLineEvent,
-          schemas.OpponentGoneEvent,
-        ]);
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      case 404: {
-        const schema = schemas.NotFound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "ndjson",
+          schema: z.union([
+            schemas.GameFullEvent,
+            schemas.GameStateEvent,
+            schemas.ChatLineEvent,
+            schemas.OpponentGoneEvent,
+          ]),
+        },
+        404: { kind: "json", schema: schemas.NotFound },
+      },
+    );
   }
 
   /**
@@ -3934,25 +2874,13 @@ export class Lichess {
     } & { offeringDraw?: boolean },
   ) {
     const path = `/api/bot/game/${params.gameId}/move/${params.move}` as const;
-    const query = { offeringDraw: params.offeringDraw } as const;
-    const { response, status } = await this.requestor.post({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, query: { offeringDraw: params.offeringDraw } },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -3960,17 +2888,10 @@ export class Lichess {
    */
   async botGameChatGet(params: { gameId: string }) {
     const path = `/api/bot/game/${params.gameId}/chat` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.GameChat;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "ndjson", schema: schemas.GameChat } },
+    );
   }
 
   /**
@@ -3985,25 +2906,13 @@ export class Lichess {
     },
   ) {
     const path = `/api/bot/game/${params.gameId}/chat` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4011,24 +2920,13 @@ export class Lichess {
    */
   async botGameAbort(params: { gameId: string }) {
     const path = `/api/bot/game/${params.gameId}/abort` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4036,24 +2934,13 @@ export class Lichess {
    */
   async botGameResign(params: { gameId: string }) {
     const path = `/api/bot/game/${params.gameId}/resign` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4062,24 +2949,13 @@ export class Lichess {
   async botGameDraw(params: { gameId: string; accept: boolean }) {
     const path =
       `/api/bot/game/${params.gameId}/draw/${params.accept}` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4088,24 +2964,13 @@ export class Lichess {
   async botGameTakeback(params: { gameId: string; accept: boolean }) {
     const path =
       `/api/bot/game/${params.gameId}/takeback/${params.accept}` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4113,24 +2978,13 @@ export class Lichess {
    */
   async botGameClaimVictory(params: { gameId: string }) {
     const path = `/api/bot/game/${params.gameId}/claim-victory` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4138,24 +2992,13 @@ export class Lichess {
    */
   async botGameClaimDraw(params: { gameId: string }) {
     const path = `/api/bot/game/${params.gameId}/claim-draw` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4163,21 +3006,18 @@ export class Lichess {
    */
   async challengeList() {
     const path = "/api/challenge" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          in: z.optional(z.array(schemas.ChallengeJson)),
-          out: z.optional(z.array(schemas.ChallengeJson)),
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            in: z.optional(z.array(schemas.ChallengeJson)),
+            out: z.optional(z.array(schemas.ChallengeJson)),
+          }),
+        },
+      },
+    );
   }
 
   /**
@@ -4203,25 +3043,13 @@ export class Lichess {
     },
   ) {
     const path = `/api/challenge/${params.username}` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ChallengeJson;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.ChallengeJson },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4229,18 +3057,10 @@ export class Lichess {
    */
   async challengeShow(params: { challengeId: string }) {
     const path = `/api/challenge/${params.challengeId}/show` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ChallengeJson;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.ChallengeJson } },
+    );
   }
 
   /**
@@ -4248,25 +3068,13 @@ export class Lichess {
    */
   async challengeAccept(params: { challengeId: string } & { color?: string }) {
     const path = `/api/challenge/${params.challengeId}/accept` as const;
-    const query = { color: params.color } as const;
-    const { response, status } = await this.requestor.post({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        const schema = schemas.NotFound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, query: { color: params.color } },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        404: { kind: "json", schema: schemas.NotFound },
+      },
+    );
   }
 
   /**
@@ -4276,25 +3084,13 @@ export class Lichess {
     params: { challengeId: string } & { body: { reason?: string } },
   ) {
     const path = `/api/challenge/${params.challengeId}/decline` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        const schema = schemas.NotFound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        404: { kind: "json", schema: schemas.NotFound },
+      },
+    );
   }
 
   /**
@@ -4304,25 +3100,13 @@ export class Lichess {
     params: { challengeId: string } & { opponentToken?: string },
   ) {
     const path = `/api/challenge/${params.challengeId}/cancel` as const;
-    const query = { opponentToken: params.opponentToken } as const;
-    const { response, status } = await this.requestor.post({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        const schema = schemas.NotFound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, query: { opponentToken: params.opponentToken } },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        404: { kind: "json", schema: schemas.NotFound },
+      },
+    );
   }
 
   /**
@@ -4340,42 +3124,33 @@ export class Lichess {
     };
   }) {
     const path = "/api/challenge/ai" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 201: {
-        const schema = z.object({
-          id: z.optional(
-            z.string().check(z.minLength(8)).check(z.maxLength(8)),
-          ),
-          variant: z.optional(schemas.Variant),
-          speed: z.optional(schemas.Speed),
-          perf: z.optional(schemas.PerfType),
-          rated: z.optional(z.boolean()),
-          fen: z.optional(z.string()),
-          turns: z.optional(z.int()),
-          source: z.optional(schemas.GameSource),
-          status: z.optional(schemas.GameStatus),
-          createdAt: z.optional(z.int()),
-          player: z.optional(schemas.GameColor),
-          fullId: z.optional(
-            z.string().check(z.minLength(12)).check(z.maxLength(12)),
-          ),
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        201: {
+          kind: "json",
+          schema: z.object({
+            id: z.optional(
+              z.string().check(z.minLength(8)).check(z.maxLength(8)),
+            ),
+            variant: z.optional(schemas.Variant),
+            speed: z.optional(schemas.Speed),
+            perf: z.optional(schemas.PerfType),
+            rated: z.optional(z.boolean()),
+            fen: z.optional(z.string()),
+            turns: z.optional(z.int()),
+            source: z.optional(schemas.GameSource),
+            status: z.optional(schemas.GameStatus),
+            createdAt: z.optional(z.int()),
+            player: z.optional(schemas.GameColor),
+            fullId: z.optional(
+              z.string().check(z.minLength(12)).check(z.maxLength(12)),
+            ),
+          }),
+        },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4396,25 +3171,13 @@ export class Lichess {
     };
   }) {
     const path = "/api/challenge/open" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ChallengeOpenJson;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.ChallengeOpenJson },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4427,19 +3190,10 @@ export class Lichess {
     },
   ) {
     const path = `/api/challenge/${params.gameId}/start-clocks` as const;
-    const query = { token1: params.token1, token2: params.token2 } as const;
-    const { response, status } = await this.requestor.post({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, query: { token1: params.token1, token2: params.token2 } },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -4447,18 +3201,10 @@ export class Lichess {
    */
   async bulkPairingList() {
     const path = "/api/bulk-pairing" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.array(schemas.BulkPairing);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: z.array(schemas.BulkPairing) } },
+    );
   }
 
   /**
@@ -4480,25 +3226,13 @@ export class Lichess {
     };
   }) {
     const path = "/api/bulk-pairing" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BulkPairing;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.BulkPairing },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4506,24 +3240,13 @@ export class Lichess {
    */
   async bulkPairingStartClocks(params: { id: string }) {
     const path = `/api/bulk-pairing/${params.id}/start-clocks` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        const schema = schemas.NotFound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        404: { kind: "json", schema: schemas.NotFound },
+      },
+    );
   }
 
   /**
@@ -4531,24 +3254,13 @@ export class Lichess {
    */
   async bulkPairingGet(params: { id: string }) {
     const path = `/api/bulk-pairing/${params.id}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.BulkPairing;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        const schema = schemas.NotFound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.BulkPairing },
+        404: { kind: "json", schema: schemas.NotFound },
+      },
+    );
   }
 
   /**
@@ -4556,24 +3268,13 @@ export class Lichess {
    */
   async bulkPairingDelete(params: { id: string }) {
     const path = `/api/bulk-pairing/${params.id}` as const;
-    const { response, status } = await this.requestor.delete({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        const schema = schemas.NotFound;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.delete(
+      { path },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        404: { kind: "json", schema: schemas.NotFound },
+      },
+    );
   }
 
   /**
@@ -4593,27 +3294,23 @@ export class Lichess {
     },
   ) {
     const path = `/api/bulk-pairing/${params.id}/games` as const;
-    const query = {
-      moves: params.moves,
-      pgnInJson: params.pgnInJson,
-      tags: params.tags,
-      clocks: params.clocks,
-      evals: params.evals,
-      accuracy: params.accuracy,
-      opening: params.opening,
-      division: params.division,
-      literate: params.literate,
-    } as const;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        /* mixed */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      {
+        path,
+        query: {
+          moves: params.moves,
+          pgnInJson: params.pgnInJson,
+          tags: params.tags,
+          clocks: params.clocks,
+          evals: params.evals,
+          accuracy: params.accuracy,
+          opening: params.opening,
+          division: params.division,
+          literate: params.literate,
+        },
+      },
+      { 200: { kind: "mixed" } },
+    );
   }
 
   /**
@@ -4622,18 +3319,10 @@ export class Lichess {
   async roundAddTime(params: { gameId: string; seconds: number }) {
     const path =
       `/api/round/${params.gameId}/add-time/${params.seconds}` as const;
-    const { response, status } = await this.requestor.post({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -4646,25 +3335,13 @@ export class Lichess {
     };
   }) {
     const path = "/api/token/admin-challenge" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = z.record(z.string(), z.string());
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: z.record(z.string(), z.string()) },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4674,25 +3351,13 @@ export class Lichess {
     params: { username: string } & { body: { text: string } },
   ) {
     const path = `/inbox/${params.username}` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.Error;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: schemas.Ok },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
   }
 
   /**
@@ -4704,25 +3369,16 @@ export class Lichess {
     variant?: schemas.VariantKey;
   }) {
     const path = "/api/cloud-eval" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        const schema = schemas.CloudEval;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 404: {
-        const schema = z.object({ error: z.optional(z.string()) });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      {
+        200: { kind: "json", schema: schemas.CloudEval },
+        404: {
+          kind: "json",
+          schema: z.object({ error: z.optional(z.string()) }),
+        },
+      },
+    );
   }
 
   /**
@@ -4730,18 +3386,10 @@ export class Lichess {
    */
   async apiExternalEngineList() {
     const path = "/api/external-engine" as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = z.array(schemas.ExternalEngine);
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: z.array(schemas.ExternalEngine) } },
+    );
   }
 
   /**
@@ -4751,19 +3399,10 @@ export class Lichess {
     body: schemas.ExternalEngineRegistration;
   }) {
     const path = "/api/external-engine" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ExternalEngine;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      { 200: { kind: "json", schema: schemas.ExternalEngine } },
+    );
   }
 
   /**
@@ -4771,18 +3410,10 @@ export class Lichess {
    */
   async apiExternalEngineGet(params: { id: string }) {
     const path = `/api/external-engine/${params.id}` as const;
-    const { response, status } = await this.requestor.get({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ExternalEngine;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.ExternalEngine } },
+    );
   }
 
   /**
@@ -4790,18 +3421,10 @@ export class Lichess {
    */
   async apiExternalEngineDelete(params: { id: string }) {
     const path = `/api/external-engine/${params.id}` as const;
-    const { response, status } = await this.requestor.delete({ path });
-    switch (status) {
-      case 200: {
-        const schema = schemas.Ok;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.delete(
+      { path },
+      { 200: { kind: "json", schema: schemas.Ok } },
+    );
   }
 
   /**
@@ -4811,22 +3434,11 @@ export class Lichess {
     params: { id: string } & { body: schemas.ExternalEngineRegistration },
   ) {
     const path = `/api/external-engine/${params.id}` as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.put({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = schemas.ExternalEngine;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.put(
+      { path, body: params.body },
+      { 200: { kind: "json", schema: schemas.ExternalEngine } },
+    );
   }
-
-  /* --- Base URL for methods below: https://engine.lichess.ovh --- */
 
   /**
    * Analyse with external engine
@@ -4840,93 +3452,62 @@ export class Lichess {
     },
   ) {
     const path = `/api/external-engine/${params.id}/analyse` as const;
-    const body = params.body;
     const baseUrl = "https://engine.lichess.ovh";
-    const { response, status } = await this.requestor.post({
-      path,
-      body,
-      baseUrl,
-    });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          time: z.int().check(z.minimum(0)),
-          depth: z.int().check(z.minimum(0)),
-          nodes: z.int().check(z.minimum(0)),
-          pvs: z.array(
-            z.object({
-              depth: z.int().check(z.minimum(0)),
-              cp: z.optional(z.int()),
-              mate: z.optional(z.int()),
-              moves: z.array(z.string()),
-            }),
-          ),
-        });
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body, baseUrl },
+      {
+        200: {
+          kind: "ndjson",
+          schema: z.object({
+            time: z.int().check(z.minimum(0)),
+            depth: z.int().check(z.minimum(0)),
+            nodes: z.int().check(z.minimum(0)),
+            pvs: z.array(
+              z.object({
+                depth: z.int().check(z.minimum(0)),
+                cp: z.optional(z.int()),
+                mate: z.optional(z.int()),
+                moves: z.array(z.string()),
+              }),
+            ),
+          }),
+        },
+      },
+    );
   }
-
-  /* --- Base URL for methods below: https://engine.lichess.ovh --- */
 
   /**
    * Acquire analysis request
    */
   async apiExternalEngineAcquire(params: { body: { providerSecret: string } }) {
     const path = "/api/external-engine/work" as const;
-    const body = params.body;
     const baseUrl = "https://engine.lichess.ovh";
-    const { response, status } = await this.requestor.post({
-      path,
-      body,
-      baseUrl,
-    });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          id: z.string(),
-          work: schemas.ExternalEngineWork,
-          engine: schemas.ExternalEngine,
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 204: {
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body, baseUrl },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            id: z.string(),
+            work: schemas.ExternalEngineWork,
+            engine: schemas.ExternalEngine,
+          }),
+        },
+        204: { kind: "nocontent" },
+      },
+    );
   }
-
-  /* --- Base URL for methods below: https://engine.lichess.ovh --- */
 
   /**
    * Answer analysis request
    */
   async apiExternalEngineSubmit(params: { id: string } & { body: string }) {
     const path = `/api/external-engine/work/${params.id}` as const;
-    const body = params.body;
     const baseUrl = "https://engine.lichess.ovh";
-    const { response, status } = await this.requestor.post({
-      path,
-      body,
-      baseUrl,
-    });
-    switch (status) {
-      case 200: {
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body, baseUrl },
+      { 200: { kind: "nocontent" } },
+    );
   }
 
   /**
@@ -4943,16 +3524,10 @@ export class Lichess {
     state?: string;
   }) {
     const path = "/oauth" as const;
-    const query = params;
-    const { response, status } = await this.requestor.get({ path, query });
-    switch (status) {
-      case 200: {
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params },
+      { 200: { kind: "nocontent" } },
+    );
   }
 
   /**
@@ -4968,29 +3543,20 @@ export class Lichess {
     };
   }) {
     const path = "/api/token" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = z.object({
-          token_type: z.string(),
-          access_token: z.string(),
-          expires_in: z.int(),
-        });
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      case 400: {
-        const schema = schemas.OAuthError;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            token_type: z.string(),
+            access_token: z.string(),
+            expires_in: z.int(),
+          }),
+        },
+        400: { kind: "json", schema: schemas.OAuthError },
+      },
+    );
   }
 
   /**
@@ -4998,15 +3564,10 @@ export class Lichess {
    */
   async apiTokenDelete() {
     const path = "/api/token" as const;
-    const { response, status } = await this.requestor.delete({ path });
-    switch (status) {
-      case 204: {
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.delete(
+      { path },
+      { 204: { kind: "nocontent" } },
+    );
   }
 
   /**
@@ -5014,32 +3575,26 @@ export class Lichess {
    */
   async tokenTest(params: { body: string }) {
     const path = "/api/token/test" as const;
-    const body = params.body;
-    const { response, status } = await this.requestor.post({ path, body });
-    switch (status) {
-      case 200: {
-        const schema = z.record(
-          z.string(),
-          z.union([
-            z.object({
-              userId: z.optional(z.string()),
-              scopes: z.optional(z.string()),
-              expires: z.optional(z.nullable(z.int())),
-            }),
-            z.null(),
-          ]),
-        );
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: {
+          kind: "json",
+          schema: z.record(
+            z.string(),
+            z.union([
+              z.object({
+                userId: z.optional(z.string()),
+                scopes: z.optional(z.string()),
+                expires: z.optional(z.nullable(z.int())),
+              }),
+              z.null(),
+            ]),
+          ),
+        },
+      },
+    );
   }
-
-  /* --- Base URL for methods below: https://explorer.lichess.ovh --- */
 
   /**
    * Masters database
@@ -5053,27 +3608,12 @@ export class Lichess {
     topGames?: number;
   }) {
     const path = "/masters" as const;
-    const query = params;
     const baseUrl = "https://explorer.lichess.ovh";
-    const { response, status } = await this.requestor.get({
-      path,
-      query,
-      baseUrl,
-    });
-    switch (status) {
-      case 200: {
-        const schema = schemas.OpeningExplorerMasters;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params, baseUrl },
+      { 200: { kind: "json", schema: schemas.OpeningExplorerMasters } },
+    );
   }
-
-  /* --- Base URL for methods below: https://explorer.lichess.ovh --- */
 
   /**
    * Lichess games
@@ -5092,27 +3632,12 @@ export class Lichess {
     history?: boolean;
   }) {
     const path = "/lichess" as const;
-    const query = params;
     const baseUrl = "https://explorer.lichess.ovh";
-    const { response, status } = await this.requestor.get({
-      path,
-      query,
-      baseUrl,
-    });
-    switch (status) {
-      case 200: {
-        const schema = schemas.OpeningExplorerLichess;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params, baseUrl },
+      { 200: { kind: "json", schema: schemas.OpeningExplorerLichess } },
+    );
   }
-
-  /* --- Base URL for methods below: https://explorer.lichess.ovh --- */
 
   /**
    * Player games
@@ -5131,26 +3656,12 @@ export class Lichess {
     recentGames?: number;
   }) {
     const path = "/player" as const;
-    const query = params;
     const baseUrl = "https://explorer.lichess.ovh";
-    const { response, status } = await this.requestor.get({
-      path,
-      query,
-      baseUrl,
-    });
-    switch (status) {
-      case 200: {
-        const schema = schemas.OpeningExplorerPlayer;
-        const stream = ndjsonStream({ response, schema });
-        return { status, stream } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params, baseUrl },
+      { 200: { kind: "ndjson", schema: schemas.OpeningExplorerPlayer } },
+    );
   }
-
-  /* --- Base URL for methods below: https://explorer.lichess.ovh --- */
 
   /**
    * OTB master game
@@ -5158,96 +3669,45 @@ export class Lichess {
   async openingExplorerMasterGame(params: { gameId: string }) {
     const path = `/master/pgn/${params.gameId}` as const;
     const baseUrl = "https://explorer.lichess.ovh";
-    const { response, status } = await this.requestor.get({ path, baseUrl });
-    switch (status) {
-      case 200: {
-        /* chess-pgn */
-        return { status, response } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, baseUrl },
+      { 200: { kind: "chess-pgn" } },
+    );
   }
-
-  /* --- Base URL for methods below: https://tablebase.lichess.ovh --- */
 
   /**
    * Tablebase lookup
    */
   async tablebaseStandard(params: { fen: string; dtc?: string }) {
     const path = "/standard" as const;
-    const query = params;
     const baseUrl = "https://tablebase.lichess.ovh";
-    const { response, status } = await this.requestor.get({
-      path,
-      query,
-      baseUrl,
-    });
-    switch (status) {
-      case 200: {
-        const schema = schemas.TablebaseJson;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params, baseUrl },
+      { 200: { kind: "json", schema: schemas.TablebaseJson } },
+    );
   }
-
-  /* --- Base URL for methods below: https://tablebase.lichess.ovh --- */
 
   /**
    * Tablebase lookup for Atomic chess
    */
   async tablebaseAtomic(params: { fen: string }) {
     const path = "/atomic" as const;
-    const query = params;
     const baseUrl = "https://tablebase.lichess.ovh";
-    const { response, status } = await this.requestor.get({
-      path,
-      query,
-      baseUrl,
-    });
-    switch (status) {
-      case 200: {
-        const schema = schemas.TablebaseJson;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params, baseUrl },
+      { 200: { kind: "json", schema: schemas.TablebaseJson } },
+    );
   }
-
-  /* --- Base URL for methods below: https://tablebase.lichess.ovh --- */
 
   /**
    * Tablebase lookup for Antichess
    */
   async antichessAtomic(params: { fen: string }) {
     const path = "/antichess" as const;
-    const query = params;
     const baseUrl = "https://tablebase.lichess.ovh";
-    const { response, status } = await this.requestor.get({
-      path,
-      query,
-      baseUrl,
-    });
-    switch (status) {
-      case 200: {
-        const schema = schemas.TablebaseJson;
-        const json: unknown = await response.clone().json();
-        const data = schema.parse(json);
-        return { status, response, data } as const;
-      }
-      default: {
-        throw new Error("Unexpected status code");
-      }
-    }
+    return await this.requestor.get(
+      { path, query: params, baseUrl },
+      { 200: { kind: "json", schema: schemas.TablebaseJson } },
+    );
   }
 }
