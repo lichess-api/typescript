@@ -1,3 +1,6 @@
+import type * as z from "zod/mini";
+import { ndjsonStream } from "#lib/ndjson";
+
 type QueryParams = Record<
   string,
   string | number | boolean | string[] | number[] | null | undefined
@@ -25,6 +28,31 @@ function addQueryParams(url: URL, params: Record<string, unknown>): void {
   });
 }
 
+type ResponseFormat =
+  | { kind: "json"; schema: z.ZodMiniType }
+  | { kind: "ndjson"; schema: z.ZodMiniType }
+  | { kind: "chess-pgn" }
+  | { kind: "nocontent" }
+  | { kind: "mixed" };
+
+type RequestConfig = Record<number, ResponseFormat>;
+
+type InferResponse<T extends RequestConfig> = {
+  [Status in keyof T]: T[Status] extends { kind: "json"; schema: infer S }
+    ? { status: Status; response: Response; data: z.infer<S> }
+    : T[Status] extends { kind: "ndjson"; schema: infer S }
+      ? {
+          status: Status;
+          response: Response;
+          stream: AsyncGenerator<z.infer<S>>;
+        }
+      : T[Status] extends { kind: "chess-pgn" }
+        ? { status: Status; response: Response }
+        : T[Status] extends { kind: "mixed" }
+          ? { status: Status; response: Response }
+          : { status: Status; response: Response };
+}[keyof T];
+
 export class Requestor {
   readonly #headers: { readonly Authorization: `Bearer ${string}` } | undefined;
   readonly #baseUrl: string;
@@ -36,7 +64,7 @@ export class Requestor {
     this.#baseUrl = baseUrl;
   }
 
-  #buildRequest<
+  #makeRequest<
     TReequestMethod extends RequestMethod,
     TQueryParams extends QueryParams,
     TBody,
@@ -65,44 +93,65 @@ export class Requestor {
     return request;
   }
 
-  async #makeRequest(request: Request) {
+  async #handleRequest<T extends RequestConfig>(
+    request: Request,
+    config: T,
+  ): Promise<InferResponse<T>> {
     const response = await fetch(request);
     const status = response.status;
-    return { response, status } as const;
+    const handler = config[status];
+    if (!handler) {
+      throw new Error(`Unexpected status code: ${status}`);
+    }
+    if (handler.kind === "json") {
+      const json = await response.clone().json();
+      const data = handler.schema.parse(json);
+      return { response, status, data } as InferResponse<T>;
+    }
+    if (handler.kind === "ndjson") {
+      const stream = ndjsonStream({ response, schema: handler.schema });
+      return { response, status, stream } as InferResponse<T>;
+    }
+    return { response, status } as InferResponse<T>;
   }
 
-  async get<TQueryParams extends QueryParams>(
+  async get<T extends RequestConfig, TQueryParams extends QueryParams>(
     params: RequestHandlerParams<TQueryParams, never>,
-  ) {
-    const request = this.#buildRequest({ method: "GET", ...params });
-    return this.#makeRequest(request);
+    config: T,
+  ): Promise<InferResponse<T>> {
+    const request = this.#makeRequest({ method: "GET", ...params });
+    return this.#handleRequest(request, config);
   }
 
-  async post<TQueryParams extends QueryParams, TBody>(
+  async post<T extends RequestConfig, TQueryParams extends QueryParams, TBody>(
     params: RequestHandlerParams<TQueryParams, TBody>,
-  ) {
-    const request = this.#buildRequest({ method: "POST", ...params });
-    return this.#makeRequest(request);
+    config: T,
+  ): Promise<InferResponse<T>> {
+    const request = this.#makeRequest({ method: "POST", ...params });
+    return this.#handleRequest(request, config);
   }
 
-  async head<TQueryParams extends QueryParams>(
+  async head<T extends RequestConfig, TQueryParams extends QueryParams>(
     params: RequestHandlerParams<TQueryParams, never>,
-  ) {
-    const request = this.#buildRequest({ method: "HEAD", ...params });
-    return this.#makeRequest(request);
+    config: T,
+  ): Promise<InferResponse<T>> {
+    const request = this.#makeRequest({ method: "HEAD", ...params });
+    return this.#handleRequest(request, config);
   }
 
-  async delete<TQueryParams extends QueryParams>(
+  async delete<T extends RequestConfig, TQueryParams extends QueryParams>(
     params: RequestHandlerParams<TQueryParams, never>,
-  ) {
-    const request = this.#buildRequest({ method: "DELETE", ...params });
-    return this.#makeRequest(request);
+    config: T,
+  ): Promise<InferResponse<T>> {
+    const request = this.#makeRequest({ method: "DELETE", ...params });
+    return this.#handleRequest(request, config);
   }
 
-  async put<TQueryParams extends QueryParams, TBody>(
+  async put<T extends RequestConfig, TQueryParams extends QueryParams, TBody>(
     params: RequestHandlerParams<TQueryParams, TBody>,
-  ) {
-    const request = this.#buildRequest({ method: "PUT", ...params });
-    return this.#makeRequest(request);
+    config: T,
+  ): Promise<InferResponse<T>> {
+    const request = this.#makeRequest({ method: "PUT", ...params });
+    return this.#handleRequest(request, config);
   }
 }
