@@ -62,6 +62,7 @@ export { ExternalEngineWork } from "./ExternalEngineWork";
 export { ExternalEngineWorkCommon } from "./ExternalEngineWorkCommon";
 export { FIDEPlayer } from "./FIDEPlayer";
 export { FIDEPlayerPhoto } from "./FIDEPlayerPhoto";
+export { FIDEPlayerRatings } from "./FIDEPlayerRatings";
 export { FideTimeControl } from "./FideTimeControl";
 export { Flair } from "./Flair";
 export { FromPositionFEN } from "./FromPositionFEN";
