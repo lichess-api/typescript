@@ -1,6 +1,6 @@
 openapi: "3.1.0"
 info:
-  version: 2.0.120
+  version: 2.0.123
   title: Lichess.org API reference
   contact:
     name: "Lichess.org API"
@@ -537,6 +537,9 @@ paths:
 
   /api/fide/player/{playerId}:
     $ref: "./tags/fide/api-fide-player-playerId.yaml"
+
+  /api/fide/player/{playerId}/ratings:
+    $ref: "./tags/fide/api-fide-player-playerId-ratings.yaml"
 
   /api/fide/player:
     $ref: "./tags/fide/api-fide-player-search.yaml"

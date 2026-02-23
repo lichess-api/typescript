@@ -2177,26 +2177,50 @@ export class Lichess {
   /**
    * Stream an ongoing broadcast round as PGN
    */
-  async broadcastStreamRoundPgn(params: { broadcastRoundId: string }) {
+  async broadcastStreamRoundPgn(
+    params: { broadcastRoundId: string } & {
+      clocks?: boolean;
+      comments?: boolean;
+    },
+  ) {
     const path =
       `/api/stream/broadcast/round/${params.broadcastRoundId}.pgn` as const;
-    return await this.requestor.get({ path }, { 200: { kind: "chess-pgn" } });
+    return await this.requestor.get(
+      { path, query: { clocks: params.clocks, comments: params.comments } },
+      { 200: { kind: "chess-pgn" } },
+    );
   }
 
   /**
    * Export one round as PGN
    */
-  async broadcastRoundPgn(params: { broadcastRoundId: string }) {
+  async broadcastRoundPgn(
+    params: { broadcastRoundId: string } & {
+      clocks?: boolean;
+      comments?: boolean;
+    },
+  ) {
     const path = `/api/broadcast/round/${params.broadcastRoundId}.pgn` as const;
-    return await this.requestor.get({ path }, { 200: { kind: "chess-pgn" } });
+    return await this.requestor.get(
+      { path, query: { clocks: params.clocks, comments: params.comments } },
+      { 200: { kind: "chess-pgn" } },
+    );
   }
 
   /**
    * Export all rounds as PGN
    */
-  async broadcastAllRoundsPgn(params: { broadcastTournamentId: string }) {
+  async broadcastAllRoundsPgn(
+    params: { broadcastTournamentId: string } & {
+      clocks?: boolean;
+      comments?: boolean;
+    },
+  ) {
     const path = `/api/broadcast/${params.broadcastTournamentId}.pgn` as const;
-    return await this.requestor.get({ path }, { 200: { kind: "chess-pgn" } });
+    return await this.requestor.get(
+      { path, query: { clocks: params.clocks, comments: params.comments } },
+      { 200: { kind: "chess-pgn" } },
+    );
   }
 
   /**
@@ -2218,6 +2242,17 @@ export class Lichess {
     return await this.requestor.get(
       { path },
       { 200: { kind: "json", schema: schemas.FIDEPlayer } },
+    );
+  }
+
+  /**
+   * Get ratings history of a FIDE player
+   */
+  async fidePlayerRatings(params: { playerId: number }) {
+    const path = `/api/fide/player/${params.playerId}/ratings` as const;
+    return await this.requestor.get(
+      { path },
+      { 200: { kind: "json", schema: schemas.FIDEPlayerRatings } },
     );
   }
 
