@@ -207,7 +207,11 @@ export class Lichess {
   /**
    * Get your puzzle activity
    */
-  async apiPuzzleActivity(params: { max?: number; before?: number }) {
+  async apiPuzzleActivity(params: {
+    max?: number;
+    before?: number;
+    since?: number;
+  }) {
     const path = "/api/puzzle/activity" as const;
     return await this.requestor.get(
       { path, query: params },
