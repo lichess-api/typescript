@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 const FIDEPlayerRatings = z.object({
   standard: z.array(z.number()),

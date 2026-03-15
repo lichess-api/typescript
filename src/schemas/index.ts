@@ -136,6 +136,7 @@ export { StatByFideTC } from "./StatByFideTC";
 export { StudyImportPgnChapters } from "./StudyImportPgnChapters";
 export { StudyMetadata } from "./StudyMetadata";
 export { StudyPgn } from "./StudyPgn";
+export { StudyUserSelection } from "./StudyUserSelection";
 export { SwissFromPositionFEN } from "./SwissFromPositionFEN";
 export { SwissStatus } from "./SwissStatus";
 export { SwissTournament } from "./SwissTournament";

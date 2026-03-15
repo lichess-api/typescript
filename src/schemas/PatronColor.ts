@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 const PatronColor = z.literal([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 

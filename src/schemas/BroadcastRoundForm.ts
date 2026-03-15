@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 import { BroadcastCustomPoints } from "./BroadcastCustomPoints";
 import { BroadcastRoundFormName } from "./BroadcastRoundFormName";

@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 import { Perf } from "./Perf";
 import { PuzzleModePerf } from "./PuzzleModePerf";

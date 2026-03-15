@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 const TimelineEntrySimul = z.object({
   type: z.literal(["simul-create", "simul-join"]),

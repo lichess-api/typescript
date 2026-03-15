@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 import { GameStatusId } from "./GameStatusId";
 import { GameStatusName } from "./GameStatusName";

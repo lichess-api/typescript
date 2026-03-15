@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 import * as schemas from "#schemas";
 
@@ -1841,6 +1841,31 @@ export class Lichess {
   }
 
   /**
+   * Create a new Study
+   */
+  async apiStudyPost(params: {
+    body: {
+      name: string;
+      visibility: string;
+      computer: schemas.StudyUserSelection;
+      explorer: schemas.StudyUserSelection;
+      cloneable: schemas.StudyUserSelection;
+      shareable: schemas.StudyUserSelection;
+      chat: schemas.StudyUserSelection;
+      sticky?: string;
+    };
+  }) {
+    const path = "/api/study" as const;
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        200: { kind: "json", schema: z.object({ id: z.optional(z.string()) }) },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
+  }
+
+  /**
    * Import PGN into a study
    */
   async apiStudyImportPGN(
@@ -3647,7 +3672,7 @@ export class Lichess {
     topGames?: number;
   }) {
     const path = "/masters" as const;
-    const baseUrl = "https://explorer.lichess.ovh";
+    const baseUrl = "https://explorer.lichess.org";
     return await this.requestor.get(
       { path, query: params, baseUrl },
       { 200: { kind: "json", schema: schemas.OpeningExplorerMasters } },
@@ -3671,7 +3696,7 @@ export class Lichess {
     history?: boolean;
   }) {
     const path = "/lichess" as const;
-    const baseUrl = "https://explorer.lichess.ovh";
+    const baseUrl = "https://explorer.lichess.org";
     return await this.requestor.get(
       { path, query: params, baseUrl },
       { 200: { kind: "json", schema: schemas.OpeningExplorerLichess } },
@@ -3695,7 +3720,7 @@ export class Lichess {
     recentGames?: number;
   }) {
     const path = "/player" as const;
-    const baseUrl = "https://explorer.lichess.ovh";
+    const baseUrl = "https://explorer.lichess.org";
     return await this.requestor.get(
       { path, query: params, baseUrl },
       { 200: { kind: "ndjson", schema: schemas.OpeningExplorerPlayer } },
@@ -3706,8 +3731,8 @@ export class Lichess {
    * OTB master game
    */
   async openingExplorerMasterGame(params: { gameId: string }) {
-    const path = `/master/pgn/${params.gameId}` as const;
-    const baseUrl = "https://explorer.lichess.ovh";
+    const path = `/masters/pgn/${params.gameId}` as const;
+    const baseUrl = "https://explorer.lichess.org";
     return await this.requestor.get(
       { path, baseUrl },
       { 200: { kind: "chess-pgn" } },
@@ -3719,7 +3744,7 @@ export class Lichess {
    */
   async tablebaseStandard(params: { fen: string; dtc?: string }) {
     const path = "/standard" as const;
-    const baseUrl = "https://tablebase.lichess.ovh";
+    const baseUrl = "https://tablebase.lichess.org";
     return await this.requestor.get(
       { path, query: params, baseUrl },
       { 200: { kind: "json", schema: schemas.TablebaseJson } },
@@ -3731,7 +3756,7 @@ export class Lichess {
    */
   async tablebaseAtomic(params: { fen: string }) {
     const path = "/atomic" as const;
-    const baseUrl = "https://tablebase.lichess.ovh";
+    const baseUrl = "https://tablebase.lichess.org";
     return await this.requestor.get(
       { path, query: params, baseUrl },
       { 200: { kind: "json", schema: schemas.TablebaseJson } },
@@ -3743,7 +3768,7 @@ export class Lichess {
    */
   async antichessAtomic(params: { fen: string }) {
     const path = "/antichess" as const;
-    const baseUrl = "https://tablebase.lichess.ovh";
+    const baseUrl = "https://tablebase.lichess.org";
     return await this.requestor.get(
       { path, query: params, baseUrl },
       { 200: { kind: "json", schema: schemas.TablebaseJson } },

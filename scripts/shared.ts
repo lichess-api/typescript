@@ -466,11 +466,11 @@ function assertNever(schema: never): never {
   throw new Error(`Unknown schema: ${JSON.stringify(schema)}`);
 }
 
-export {
-  QueryParamSchemaSchema,
-  SchemaSchemaRef,
-  SchemaSchema,
-  convertToZod,
-  assertNever,
-};
 export type { Schema };
+export {
+  assertNever,
+  convertToZod,
+  QueryParamSchemaSchema,
+  SchemaSchema,
+  SchemaSchemaRef,
+};

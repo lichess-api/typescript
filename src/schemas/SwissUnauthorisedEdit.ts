@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 const SwissUnauthorisedEdit = z.object({ error: z.optional(z.string()) });
 

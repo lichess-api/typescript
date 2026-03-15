@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 const TimelineEntryForumPost = z.object({
   type: z.literal(["forum-post"]),

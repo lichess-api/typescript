@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 const OpponentGoneEvent = z.object({
   type: z.literal("opponentGone"),

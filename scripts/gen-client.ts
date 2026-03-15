@@ -107,7 +107,12 @@ const SchemaSchemaExampleRef = z
 const ResponseContentBaseContent = z.object({
   schema: SchemaSchema,
   example: SchemaSchemaExampleRef.optional(),
-  examples: z.record(z.string(), SchemaSchemaRef).optional(),
+  examples: z
+    .record(
+      z.string(),
+      z.union([SchemaSchemaRef, z.object({ value: z.json() })]),
+    )
+    .optional(),
 });
 
 const ResponseContextPlainTextContent = ResponseContentBaseContent.extend({})
@@ -313,8 +318,8 @@ const TagSchemaSchema = z
         z.object({
           url: z.literal([
             "https://engine.lichess.ovh",
-            "https://explorer.lichess.ovh",
-            "https://tablebase.lichess.ovh",
+            "https://explorer.lichess.org",
+            "https://tablebase.lichess.org",
           ]),
         }),
       ])
@@ -727,7 +732,7 @@ async function processSchema(schema: OpenApiSchema): Promise<void> {
 
   const API_URL = schema.servers[0].url;
 
-  const clientCodeTs = `import * as z from "zod/mini";
+  const clientCodeTs = `import * as z from "minizod";
 
 import * as schemas from "#schemas";
 

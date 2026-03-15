@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 const UserActivityFollowList = z.object({
   ids: z.array(z.string()),

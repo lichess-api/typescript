@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 const TimelineEntryStreamStart = z.object({
   type: z.literal(["stream-start"]),

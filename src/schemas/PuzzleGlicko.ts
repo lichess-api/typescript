@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 const PuzzleGlicko = z.object({
   rating: z.optional(z.number()),

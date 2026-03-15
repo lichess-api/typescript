@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 const GameCompat = z.object({
   bot: z.optional(z.boolean()),

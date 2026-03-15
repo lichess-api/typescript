@@ -1,35 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.15/schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "ignoreUnknown": false,
-    "includes": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"]
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space",
-    "lineEnding": "lf"
-  },
-  "linter": {
-    "rules": {
-      "style": {
-        "noNonNullAssertion": "warn"
-      },
-      "suspicious": {
-        "useIterableCallbackReturn": "warn"
-      }
-    }
-  },
-  "assist": {
-    "enabled": true,
-    "actions": {
-      "source": {
-        "organizeImports": "on"
-      }
-    }
-  }
+  "$schema": "https://biomejs.dev/schemas/2.4.7/schema.json",
+  "extends": ["@gameroman/config/biome"],
+  "linter": { "rules": { "suspicious": { "noShadowRestrictedNames": "warn" } } }
 }

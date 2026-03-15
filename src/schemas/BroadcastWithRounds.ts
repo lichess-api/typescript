@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 import { BroadcastGroup } from "./BroadcastGroup";
 import { BroadcastPhotos } from "./BroadcastPhotos";

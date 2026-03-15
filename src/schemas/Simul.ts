@@ -1,4 +1,4 @@
-import * as z from "zod/mini";
+import * as z from "minizod";
 
 import { LightUser } from "./LightUser";
 import { VariantKey } from "./VariantKey";

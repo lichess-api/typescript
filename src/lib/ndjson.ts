@@ -1,4 +1,4 @@
-import type * as z from "zod/mini";
+import type * as z from "minizod";
 
 async function* ndjsonStream<T>({
   response,
