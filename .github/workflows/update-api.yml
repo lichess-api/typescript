@@ -72,3 +72,16 @@ jobs:
           assignees: gameroman
           reviewers: gameroman
           labels: ci
+
+      - name: Notify Discord
+        if: always()
+        uses: sarisia/actions-status-discord@eb045afee445dc055c18d3d90bd0f244fd062708 # v1.16.0
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: ${{ job.status }}
+          title: "Update API (#${{ github.run_number }})"
+          description: |
+            Status: **${{ job.status }}**
+            Branch: ${{ github.ref_name }}
+            Trigger: ${{ github.event_name }}
+            Commit: ${{ github.sha }}
