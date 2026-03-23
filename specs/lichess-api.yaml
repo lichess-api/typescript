@@ -1,6 +1,6 @@
 openapi: "3.1.0"
 info:
-  version: 2.0.129
+  version: 2.0.130
   title: Lichess.org API reference
   contact:
     name: "Lichess.org API"
@@ -345,6 +345,9 @@ paths:
 
   /game/export/{gameId}:
     $ref: "./tags/games/game-export-gameId.yaml"
+
+  /game/{gameId}/chat:
+    $ref: "./tags/games/api-game-gameId-chat.yaml"
 
   /api/user/{username}/current-game:
     $ref: "./tags/games/api-user-username-current-game.yaml"
