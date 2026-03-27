@@ -61,7 +61,23 @@ export class Lichess {
   /**
    * Get one leaderboard
    */
-  async playerTopNbPerfType(params: { nb: number; perfType: string }) {
+  async playerTopNbPerfType(params: {
+    nb: number;
+    perfType:
+      | "ultraBullet"
+      | "bullet"
+      | "blitz"
+      | "rapid"
+      | "classical"
+      | "chess960"
+      | "crazyhouse"
+      | "antichess"
+      | "atomic"
+      | "horde"
+      | "kingOfTheHill"
+      | "racingKings"
+      | "threeCheck";
+  }) {
     const path = `/api/player/top/${params.nb}/${params.perfType}` as const;
     return await this.requestor.get(
       { path },
@@ -155,8 +171,8 @@ export class Lichess {
    */
   async apiPuzzleNext(params: {
     angle?: string;
-    difficulty?: string;
-    color?: string;
+    difficulty?: "easiest" | "easier" | "normal" | "harder" | "hardest";
+    color?: "white" | "black";
   }) {
     const path = "/api/puzzle/next" as const;
     return await this.requestor.get(
@@ -170,9 +186,9 @@ export class Lichess {
    */
   async apiPuzzleBatchSelect(
     params: { angle: string } & {
-      difficulty?: string;
+      difficulty?: "easiest" | "easier" | "normal" | "harder" | "hardest";
       nb?: number;
-      color?: string;
+      color?: "white" | "black";
     },
   ) {
     const path = `/api/puzzle/batch/${params.angle}` as const;
@@ -493,7 +509,7 @@ export class Lichess {
       vs?: string;
       rated?: boolean;
       perfType?: schemas.PerfType;
-      color?: string;
+      color?: "white" | "black";
       analysed?: boolean;
       moves?: boolean;
       pgnInJson?: boolean;
@@ -508,7 +524,7 @@ export class Lichess {
       literate?: boolean;
       lastFen?: boolean;
       withBookmarked?: boolean;
-      sort?: string;
+      sort?: "dateAsc" | "dateDesc";
     },
   ) {
     const path = `/api/games/user/${params.username}` as const;
@@ -737,7 +753,7 @@ export class Lichess {
     division?: boolean;
     literate?: boolean;
     lastFen?: boolean;
-    sort?: string;
+    sort?: "dateAsc" | "dateDesc";
   }) {
     const path = "/api/games/export/bookmarks" as const;
     return await this.requestor.get(
@@ -1857,13 +1873,13 @@ export class Lichess {
   async apiStudyPost(params: {
     body: {
       name: string;
-      visibility: string;
+      visibility: "public" | "unlisted" | "private";
       computer: schemas.StudyUserSelection;
       explorer: schemas.StudyUserSelection;
       cloneable: schemas.StudyUserSelection;
       shareable: schemas.StudyUserSelection;
       chat: schemas.StudyUserSelection;
-      sticky?: string;
+      sticky?: "true" | "false";
     };
   }) {
     const path = "/api/study" as const;
@@ -1884,7 +1900,7 @@ export class Lichess {
       body: {
         pgn: string;
         name?: string;
-        orientation?: string;
+        orientation?: "white" | "black";
         variant?: schemas.VariantKey;
       };
     },
@@ -2777,7 +2793,7 @@ export class Lichess {
   async boardGameChatPost(
     params: { gameId: string } & {
       body: {
-        room: string;
+        room: "player" | "spectator";
         text: string;
       };
     },
@@ -2975,7 +2991,7 @@ export class Lichess {
   async botGameChat(
     params: { gameId: string } & {
       body: {
-        room: string;
+        room: "player" | "spectator";
         text: string;
       };
     },
@@ -3113,7 +3129,12 @@ export class Lichess {
         variant?: schemas.VariantKey;
         fen?: schemas.FromPositionFEN;
         keepAliveStream?: boolean;
-        rules?: string;
+        rules?:
+          | "noAbort"
+          | "noRematch"
+          | "noGiveTime"
+          | "noClaimWin"
+          | "noEarlyDraw";
       };
     },
   ) {
@@ -3141,7 +3162,9 @@ export class Lichess {
   /**
    * Accept a challenge
    */
-  async challengeAccept(params: { challengeId: string } & { color?: string }) {
+  async challengeAccept(
+    params: { challengeId: string } & { color?: "white" | "black" },
+  ) {
     const path = `/api/challenge/${params.challengeId}/accept` as const;
     return await this.requestor.post(
       { path, query: { color: params.color } },
@@ -3156,7 +3179,22 @@ export class Lichess {
    * Decline a challenge
    */
   async challengeDecline(
-    params: { challengeId: string } & { body: { reason?: string } },
+    params: { challengeId: string } & {
+      body: {
+        reason?:
+          | "generic"
+          | "later"
+          | "tooFast"
+          | "tooSlow"
+          | "timeControl"
+          | "rated"
+          | "casual"
+          | "standard"
+          | "variant"
+          | "noBot"
+          | "onlyBot";
+      };
+    },
   ) {
     const path = `/api/challenge/${params.challengeId}/decline` as const;
     return await this.requestor.post(
@@ -3240,7 +3278,12 @@ export class Lichess {
       variant?: schemas.VariantKey;
       fen?: schemas.FromPositionFEN;
       name?: string;
-      rules?: string;
+      rules?:
+        | "noRematch"
+        | "noGiveTime"
+        | "noClaimWin"
+        | "noEarlyDraw"
+        | "noAbort";
       users?: string;
       expiresAt?: number;
     };
@@ -3297,7 +3340,12 @@ export class Lichess {
       variant?: schemas.VariantKey;
       fen?: schemas.FromPositionFEN;
       message?: string;
-      rules?: string;
+      rules?:
+        | "noAbort"
+        | "noRematch"
+        | "noGiveTime"
+        | "noClaimWin"
+        | "noEarlyDraw";
     };
   }) {
     const path = "/api/bulk-pairing" as const;
@@ -3719,12 +3767,12 @@ export class Lichess {
    */
   async openingExplorerPlayer(params: {
     player: string;
-    color: string;
+    color: "white" | "black";
     variant?: schemas.VariantKey;
     fen?: string;
     play?: string;
     speeds?: schemas.Speed[];
-    modes?: string[];
+    modes?: ("casual" | "rated")[];
     since?: string;
     until?: string;
     moves?: number;
@@ -3753,7 +3801,10 @@ export class Lichess {
   /**
    * Tablebase lookup
    */
-  async tablebaseStandard(params: { fen: string; dtc?: string }) {
+  async tablebaseStandard(params: {
+    fen: string;
+    dtc?: "never" | "auxiliary" | "always";
+  }) {
     const path = "/standard" as const;
     const baseUrl = "https://tablebase.lichess.org";
     return await this.requestor.get(

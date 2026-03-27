@@ -490,6 +490,10 @@ function schemaToTypescriptTypes(
       return "boolean" as const;
     }
     case "string": {
+      if (schema.enum) {
+        const literals = schema.enum.map((v) => JSON.stringify(v)).join(" | ");
+        return `(${literals})` as const;
+      }
       return "string" as const;
     }
     case "number":
