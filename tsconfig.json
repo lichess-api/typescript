@@ -9,8 +9,6 @@
 
     "rootDir": "./",
 
-    "paths": { "~/*": ["./src/*"] },
-
     "skipLibCheck": true,
 
     // Max strictness

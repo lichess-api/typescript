@@ -5,4 +5,5 @@ export default defineConfig({
   exports: true,
   dts: { tsgo: true },
   outputOptions: { minifyInternalExports: false },
+  hash: false,
 });
