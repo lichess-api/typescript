@@ -5,7 +5,7 @@ import {
   convertToZod,
   OperationParameterBase,
   OperationQueryParameterSchema,
-  QueryParamSchemaSchema,
+  type QueryParamSchemaSchema,
   type Schema,
   SchemaSchema,
   SchemaSchemaBoolean,
@@ -247,7 +247,6 @@ type OperationParameters = z.infer<typeof OperationParameters>;
 const ResponseStatus = z.string();
 
 const OperationResponses = z.record(ResponseStatus, ResponseSchema);
-type OperationResponses = z.infer<typeof OperationResponses>;
 
 const BaseTagSchemaOperation = z.object({
   operationId: z.string(),
