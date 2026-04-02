@@ -1936,6 +1936,26 @@ export class Lichess {
   }
 
   /**
+   * Update the moves of a study chapter
+   */
+  async apiStudyChapterMoves(
+    params: {
+      studyId: string;
+      chapterId: string;
+    } & { body: { pgn: string } },
+  ) {
+    const path =
+      `/api/study/${params.studyId}/${params.chapterId}/moves` as const;
+    return await this.requestor.post(
+      { path, body: params.body },
+      {
+        204: { kind: "nocontent" },
+        400: { kind: "json", schema: schemas.Error },
+      },
+    );
+  }
+
+  /**
    * Export all studies of a user
    */
   async studyExportAllPgn(
