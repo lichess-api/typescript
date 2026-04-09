@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Test and Typecheck
+    name: Lint and Test
     runs-on: ubuntu-latest
 
     steps:
@@ -25,6 +25,9 @@ jobs:
 
       - name: Build
         run: bun run build
+
+      - name: Lint code
+        run: bun run lint
 
       - name: Typecheck code
         run: bun run typecheck
