@@ -9,10 +9,8 @@ const BroadcastPlayerEntry = z.intersection(
   z.object({
     score: z.optional(z.number()),
     played: z.optional(z.int()),
-    ratingDiff: z.optional(z.int()),
     ratingDiffs: z.optional(StatByFideTC),
     ratingsMap: z.optional(StatByFideTC),
-    performance: z.optional(z.int()),
     performances: z.optional(StatByFideTC),
     tiebreaks: z.optional(
       z.array(BroadcastPlayerTiebreak).check(z.maxLength(5)),
