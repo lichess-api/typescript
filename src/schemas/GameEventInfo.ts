@@ -19,6 +19,7 @@ const GameEventInfo = z.object({
   variant: z.optional(Variant),
   speed: z.optional(Speed),
   perf: z.optional(z.string()),
+  rating: z.optional(z.int()),
   rated: z.optional(z.boolean()),
   hasMoved: z.optional(z.boolean()),
   opponent: z.optional(GameEventOpponent),
