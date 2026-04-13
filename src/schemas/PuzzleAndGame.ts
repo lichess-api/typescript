@@ -45,6 +45,7 @@ const PuzzleAndGame = z.object({
     initialPly: z.int(),
     plays: z.int(),
     rating: z.int(),
+    fen: z.optional(z.string()),
     solution: z.array(z.string()),
     themes: z.array(z.string()),
   }),
