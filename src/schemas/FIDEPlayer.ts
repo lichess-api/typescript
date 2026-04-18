@@ -13,6 +13,7 @@ const FIDEPlayer = z.object({
   standard: z.optional(z.int()),
   rapid: z.optional(z.int()),
   blitz: z.optional(z.int()),
+  gender: z.optional(z.literal(["M", "F"])),
   photo: z.optional(FIDEPlayerPhoto),
 });
 
