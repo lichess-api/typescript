@@ -1902,6 +1902,7 @@ export class Lichess {
         name?: string;
         orientation?: "white" | "black";
         variant?: schemas.VariantKey;
+        mode?: "practice" | "conceal" | "gamebook";
       };
     },
   ) {
