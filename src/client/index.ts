@@ -2010,7 +2010,11 @@ export class Lichess {
   /**
    * Get official broadcasts
    */
-  async broadcastsOfficial(params: { nb?: number; html?: boolean }) {
+  async broadcastsOfficial(params: {
+    nb?: number;
+    html?: boolean;
+    live?: boolean;
+  }) {
     const path = "/api/broadcast" as const;
     return await this.requestor.get(
       { path, query: params },
