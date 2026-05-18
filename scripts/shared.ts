@@ -1,3 +1,4 @@
+import * as path from "node:path";
 import * as z from "zod";
 
 const SchemaUnparsed = z
@@ -28,6 +29,8 @@ const BaseSchema = z.object({
 const StringYamlRef = z
   .templateLiteral([z.string(), ".yaml"])
   .brand("StringYamlRef");
+
+type StringYamlRef = z.infer<typeof StringYamlRef>;
 
 const SchemaSchemaRef = BaseSchema.extend({
   type: z.literal("object").optional(),
@@ -240,6 +243,33 @@ function parseUnparsed(schema: Unparsed) {
 
 type ConvertResult = { readonly zodSchema: string; readonly refs: string[] };
 
+function refToName(ref: StringYamlRef) {
+  return path.basename(ref).replace(".yaml", "");
+}
+
+function recordToObject(
+  object: Record<string, string>,
+  options = { colon: true },
+) {
+  const entries = Object.entries(object);
+
+  const colon = options.colon ? ":" : "";
+
+  if (entries.length <= 1) {
+    const firstEntry = entries[0];
+    if (firstEntry) {
+      return `{ "${firstEntry[0]}"${colon} ${firstEntry[1]} }`;
+    }
+    return "Record<string, never>";
+  }
+
+  const entriesKv = entries
+    .map(([k, v]) => `  "${k}"${colon} ${v},`)
+    .join("\n");
+
+  return `{\n${entriesKv}\n}`;
+}
+
 function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
   if (schema.const !== undefined) {
     return {
@@ -252,7 +282,7 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
     switch (schema.__schema) {
       case "$ref": {
         const ref = schema.$ref;
-        const name = ref.split("/").pop()!.replace(".yaml", "");
+        const name = refToName(ref);
         const prefixedName = `${prefix}${name}` as const;
         return { zodSchema: prefixedName, refs: prefix ? [] : [name] } as const;
       }
@@ -262,7 +292,9 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
         );
         const zodSchemas = subResults.map((r) => r.zodSchema);
         const allRefs = new Set<string>();
-        subResults.forEach((r) => r.refs.forEach((ref) => allRefs.add(ref)));
+        subResults.forEach(
+          (r) => void r.refs.forEach((ref) => void allRefs.add(ref)),
+        );
         return {
           zodSchema: `z.union([${zodSchemas.join(", ")}])`,
           refs: Array.from(allRefs),
@@ -286,10 +318,8 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
       case "anyOf": {
         const refNames: string[] = [];
         const allRefs = new Set<string>();
-        for (const [_, refYaml] of Object.entries(
-          schema.discriminator.mapping,
-        )) {
-          const name = refYaml.split("/").pop()!.replace(".yaml", "");
+        for (const [_, ref] of Object.entries(schema.discriminator.mapping)) {
+          const name = refToName(ref);
           refNames.push(prefix + name);
           if (!prefix) allRefs.add(name);
         }
@@ -387,20 +417,14 @@ function convertToZod(schema: Schema, prefix: string = ""): ConvertResult {
             parseUnparsed(v),
             prefix,
           );
-          propRefs.forEach((r) => allRefs.add(r));
+          propRefs.forEach((r) => void allRefs.add(r));
           let propStr = sch;
           if (!required.has(k)) {
             propStr = `z.optional(${propStr})`;
           }
           zodProps[k] = propStr;
         }
-        const entries = Object.entries(zodProps);
-        const inner =
-          entries.length === 1
-            ? `{ "${entries[0]![0]}": ${entries[0]![1]} }`
-            : "{\n" +
-              entries.map(([k, v]) => `  "${k}": ${v},`).join("\n") +
-              "\n}";
+        const inner = recordToObject(zodProps);
         return {
           zodSchema: `z.object(${inner})`,
           refs: Array.from(allRefs),
@@ -471,6 +495,9 @@ export {
   assertNever,
   convertToZod,
   QueryParamSchemaSchema,
+  recordToObject,
+  refToName,
   SchemaSchema,
   SchemaSchemaRef,
+  StringYamlRef,
 };

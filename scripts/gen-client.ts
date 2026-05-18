@@ -6,6 +6,8 @@ import {
   OperationParameterBase,
   OperationQueryParameterSchema,
   type QueryParamSchemaSchema,
+  recordToObject,
+  refToName,
   type Schema,
   SchemaSchema,
   SchemaSchemaBoolean,
@@ -38,15 +40,17 @@ const OpenApiSchemaPaths = z.record(OpenApiSchemaPath, SchemaSchemaRef);
 
 const OpenApiSchemaComponents = z.object();
 
+const OpenApiServersSchema = z.tuple([
+  z.object({ url: z.literal("https://lichess.org") }),
+  z.object({ url: z.literal("https://lichess.dev") }),
+  z.object({ url: z.literal("http://localhost:{port}") }),
+  z.object({ url: z.literal("http://l.org") }),
+]);
+
 const OpenApiSchemaSchema = z.object({
   openapi: z.literal("3.1.0"),
   info: OpenApiSchemaInfo,
-  servers: z.tuple([
-    z.object({ url: z.literal("https://lichess.org") }),
-    z.object({ url: z.literal("https://lichess.dev") }),
-    z.object({ url: z.literal("http://localhost:{port}") }),
-    z.object({ url: z.literal("http://l.org") }),
-  ]),
+  servers: OpenApiServersSchema,
   tags: z.array(z.object({ name: z.string(), description: z.string() })),
   paths: OpenApiSchemaPaths,
   components: OpenApiSchemaComponents,
@@ -248,10 +252,30 @@ const ResponseStatus = z.string();
 
 const OperationResponses = z.record(ResponseStatus, ResponseSchema);
 
+const LichessServerSchema = z.union([
+  z.object({
+    url: z.literal([
+      "https://engine.lichess.ovh",
+      "https://explorer.lichess.org",
+      "https://tablebase.lichess.org",
+    ]),
+  }),
+  z.object({
+    url: z.literal("http://localhost:{port}"),
+    variables: z.object({ port: z.object({ default: z.string() }) }),
+  }),
+]);
+
+const LichessServersSchema = z
+  .tuple([LichessServerSchema])
+  .rest(LichessServerSchema)
+  .transform((s) => ({ url: s[0].url, __id: "__servers" as const }));
+
 const BaseTagSchemaOperation = z.object({
   operationId: z.string(),
   summary: z.string(),
   description: z.string(),
+  servers: LichessServersSchema.optional(),
   tags: z.array(z.string()),
   security: SecuritySchema,
   parameters: OperationParameters,
@@ -312,18 +336,7 @@ const TagSchemaSchemaPut = BaseTagSchemaOperation.extend({
 
 const TagSchemaSchema = z
   .object({
-    servers: z
-      .tuple([
-        z.object({
-          url: z.literal([
-            "https://engine.lichess.ovh",
-            "https://explorer.lichess.org",
-            "https://tablebase.lichess.org",
-          ]),
-        }),
-      ])
-      .transform((s) => ({ url: s[0].url, __id: "__servers" as const }))
-      .optional(),
+    servers: LichessServersSchema.optional(),
     parameters: z
       .array(OperationPathParameterSchema)
       .transform((s) => ({ parameters: s, __id: "__parameters" as const }))
@@ -453,13 +466,13 @@ function schemaToTypescriptTypes(
     case "$ref":
     case "notverified:reftoprimitive": {
       const ref = schema.$ref;
-      const name = ref.split("/").pop()!.replace(".yaml", "");
+      const name = refToName(ref);
       const typescriptSchema = `schemas.${name}` as const;
       return typescriptSchema;
     }
     case "notverified:reftoprimitive:nullable": {
       const ref = schema.allOf[0].$ref;
-      const name = ref.split("/").pop()!.replace(".yaml", "");
+      const name = refToName(ref);
       const typescriptSchema = `schemas.${name} | null` as const;
       return typescriptSchema;
     }
@@ -474,15 +487,7 @@ function schemaToTypescriptTypes(
           : (`?: ${typescriptSchema}` as const);
         objectRecord[k] = propStr;
       }
-      const entries = Object.entries(objectRecord);
-      if (entries.length === 1) {
-        return `{ "${entries[0]![0]}" ${entries[0]![1]} }` as const;
-      }
-      return (
-        "{\n" +
-        entries.map(([k, v]) => `  "${k}" ${v},` as const).join("\n") +
-        "\n}"
-      );
+      return recordToObject(objectRecord, { colon: false });
     }
     case "boolean":
     case "boolean-like": {
@@ -524,7 +529,7 @@ function schemaToTypescriptTypes(
     }
     case "array:notverified:reftoprimitive": {
       const ref = schema.items.$ref;
-      const name = ref.split("/").pop()!.replace(".yaml", "");
+      const name = refToName(ref);
       const typescriptSchema = `schemas.${name}` as const;
       return `(${typescriptSchema})[]` as const;
     }
@@ -552,32 +557,15 @@ function extractQueryParams(queryParams: OperationQueryParameter[]) {
       ? `: ${typescriptSchema}`
       : `?: ${typescriptSchema}`;
   }
-  const entries = Object.entries(params);
-  if (entries.length === 1) {
-    return `{ "${entries[0]![0]}" ${entries[0]![1]} }` as const;
-  }
-  return (
-    "{\n" +
-    entries.map(([k, v]) => `  "${k}" ${v},` as const).join("\n") +
-    "\n}"
-  );
+  return recordToObject(params, { colon: false });
 }
 
 function extractPathParams(pathParams: OperationPathParameter[]) {
   const params: Record<string, string> = {};
   for (const param of pathParams) {
-    const typescriptSchema = schemaToTypescriptTypes(param.schema);
-    params[param.name] = `: ${typescriptSchema}` as const;
+    params[param.name] = schemaToTypescriptTypes(param.schema);
   }
-  const entries = Object.entries(params);
-  if (entries.length === 1) {
-    return `{ "${entries[0]![0]}" ${entries[0]![1]} }` as const;
-  }
-  return (
-    "{\n" +
-    entries.map(([k, v]) => `  "${k}" ${v},` as const).join("\n") +
-    "\n}"
-  );
+  return recordToObject(params);
 }
 
 function extractBodyTypes(bodySchema: Schema) {
@@ -665,10 +653,12 @@ function processOperation(
     requestObjCode = `${requestPieces.join(", ")}`;
   }
 
+  const baseUrl = options?.baseUrl || operation.servers?.url;
+
   let baseUrlLine = "";
   let baseUrlArg = "";
-  if (options?.baseUrl) {
-    baseUrlLine = `    const baseUrl = "${options.baseUrl}";\n`;
+  if (baseUrl) {
+    baseUrlLine = `    const baseUrl = "${baseUrl}";\n`;
     baseUrlArg = ", baseUrl";
   }
 
@@ -692,8 +682,8 @@ ${baseUrlLine}\
 
 function processTag(tagSchema: TagSchema, rawApiPath: string) {
   const methodsCode: string[] = [];
-  let sharedPathParams: OperationPathParameter[] | undefined = undefined;
-  let baseUrl: string | undefined = undefined;
+  let sharedPathParams: OperationPathParameter[] | undefined;
+  let baseUrl: string | undefined;
 
   for (const operation of Object.values(tagSchema)) {
     const processedOperation = processOperation(operation, rawApiPath, {

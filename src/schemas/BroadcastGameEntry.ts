@@ -15,6 +15,7 @@ const BroadcastGameEntry = z.object({
   customPoints: z.optional(BroadcastCustomPoints),
   ratingDiff: z.optional(z.int()),
   fideTC: FideTimeControl,
+  ongoing: z.optional(z.boolean()),
 });
 
 type BroadcastGameEntry = z.infer<typeof BroadcastGameEntry>;

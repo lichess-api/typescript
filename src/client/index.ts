@@ -558,7 +558,7 @@ export class Lichess {
       },
       {
         200: {
-          kind: "json",
+          kind: "ndjson",
           schema: z.union([schemas.GamePgn, schemas.GameJson]),
         },
       },
@@ -3147,7 +3147,7 @@ export class Lichess {
             "clock.increment": number;
           }
         | { days: 1 | 2 | 3 | 5 | 7 | 10 | 14 }
-        | {}
+        | Record<string, never>
       ) & {
         rated?: boolean;
         color?: schemas.ChallengeColor;

@@ -3,11 +3,11 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { ZodError } from "zod";
 import { prettifyError } from "zod/mini";
-import { convertToZod, SchemaSchema } from "./shared";
+import { convertToZod, refToName, SchemaSchema, StringYamlRef } from "./shared";
 
 async function processFile(filePath: string) {
   const normalizedFilePath = filePath.replaceAll("\\", "/");
-  const fileName = normalizedFilePath.split("/").pop()!.replace(".yaml", "");
+  const fileName = refToName(StringYamlRef.parse(normalizedFilePath));
   const yamlStr = await Bun.file(normalizedFilePath).text();
   const yamlContent = Bun.YAML.parse(yamlStr);
   const parsedSchema = SchemaSchema.safeParse(yamlContent);

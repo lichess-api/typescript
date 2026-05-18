@@ -31,21 +31,21 @@
     "gen": "bun run --sequential gen:schemas gen:client format",
     "test": "bun test",
     "typecheck": "tsgo --noEmit",
-    "lint": "biome check ./src",
+    "lint": "biome check",
     "format": "biome check --write --linter-enabled=false",
     "build": "bunx --bun tsdown",
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "minizod": "^0.0.3"
+    "minizod": "0.0.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.12",
-    "@gameroman/config": "^0.1.0",
-    "@types/bun": "^1.3.11",
-    "@typescript/native-preview": "^7.0.0-dev.20260401.1",
-    "tsdown": "^0.21.7",
-    "zod": "^4.3.6"
+    "@biomejs/biome": "2.4.15",
+    "@gameroman/config": "0.1.0",
+    "@types/bun": "1.3.14",
+    "@typescript/native-preview": "7.0.0-dev.20260517.1",
+    "tsdown": "0.22.0",
+    "zod": "4.4.3"
   },
   "engines": {
     "node": ">=24"
