@@ -38,15 +38,17 @@ const OpenApiSchemaPaths = z.record(OpenApiSchemaPath, SchemaSchemaRef);
 
 const OpenApiSchemaComponents = z.object();
 
+const OpenApiServersSchema = z.tuple([
+  z.object({ url: z.literal("https://lichess.org") }),
+  z.object({ url: z.literal("https://lichess.dev") }),
+  z.object({ url: z.literal("http://localhost:{port}") }),
+  z.object({ url: z.literal("http://l.org") }),
+]);
+
 const OpenApiSchemaSchema = z.object({
   openapi: z.literal("3.1.0"),
   info: OpenApiSchemaInfo,
-  servers: z.tuple([
-    z.object({ url: z.literal("https://lichess.org") }),
-    z.object({ url: z.literal("https://lichess.dev") }),
-    z.object({ url: z.literal("http://localhost:{port}") }),
-    z.object({ url: z.literal("http://l.org") }),
-  ]),
+  servers: OpenApiServersSchema,
   tags: z.array(z.object({ name: z.string(), description: z.string() })),
   paths: OpenApiSchemaPaths,
   components: OpenApiSchemaComponents,
@@ -248,10 +250,30 @@ const ResponseStatus = z.string();
 
 const OperationResponses = z.record(ResponseStatus, ResponseSchema);
 
+const LichessServerSchema = z.union([
+  z.object({
+    url: z.literal([
+      "https://engine.lichess.ovh",
+      "https://explorer.lichess.org",
+      "https://tablebase.lichess.org",
+    ]),
+  }),
+  z.object({
+    url: z.literal("http://localhost:{port}"),
+    variables: z.object({ port: z.object({ default: z.string() }) }),
+  }),
+]);
+
+const LichessServersSchema = z
+  .tuple([LichessServerSchema])
+  .rest(LichessServerSchema)
+  .transform((s) => ({ url: s[0].url, __id: "__servers" as const }));
+
 const BaseTagSchemaOperation = z.object({
   operationId: z.string(),
   summary: z.string(),
   description: z.string(),
+  servers: LichessServersSchema.optional(),
   tags: z.array(z.string()),
   security: SecuritySchema,
   parameters: OperationParameters,
@@ -312,18 +334,7 @@ const TagSchemaSchemaPut = BaseTagSchemaOperation.extend({
 
 const TagSchemaSchema = z
   .object({
-    servers: z
-      .tuple([
-        z.object({
-          url: z.literal([
-            "https://engine.lichess.ovh",
-            "https://explorer.lichess.org",
-            "https://tablebase.lichess.org",
-          ]),
-        }),
-      ])
-      .transform((s) => ({ url: s[0].url, __id: "__servers" as const }))
-      .optional(),
+    // servers: LichessServersSchema.optional(),
     parameters: z
       .array(OperationPathParameterSchema)
       .transform((s) => ({ parameters: s, __id: "__parameters" as const }))
@@ -603,10 +614,10 @@ function processOperation(
     return { parameters, __type: "__parameters" } as const;
   }
 
-  if (operation.__id === "__servers") {
-    const baseUrl = operation.url;
-    return { baseUrl, __type: "__servers" } as const;
-  }
+  // if (operation.__id === "__servers") {
+  //   const baseUrl = operation.url;
+  //   return { baseUrl, __type: "__servers" } as const;
+  // }
 
   const { processedPath, hasPathParams } = processRawPath(rawApiPath);
   const pathLiteral = hasPathParams
@@ -665,10 +676,12 @@ function processOperation(
     requestObjCode = `${requestPieces.join(", ")}`;
   }
 
+  const baseUrl = options?.baseUrl || operation.servers?.url;
+
   let baseUrlLine = "";
   let baseUrlArg = "";
-  if (options?.baseUrl) {
-    baseUrlLine = `    const baseUrl = "${options.baseUrl}";\n`;
+  if (baseUrl) {
+    baseUrlLine = `    const baseUrl = "${baseUrl}";\n`;
     baseUrlArg = ", baseUrl";
   }
 
@@ -692,8 +705,8 @@ ${baseUrlLine}\
 
 function processTag(tagSchema: TagSchema, rawApiPath: string) {
   const methodsCode: string[] = [];
-  let sharedPathParams: OperationPathParameter[] | undefined = undefined;
-  let baseUrl: string | undefined = undefined;
+  let sharedPathParams: OperationPathParameter[] | undefined;
+  let baseUrl: string | undefined;
 
   for (const operation of Object.values(tagSchema)) {
     const processedOperation = processOperation(operation, rawApiPath, {

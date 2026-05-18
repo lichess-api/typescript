@@ -46,6 +46,7 @@ const PuzzleAndGame = z.object({
     plays: z.int(),
     rating: z.int(),
     fen: z.optional(z.string()),
+    lastMove: z.optional(z.string()),
     solution: z.array(z.string()),
     themes: z.array(z.string()),
   }),

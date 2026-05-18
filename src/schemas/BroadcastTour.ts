@@ -27,6 +27,7 @@ const BroadcastTour = z.object({
   image: z.optional(z.url()),
   description: z.optional(z.string()),
   teamTable: z.optional(z.boolean()),
+  showTeamScores: z.optional(z.boolean()),
   url: z.url(),
   communityOwner: z.optional(LightUser),
 });

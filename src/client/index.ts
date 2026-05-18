@@ -558,7 +558,7 @@ export class Lichess {
       },
       {
         200: {
-          kind: "json",
+          kind: "ndjson",
           schema: z.union([schemas.GamePgn, schemas.GameJson]),
         },
       },
