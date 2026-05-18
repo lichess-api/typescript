@@ -6,6 +6,8 @@ import {
   OperationParameterBase,
   OperationQueryParameterSchema,
   type QueryParamSchemaSchema,
+  recordToObject,
+  refToName,
   type Schema,
   SchemaSchema,
   SchemaSchemaBoolean,
@@ -334,7 +336,7 @@ const TagSchemaSchemaPut = BaseTagSchemaOperation.extend({
 
 const TagSchemaSchema = z
   .object({
-    // servers: LichessServersSchema.optional(),
+    servers: LichessServersSchema.optional(),
     parameters: z
       .array(OperationPathParameterSchema)
       .transform((s) => ({ parameters: s, __id: "__parameters" as const }))
@@ -464,13 +466,13 @@ function schemaToTypescriptTypes(
     case "$ref":
     case "notverified:reftoprimitive": {
       const ref = schema.$ref;
-      const name = ref.split("/").pop()!.replace(".yaml", "");
+      const name = refToName(ref);
       const typescriptSchema = `schemas.${name}` as const;
       return typescriptSchema;
     }
     case "notverified:reftoprimitive:nullable": {
       const ref = schema.allOf[0].$ref;
-      const name = ref.split("/").pop()!.replace(".yaml", "");
+      const name = refToName(ref);
       const typescriptSchema = `schemas.${name} | null` as const;
       return typescriptSchema;
     }
@@ -485,15 +487,7 @@ function schemaToTypescriptTypes(
           : (`?: ${typescriptSchema}` as const);
         objectRecord[k] = propStr;
       }
-      const entries = Object.entries(objectRecord);
-      if (entries.length === 1) {
-        return `{ "${entries[0]![0]}" ${entries[0]![1]} }` as const;
-      }
-      return (
-        "{\n" +
-        entries.map(([k, v]) => `  "${k}" ${v},` as const).join("\n") +
-        "\n}"
-      );
+      return recordToObject(objectRecord, { colon: false });
     }
     case "boolean":
     case "boolean-like": {
@@ -535,7 +529,7 @@ function schemaToTypescriptTypes(
     }
     case "array:notverified:reftoprimitive": {
       const ref = schema.items.$ref;
-      const name = ref.split("/").pop()!.replace(".yaml", "");
+      const name = refToName(ref);
       const typescriptSchema = `schemas.${name}` as const;
       return `(${typescriptSchema})[]` as const;
     }
@@ -563,32 +557,15 @@ function extractQueryParams(queryParams: OperationQueryParameter[]) {
       ? `: ${typescriptSchema}`
       : `?: ${typescriptSchema}`;
   }
-  const entries = Object.entries(params);
-  if (entries.length === 1) {
-    return `{ "${entries[0]![0]}" ${entries[0]![1]} }` as const;
-  }
-  return (
-    "{\n" +
-    entries.map(([k, v]) => `  "${k}" ${v},` as const).join("\n") +
-    "\n}"
-  );
+  return recordToObject(params, { colon: false });
 }
 
 function extractPathParams(pathParams: OperationPathParameter[]) {
   const params: Record<string, string> = {};
   for (const param of pathParams) {
-    const typescriptSchema = schemaToTypescriptTypes(param.schema);
-    params[param.name] = `: ${typescriptSchema}` as const;
+    params[param.name] = schemaToTypescriptTypes(param.schema);
   }
-  const entries = Object.entries(params);
-  if (entries.length === 1) {
-    return `{ "${entries[0]![0]}" ${entries[0]![1]} }` as const;
-  }
-  return (
-    "{\n" +
-    entries.map(([k, v]) => `  "${k}" ${v},` as const).join("\n") +
-    "\n}"
-  );
+  return recordToObject(params);
 }
 
 function extractBodyTypes(bodySchema: Schema) {
@@ -614,10 +591,10 @@ function processOperation(
     return { parameters, __type: "__parameters" } as const;
   }
 
-  // if (operation.__id === "__servers") {
-  //   const baseUrl = operation.url;
-  //   return { baseUrl, __type: "__servers" } as const;
-  // }
+  if (operation.__id === "__servers") {
+    const baseUrl = operation.url;
+    return { baseUrl, __type: "__servers" } as const;
+  }
 
   const { processedPath, hasPathParams } = processRawPath(rawApiPath);
   const pathLiteral = hasPathParams
