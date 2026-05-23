@@ -2105,7 +2105,9 @@ export class Lichess {
     const path = `/api/broadcast/${params.broadcastTournamentId}` as const;
     return await this.requestor.get(
       { path },
-      { 200: { kind: "json", schema: schemas.BroadcastWithRounds } },
+      {
+        200: { kind: "json", schema: schemas.BroadcastWithRoundsAndFullGroup },
+      },
     );
   }
 

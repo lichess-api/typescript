@@ -40,6 +40,7 @@ export { BroadcastTop } from "./BroadcastTop";
 export { BroadcastTour } from "./BroadcastTour";
 export { BroadcastWithLastRound } from "./BroadcastWithLastRound";
 export { BroadcastWithRounds } from "./BroadcastWithRounds";
+export { BroadcastWithRoundsAndFullGroup } from "./BroadcastWithRoundsAndFullGroup";
 export { BulkPairing } from "./BulkPairing";
 export { ChallengeCanceledEvent } from "./ChallengeCanceledEvent";
 export { ChallengeColor } from "./ChallengeColor";
