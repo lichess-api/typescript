@@ -1,13 +1,15 @@
-name: Regenerate API client
+name: Update API
 
 on:
   schedule:
-    - cron: "0 3 * * 5"
+    - cron: "0 3 * * 1"
+    - cron: "0 3 * * 4"
+    - cron: "0 3 * * 6"
   workflow_dispatch:
 
 jobs:
-  gen-api:
-    name: Regenerate API client
+  update-api:
+    name: Update API
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -18,6 +20,26 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           token: ${{ secrets.CI_PAT }}
+
+      - name: Checkout lichess-org/api
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: lichess-org/api
+          ref: master
+          path: lichess-api
+          fetch-depth: 1
+
+      - name: Copy files
+        run: |
+          rm -rf specs/*
+
+          mkdir -p specs/schemas specs/tags
+
+          cp -r lichess-api/doc/specs/schemas/.         specs/schemas/
+          cp -r lichess-api/doc/specs/tags/.            specs/tags/
+          cp    lichess-api/doc/specs/lichess-api.yaml  specs/lichess-api.yaml
+
+          rm -rf lichess-api
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
@@ -30,15 +52,25 @@ jobs:
       - name: Generate files
         run: bun run gen
 
+      - name: Build
+        run: bun run build
+
+      - name: Typecheck code
+        run: bun run typecheck
+
+      - name: Run tests
+        run: bun run test
+
       - name: Create or update Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ secrets.CI_PAT }}
-          commit-message: "feat: regenerate api client"
-          title: "feat: regenerate api client"
+          commit-message: "ci: update api"
+          title: "ci: update api"
           committer: CI <ci@rman.dev>
           author: CI <ci@rman.dev>
-          branch: gen-api
+          body: Update API
+          branch: update-api
           delete-branch: true
           assignees: gameroman
           reviewers: gameroman
@@ -50,7 +82,7 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           status: ${{ job.status }}
-          title: "Regenerate API client (#${{ github.run_number }})"
+          title: "Update API (#${{ github.run_number }})"
           description: |
             Status: **${{ job.status }}**
             Branch: ${{ github.ref_name }}
