@@ -38,6 +38,7 @@ export { BroadcastTeamPOVMatchEntry } from "./BroadcastTeamPOVMatchEntry";
 export { BroadcastTiebreakExtendedCode } from "./BroadcastTiebreakExtendedCode";
 export { BroadcastTop } from "./BroadcastTop";
 export { BroadcastTour } from "./BroadcastTour";
+export { BroadcastTourInfo } from "./BroadcastTourInfo";
 export { BroadcastWithLastRound } from "./BroadcastWithLastRound";
 export { BroadcastWithRounds } from "./BroadcastWithRounds";
 export { BroadcastWithRoundsAndFullGroup } from "./BroadcastWithRoundsAndFullGroup";
