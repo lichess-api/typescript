@@ -1,6 +1,7 @@
 import * as z from "minizod";
 
-import { BroadcastCustomPoints } from "./BroadcastCustomPoints";
+import { BroadcastCustomPointsPerColor } from "./BroadcastCustomPointsPerColor";
+import { BroadcastCustomScoring } from "./BroadcastCustomScoring";
 import { BroadcastRoundFormName } from "./BroadcastRoundFormName";
 
 const BroadcastRoundForm = z.intersection(
@@ -34,10 +35,8 @@ const BroadcastRoundForm = z.intersection(
     delay: z.optional(z.int().check(z.minimum(0)).check(z.maximum(3600))),
     status: z.optional(z.literal(["new", "started", "finished"])),
     rated: z.optional(z.boolean()),
-    "customScoring.white.win": z.optional(BroadcastCustomPoints),
-    "customScoring.white.draw": z.optional(BroadcastCustomPoints),
-    "customScoring.black.win": z.optional(BroadcastCustomPoints),
-    "customScoring.black.draw": z.optional(BroadcastCustomPoints),
+    customScoring: z.optional(BroadcastCustomScoring),
+    teamCustomScoring: z.optional(BroadcastCustomPointsPerColor),
     period: z.optional(z.int().check(z.minimum(2)).check(z.maximum(60))),
   }),
 );
