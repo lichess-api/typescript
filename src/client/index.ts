@@ -657,6 +657,7 @@ export class Lichess {
         200: {
           kind: "json",
           schema: z.object({
+            nbMyTurn: z.int(),
             nowPlaying: z.array(
               z.object({
                 fullId: z.string(),
