@@ -32,9 +32,14 @@ get:
             type: object
             required:
               - nowPlaying
+              - nbMyTurn
             properties:
+              nbMyTurn:
+                type: integer
+                description: Number of games where it is my turn to play
               nowPlaying:
                 type: array
+                description: Games I'm currently playing
                 items:
                   type: object
                   required:
@@ -107,6 +112,7 @@ get:
                       type: integer
             example:
               {
+                "nbMyTurn": 1,
                 "nowPlaying":
                   [
                     {
