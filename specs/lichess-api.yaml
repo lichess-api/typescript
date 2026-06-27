@@ -1,6 +1,6 @@
 openapi: "3.1.0"
 info:
-  version: 2.0.147
+  version: 2.0.149
   title: Lichess.org API reference
   contact:
     name: "Lichess.org API"
@@ -536,6 +536,9 @@ paths:
 
   /api/stream/broadcast/round/{broadcastRoundId}.pgn:
     $ref: "./tags/broadcasts/api-stream-broadcast-round-broadcastRoundId-pgn.yaml"
+
+  /api/stream/broadcast/group/{broadcastGroupId}.pgn:
+    $ref: "./tags/broadcasts/api-stream-broadcast-group-broadcastGroupId-pgn.yaml"
 
   /api/broadcast/round/{broadcastRoundId}.pgn:
     $ref: "./tags/broadcasts/api-broadcast-round-broadcastRoundId-pgn.yaml"
