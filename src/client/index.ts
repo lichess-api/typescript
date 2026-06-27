@@ -2276,6 +2276,23 @@ export class Lichess {
   }
 
   /**
+   * Stream ongoing broadcast rounds of a group as PGN
+   */
+  async broadcastStreamGroupPgn(
+    params: { broadcastGroupId: string } & {
+      clocks?: boolean;
+      comments?: boolean;
+    },
+  ) {
+    const path =
+      `/api/stream/broadcast/group/${params.broadcastGroupId}.pgn` as const;
+    return await this.requestor.get(
+      { path, query: { clocks: params.clocks, comments: params.comments } },
+      { 200: { kind: "chess-pgn" } },
+    );
+  }
+
+  /**
    * Export one round as PGN
    */
   async broadcastRoundPgn(
