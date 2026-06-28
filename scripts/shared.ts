@@ -244,7 +244,9 @@ function parseUnparsed(schema: Unparsed) {
 type ConvertResult = { readonly zodSchema: string; readonly refs: string[] };
 
 function refToName(ref: StringYamlRef) {
-  return path.basename(ref).replace(".yaml", "");
+  const name = path.basename(ref).replace(".yaml", "");
+  if (name === "Error") return "BadRequestError";
+  return name;
 }
 
 function recordToObject(

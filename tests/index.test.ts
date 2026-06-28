@@ -2,7 +2,7 @@ import { describe, expect, it } from "bun:test";
 
 import { Lichess } from "@lichess/api";
 
-import type * as schemas from "@lichess/api/schemas";
+import type { TvFeed } from "@lichess/api/schemas";
 
 describe.concurrent("Lichess", () => {
   it("should work", () => {
@@ -15,10 +15,10 @@ describe.concurrent("Lichess", () => {
     const lichess = new Lichess({ token: null });
     const liveStreamers = (await lichess.streamerLive()).data;
     expect(liveStreamers).toBeArray();
-  }, 1_000);
+  }, 2_000);
 
   it("should correctly handle streaming ndjson", async () => {
-    const received: schemas.TvFeed[] = [];
+    const received: TvFeed[] = [];
 
     const lichess = new Lichess({ token: null });
     const { stream } = await lichess.tvFeed();

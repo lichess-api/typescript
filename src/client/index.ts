@@ -1018,7 +1018,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.ArenaTournamentFull },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1188,7 +1188,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.ArenaTournamentFull },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1210,7 +1210,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1224,7 +1224,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1238,7 +1238,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1259,7 +1259,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.ArenaTournamentFull },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1513,7 +1513,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.SwissTournament },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1647,7 +1647,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.SwissTournament },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
         401: { kind: "json", schema: schemas.SwissUnauthorisedEdit },
       },
     );
@@ -1664,7 +1664,7 @@ export class Lichess {
       { path, body: params.body },
       {
         204: { kind: "nocontent" },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
         401: { kind: "json", schema: schemas.SwissUnauthorisedEdit },
       },
     );
@@ -1679,7 +1679,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1704,7 +1704,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1888,7 +1888,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: z.object({ id: z.optional(z.string()) }) },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1912,7 +1912,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.StudyImportPgnChapters },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1932,7 +1932,7 @@ export class Lichess {
       { path, body: params.body },
       {
         204: { kind: "nocontent" },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -1952,7 +1952,7 @@ export class Lichess {
       { path, body: params.body },
       {
         204: { kind: "nocontent" },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2094,7 +2094,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.BroadcastWithRounds },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2173,7 +2173,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2191,7 +2191,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.BroadcastRoundNew },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2223,7 +2223,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.BroadcastRound },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2567,7 +2567,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2775,7 +2775,10 @@ export class Lichess {
     const path = "/api/board/seek" as const;
     return await this.requestor.post(
       { path, body: params.body },
-      { 200: { kind: "mixed" }, 400: { kind: "json", schema: schemas.Error } },
+      {
+        200: { kind: "mixed" },
+        400: { kind: "json", schema: schemas.BadRequestError },
+      },
     );
   }
 
@@ -2816,7 +2819,7 @@ export class Lichess {
       { path, query: { offeringDraw: params.offeringDraw } },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2848,7 +2851,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2862,7 +2865,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2876,7 +2879,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2891,7 +2894,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2906,7 +2909,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2920,7 +2923,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2934,7 +2937,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2948,7 +2951,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -2973,7 +2976,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3014,7 +3017,7 @@ export class Lichess {
       { path, query: { offeringDraw: params.offeringDraw } },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3046,7 +3049,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3060,7 +3063,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3074,7 +3077,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3089,7 +3092,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3104,7 +3107,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3118,7 +3121,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3132,7 +3135,7 @@ export class Lichess {
       { path },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3188,7 +3191,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.ChallengeJson },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3306,7 +3309,7 @@ export class Lichess {
             ),
           }),
         },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3338,7 +3341,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.ChallengeOpenJson },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3398,7 +3401,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.BulkPairing },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3507,7 +3510,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: z.record(z.string(), z.string()) },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
@@ -3523,7 +3526,7 @@ export class Lichess {
       { path, body: params.body },
       {
         200: { kind: "json", schema: schemas.Ok },
-        400: { kind: "json", schema: schemas.Error },
+        400: { kind: "json", schema: schemas.BadRequestError },
       },
     );
   }
