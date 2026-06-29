@@ -450,7 +450,7 @@ export class Lichess {
    * Fetch the spectator game chat
    */
   async gameChatGet(params: { gameId: string }) {
-    const path = `/game/${params.gameId}/chat` as const;
+    const path = `/api/game/${params.gameId}/chat` as const;
     return await this.requestor.get(
       { path },
       { 200: { kind: "ndjson", schema: schemas.SpectatorGameChat } },
