@@ -26,8 +26,13 @@ const GameJson = z.object({
   pgn: z.optional(z.string()),
   daysPerTurn: z.optional(z.int()),
   analysis: z.optional(z.array(GameMoveAnalysis)),
-  tournament: z.optional(z.string()),
-  swiss: z.optional(z.string()),
+  arenaTour: z.optional(
+    z.object({
+      id: z.optional(z.string()),
+      name: z.optional(z.string()),
+    }),
+  ),
+  swissTour: z.optional(z.object({ id: z.optional(z.string()) })),
   clock: z.optional(
     z.object({
       initial: z.int(),
