@@ -34,11 +34,6 @@ jobs:
         with:
           bun-version-file: ".bun-version"
 
-      - name: Setup Git User
-        run: |
-          git config --global user.name "Roman [bot]"
-          git config --global user.email "bot@rman.dev"
-
       - name: Bump Version
         id: versioning
         run: |
@@ -54,3 +49,8 @@ jobs:
           commit-message: "chore: release v${{ steps.versioning.outputs.version }}"
           title: "chore: release v${{ steps.versioning.outputs.version }}"
           body: "Review the version change. Merging this PR will automatically tag the commit and publish the package to npm."
+          committer: Roman [bot] <bot@rman.dev>
+          author: Roman [bot] <bot@rman.dev>
+          delete-branch: true
+          sign-commits: true
+          labels: release
