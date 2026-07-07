@@ -69,8 +69,8 @@ jobs:
           token: ${{ secrets.BOT_PAT }}
           commit-message: "feat: update api"
           title: "feat: update api"
-          committer: Bot <bot@rman.dev>
-          author: Bot <bot@rman.dev>
+          committer: Roman [bot] <bot@rman.dev>
+          author: Roman [bot] <bot@rman.dev>
           body: Update API
           branch: update-api
           delete-branch: true
