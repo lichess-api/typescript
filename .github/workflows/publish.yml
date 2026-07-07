@@ -40,6 +40,6 @@ jobs:
           git push origin v$VERSION
 
       - name: Stage Publish to npm
-        run: npm stage publish --provenance --access public
+        run: npm stage publish --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
