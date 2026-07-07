@@ -3,6 +3,7 @@ name: Publish
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions: {}
 
@@ -38,6 +39,9 @@ jobs:
 
           git tag v$VERSION
           git push origin v$VERSION
+
+      - name: Install npm
+        run: bun i -g npm@11.18.0
 
       - name: Stage Publish to npm
         run: npm stage publish --provenance
