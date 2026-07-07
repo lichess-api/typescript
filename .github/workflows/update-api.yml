@@ -7,6 +7,8 @@ on:
     - cron: "0 3 * * 6"
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   update-api:
     name: Update API
@@ -19,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
-          token: ${{ secrets.CI_PAT }}
+          token: ${{ secrets.BOT_PAT }}
 
       - name: Checkout lichess-org/api
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -64,17 +66,17 @@ jobs:
       - name: Create or update Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
-          token: ${{ secrets.CI_PAT }}
-          commit-message: "ci: update api"
-          title: "ci: update api"
-          committer: CI <ci@rman.dev>
-          author: CI <ci@rman.dev>
+          token: ${{ secrets.BOT_PAT }}
+          commit-message: "feat: update api"
+          title: "feat: update api"
+          committer: Bot <bot@rman.dev>
+          author: Bot <bot@rman.dev>
           body: Update API
           branch: update-api
           delete-branch: true
           assignees: gameroman
           reviewers: gameroman
-          labels: ci
+          labels: update-api
 
       - name: Notify Discord
         if: always()
