@@ -1,0 +1,56 @@
+name: Create Release PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Version bump type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions: {}
+
+jobs:
+  create-pr:
+    name: Create Release PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          token: ${{ secrets.BOT_PAT }}
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: ".bun-version"
+
+      - name: Setup Git User
+        run: |
+          git config --global user.name "Roman [bot]"
+          git config --global user.email "bot@rman.dev"
+
+      - name: Bump Version
+        id: versioning
+        run: |
+          bun pm version ${{ github.event.inputs.bump }} --no-git-tag-version
+          NEW_VERSION=$(bun -p "require('./package.json').version")
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ secrets.BOT_PAT }}
+          branch: release/v${{ steps.versioning.outputs.version }}
+          commit-message: "chore: release v${{ steps.versioning.outputs.version }}"
+          title: "chore: release v${{ steps.versioning.outputs.version }}"
+          body: "Review the version change. Merging this PR will automatically tag the commit and publish the package to npm."
