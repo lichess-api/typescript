@@ -6,6 +6,10 @@ get:
     If a `study:read` [OAuth token](#tag/OAuth) is provided,
     the private rounds where the user is a contributor will be available.
     You may want to [download only the games of a single round](#tag/broadcasts/GET/api/broadcast/round/{broadcastRoundId}.pgn) instead.
+
+    To get real-time updates about an ongoing tournament, please use the 
+    [round PGN stream](#tag/broadcasts/GET/api/stream/broadcast/round/{broadcastRoundId}.pgn) or
+    [group PGN stream](#tag/broadcasts/GET/api/stream/broadcast/group/{broadcastGroupId}.pgn) endpoints instead.
   tags:
     - Broadcasts
   security:
