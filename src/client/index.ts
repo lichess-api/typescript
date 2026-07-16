@@ -769,6 +769,17 @@ export class Lichess {
   }
 
   /**
+   * Bookmark a game
+   */
+  async bookmarkToggle(params: { gameId: string } & { v?: boolean }) {
+    const path = `/bookmark/${params.gameId}` as const;
+    return await this.requestor.post(
+      { path, query: { v: params.v } },
+      { 204: { kind: "nocontent" } },
+    );
+  }
+
+  /**
    * Get current TV games
    */
   async tvChannels() {

@@ -1,0 +1,36 @@
+post:
+  operationId: bookmarkToggle
+  summary: Bookmark a game
+  description: |
+    Add or remove a bookmark on a game, for the logged in user.
+    By default, the bookmark is toggled: added if absent, removed if present.
+    Use the `v` parameter to explicitly set the bookmark instead, making the request idempotent.
+    Bookmarked games can be downloaded with the [export your bookmarked games](#tag/games/GET/api/games/export/bookmarks) endpoint.
+  tags:
+    - Games
+  security:
+    - OAuth2: ["preference:write"]
+  parameters:
+    - in: path
+      name: gameId
+      schema:
+        type: string
+        example: "5IrD6Gzz"
+      required: true
+    - in: query
+      name: v
+      required: false
+      description: |
+        Explicitly set the bookmark instead of toggling it.
+        `true` adds the bookmark, `false` removes it.
+      schema:
+        type: boolean
+      example: true
+  responses:
+    "204":
+      description: The bookmark was successfully added or removed.
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+            default: "'*'"
