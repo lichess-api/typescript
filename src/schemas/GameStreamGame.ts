@@ -29,12 +29,14 @@ const GameStreamGame = z.object({
         z.object({
           userId: z.optional(z.string()),
           rating: z.optional(z.int()),
+          provisional: z.optional(z.boolean()),
         }),
       ),
       black: z.optional(
         z.object({
           userId: z.optional(z.string()),
           rating: z.optional(z.int()),
+          provisional: z.optional(z.boolean()),
         }),
       ),
     }),

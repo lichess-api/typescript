@@ -25,6 +25,7 @@ const GamePlayerUser = z.object({
     }),
   ),
   team: z.optional(z.string()),
+  berserk: z.optional(z.boolean()),
 });
 
 type GamePlayerUser = z.infer<typeof GamePlayerUser>;
