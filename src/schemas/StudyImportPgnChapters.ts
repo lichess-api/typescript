@@ -22,6 +22,7 @@ const StudyImportPgnChapters = z.object({
       }),
     ),
   ),
+  error: z.optional(z.nullable(z.string())),
 });
 
 type StudyImportPgnChapters = z.infer<typeof StudyImportPgnChapters>;

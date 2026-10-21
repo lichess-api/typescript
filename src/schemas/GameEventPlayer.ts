@@ -8,6 +8,7 @@ const GameEventPlayer = z.object({
   name: z.string(),
   title: z.optional(z.union([Title, z.null()])),
   rating: z.optional(z.int()),
+  ratingDiff: z.optional(z.int()),
   provisional: z.optional(z.boolean()),
 });
 

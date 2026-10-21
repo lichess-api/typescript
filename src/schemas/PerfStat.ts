@@ -132,7 +132,21 @@ const PerfStat = z.object({
     }),
     playStreak: z.object({
       nb: z.object({
-        cur: z.object({ v: z.int() }),
+        cur: z.object({
+          v: z.int(),
+          from: z.optional(
+            z.object({
+              at: z.iso.datetime(),
+              gameId: z.string(),
+            }),
+          ),
+          to: z.optional(
+            z.object({
+              at: z.iso.datetime(),
+              gameId: z.string(),
+            }),
+          ),
+        }),
         max: z.object({
           v: z.int(),
           from: z.optional(
@@ -150,7 +164,21 @@ const PerfStat = z.object({
         }),
       }),
       time: z.object({
-        cur: z.object({ v: z.int() }),
+        cur: z.object({
+          v: z.int(),
+          from: z.optional(
+            z.object({
+              at: z.iso.datetime(),
+              gameId: z.string(),
+            }),
+          ),
+          to: z.optional(
+            z.object({
+              at: z.iso.datetime(),
+              gameId: z.string(),
+            }),
+          ),
+        }),
         max: z.object({
           v: z.int(),
           from: z.optional(

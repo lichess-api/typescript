@@ -17,7 +17,7 @@ const BulkPairing = z.object({
   pairAt: z.int(),
   pairedAt: z.nullable(z.int()),
   rated: z.boolean(),
-  startClocksAt: z.int(),
+  startClocksAt: z.nullable(z.int()),
   scheduledAt: z.int(),
 });
 

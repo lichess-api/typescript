@@ -440,7 +440,7 @@ export class Lichess {
     const path = `/api/game/${params.gameId}/chat`;
     return await this.requestor.get(
       { path },
-      { 200: { kind: "ndjson", schema: schemas.SpectatorGameChat } },
+      { 200: { kind: "json", schema: schemas.SpectatorGameChat } },
     );
   }
 
@@ -1776,7 +1776,7 @@ export class Lichess {
             absent: z.optional(z.boolean()),
             rank: z.int(),
             points: z.number(),
-            tieBreak: z.int(),
+            tieBreak: z.number(),
             rating: z.int(),
             username: z.string(),
             title: z.optional(schemas.Title),
@@ -2464,8 +2464,11 @@ export class Lichess {
             joinedTeamAt: z.optional(z.int()),
             id: z.string(),
             name: z.string(),
+            flair: z.optional(schemas.Flair),
             title: z.optional(schemas.Title),
+            patron: z.optional(schemas.Patron),
             patronColor: z.optional(schemas.PatronColor),
+            url: z.optional(z.url()),
           }),
         },
       },
@@ -2867,7 +2870,7 @@ export class Lichess {
     const path = `/api/board/game/${params.gameId}/chat`;
     return await this.requestor.get(
       { path },
-      { 200: { kind: "ndjson", schema: schemas.PlayerGameChat } },
+      { 200: { kind: "json", schema: schemas.PlayerGameChat } },
     );
   }
 
@@ -3063,7 +3066,7 @@ export class Lichess {
     const path = `/api/bot/game/${params.gameId}/chat`;
     return await this.requestor.get(
       { path },
-      { 200: { kind: "ndjson", schema: schemas.PlayerGameChat } },
+      { 200: { kind: "json", schema: schemas.PlayerGameChat } },
     );
   }
 
@@ -3401,7 +3404,12 @@ export class Lichess {
     const path = "/api/bulk-pairing";
     return await this.requestor.get(
       { path },
-      { 200: { kind: "json", schema: z.array(schemas.BulkPairing) } },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({ bulks: z.array(schemas.BulkPairing) }),
+        },
+      },
     );
   }
 
