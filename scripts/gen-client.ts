@@ -190,7 +190,7 @@ const ResponseSchemaHeaders = z.strictObject({
     .strictObject({
       schema: z.object({
         type: z.literal("string"),
-        example: z.string(),
+        example: z.string().optional(),
       }),
     })
     .optional(),
