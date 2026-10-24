@@ -25,7 +25,8 @@ get:
       example: true
     - in: query
       name: live
-      description: "[Filter] only broadcasts where a round is ongoing, i.e. started
+      description:
+        "[Filter] only broadcasts where a round is ongoing, i.e. started
         and not finished"
       schema:
         type: boolean
