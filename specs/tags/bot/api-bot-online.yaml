@@ -4,7 +4,8 @@ get:
   tags:
     - Bot
   security: []
-  description: Stream the [online bot users](https://lichess.org/player/bots), as
+  description:
+    Stream the [online bot users](https://lichess.org/player/bots), as
     [ndjson](#description/streaming-with-nd-json).
   parameters:
     - in: query
