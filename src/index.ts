@@ -778,6 +778,27 @@ export class Lichess {
   }
 
   /**
+   * Get server version
+   */
+  async apiVersion() {
+    const path = "/api/version";
+    return await this.requestor.get(
+      { path },
+      {
+        200: {
+          kind: "json",
+          schema: z.object({
+            server: z.object({
+              date: z.iso.datetime(),
+              commit: z.string(),
+            }),
+          }),
+        },
+      },
+    );
+  }
+
+  /**
    * Get current TV games
    */
   async tvChannels() {
